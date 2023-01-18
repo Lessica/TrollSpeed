@@ -1,0 +1,13 @@
+#if __has_include(<AvailabilityVersions.h>)
+    #import <AvailabilityVersions.h>
+#endif
+
+#ifdef __OBJC__
+    #if __has_include(<TargetConditionals.h>)
+        #import <TargetConditionals.h>
+    #endif
+    
+    #import <Foundation/Foundation.h>
+    #import <UIKit/UIKit.h>
+    #import <os/log.h>
+#endif
