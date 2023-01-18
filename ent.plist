@@ -54,10 +54,10 @@
 	<true/>
 	<key>com.apple.private.LocalAuthentication.Storage</key>
 	<true/>
-	<key>com.apple.private.MobileGestalt.AllowedProtectedKeys</key>
-	<array>
-		<string>SerialNumber</string>
-	</array>
+	<!-- <key>com.apple.private.MobileGestalt.AllowedProtectedKeys</key> -->
+	<!-- <array> -->
+		<!-- <string>SerialNumber</string> -->
+	<!-- </array> -->
 	<key>com.apple.private.acccessibility.motionTrackingClient</key>
 	<true/>
 	<key>com.apple.private.appleaccount.app-hidden-from-icloud-settings</key>
@@ -112,13 +112,13 @@
 	<true/>
 	<key>com.apple.private.sysdiagnose</key>
 	<true/>
-	<key>com.apple.private.tcc.allow</key>
-	<array>
-		<string>kTCCServiceCamera</string>
-		<string>kTCCServiceMotion</string>
-		<string>kTCCServiceAddressBook</string>
-		<string>kTCCServiceListenEvent</string>
-	</array>
+	<!-- <key>com.apple.private.tcc.allow</key> -->
+	<!-- <array> -->
+		<!-- <string>kTCCServiceCamera</string> -->
+		<!-- <string>kTCCServiceMotion</string> -->
+		<!-- <string>kTCCServiceAddressBook</string> -->
+		<!-- <string>kTCCServiceListenEvent</string> -->
+	<!-- </array> -->
 	<key>com.apple.private.ubiquity-additional-kvstore-identifiers</key>
 	<array>
 		<string>com.apple.AssistiveTouch</string>
@@ -198,14 +198,14 @@
 	<true/>
 	<key>get-task-allow</key>
 	<true/>
-	<key>keychain-access-groups</key>
-	<array>
-		<string>appleaccount</string>
-		<string>com.apple.coreservices.appleIDAuthentication</string>
-		<string>com.apple.coreservices.appleidauthentication.keychainaccessgroup</string>
-		<string>com.apple.coreservices.appleidauthentication</string>
-		<string>com.apple.sharing.appleidauthentication</string>
-	</array>
+	<!-- <key>keychain-access-groups</key> -->
+	<!-- <array> -->
+		<!-- <string>appleaccount</string> -->
+		<!-- <string>com.apple.coreservices.appleIDAuthentication</string> -->
+		<!-- <string>com.apple.coreservices.appleidauthentication.keychainaccessgroup</string> -->
+		<!-- <string>com.apple.coreservices.appleidauthentication</string> -->
+		<!-- <string>com.apple.sharing.appleidauthentication</string> -->
+	<!-- </array> -->
 	<key>platform-application</key>
 	<true/>
 	<key>run-unsigned-code</key>

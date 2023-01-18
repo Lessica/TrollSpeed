@@ -1,3 +1,4 @@
+#import <notify.h>
 #import <UIKit/UIKit.h>
 
 OBJC_EXTERN BOOL IsHUDEnabled(void);
@@ -26,7 +27,9 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 {
     CGRect bounds = UIScreen.mainScreen.bounds;
     self.view = [[UIView alloc] initWithFrame:bounds];
-    self.view.backgroundColor = [UIColor systemPurpleColor];
+
+    // rgba(26, 188, 156, 1.0)
+    self.view.backgroundColor = [UIColor colorWithRed:26.0f/255.0f green:188.0f/255.0f blue:156.0f/255.0f alpha:1.0f];
 
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapView:)];
     tap.numberOfTapsRequired = 1;
@@ -51,7 +54,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
 - (void)reloadButtonState
 {
-    [_mainButton setTitle:(IsHUDEnabled() ? @"Close HUD" : @"Open HUD") forState:UIControlStateNormal];
+    [_mainButton setTitle:(IsHUDEnabled() ? @"Exit HUD" : @"Open HUD") forState:UIControlStateNormal];
     [_mainButton sizeToFit];
 }
 
@@ -63,8 +66,40 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 - (void)buttonTapped:(UIButton *)sender
 {
     os_log_debug(OS_LOG_DEFAULT, "- [HUDRootViewController buttonTapped:%{public}@]", sender);
-    SetHUDEnabled(!IsHUDEnabled());
-    [self reloadButtonState];
+
+    BOOL isNowEnabled = IsHUDEnabled();
+    SetHUDEnabled(!isNowEnabled);
+    isNowEnabled = !isNowEnabled;
+
+    if (isNowEnabled)
+    {
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+        int token;
+        notify_register_dispatch(NOTIFY_LAUNCHED_HUD, &token, dispatch_get_main_queue(), ^(int token) {
+            notify_cancel(token);
+            dispatch_semaphore_signal(semaphore);
+        });
+
+        [sender setEnabled:NO];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+            int timedOut = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)));
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (timedOut)
+                    os_log_error(OS_LOG_DEFAULT, "Timed out waiting for HUD to launch");
+                
+                [self reloadButtonState];
+                [sender setEnabled:YES];
+            });
+        });
+    }
+    else {
+        [sender setEnabled:NO];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self reloadButtonState];
+            [sender setEnabled:YES];
+        });
+    }
 }
 
 @end

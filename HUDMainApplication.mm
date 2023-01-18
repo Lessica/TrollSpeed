@@ -6,6 +6,7 @@
 #import <notify.h>
 #import <net/if.h>
 #import <ifaddrs.h>
+#import <sys/wait.h>
 #import <sys/sysctl.h>
 #import <mach-o/dyld.h>
 #import <objc/runtime.h>
@@ -18,58 +19,61 @@ extern "C" int posix_spawnattr_set_persona_np(const posix_spawnattr_t* __restric
 extern "C" int posix_spawnattr_set_persona_uid_np(const posix_spawnattr_t* __restrict, uid_t);
 extern "C" int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restrict, uid_t);
 
+
 OBJC_EXTERN BOOL IsHUDEnabled(void);
 BOOL IsHUDEnabled(void)
 {
-    static NSString *cachesDirectoryPath = 
-        [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
-    static NSString *hudPIDFilePath = [cachesDirectoryPath stringByAppendingPathComponent:@"hud.pid"];
+    static char *executablePath = NULL;
+    uint32_t executablePathSize = 0;
+    _NSGetExecutablePath(NULL, &executablePathSize);
+    executablePath = (char *)calloc(1, executablePathSize);
+    _NSGetExecutablePath(executablePath, &executablePathSize);
+
+    posix_spawnattr_t attr;
+    posix_spawnattr_init(&attr);
+
+    posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
+    posix_spawnattr_set_persona_uid_np(&attr, 0);
+    posix_spawnattr_set_persona_gid_np(&attr, 0);
+
+    pid_t task_pid;
+    const char *args[] = { executablePath, "-check", NULL };
+    posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
+    posix_spawnattr_destroy(&attr);
+
+    os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -check pid = %{public}d", executablePath, task_pid);
     
-    BOOL hudPIDFileExists = [[NSFileManager defaultManager] fileExistsAtPath:hudPIDFilePath];
-    if (!hudPIDFileExists) return NO;
-    
-    NSString *pidString = 
-        [NSString stringWithContentsOfFile:hudPIDFilePath encoding:NSUTF8StringEncoding error:nil];
-    if (!pidString) return NO;
-    
-    pid_t pid = (pid_t)pidString.intValue;
-    if (pid <= 0) return NO;
-    
-    int result = kill(pid, 0);
-    if (result == -1) return NO;
-    
-    return YES;
+    int status;
+    do {
+        if (waitpid(task_pid, &status, 0) != -1)
+            os_log_debug(OS_LOG_DEFAULT, "child status %d", WEXITSTATUS(status));
+    } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+
+    return WEXITSTATUS(status) != 0;
 }
 
 OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 void SetHUDEnabled(BOOL isEnabled)
 {
-    static NSString *cachesDirectoryPath = 
-        [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
-    static NSString *hudPIDFilePath = [cachesDirectoryPath stringByAppendingPathComponent:@"hud.pid"];
-    
-    if (IsHUDEnabled())
-    {
-        NSString *pidString = 
-            [NSString stringWithContentsOfFile:hudPIDFilePath encoding:NSUTF8StringEncoding error:nil];
-        pid_t pid = (pid_t)pidString.intValue; kill(pid, SIGKILL);
-        [[NSFileManager defaultManager] removeItemAtPath:hudPIDFilePath error:nil];
-    }
-
 #ifdef NOTIFY_DISMISSAL_HUD
     notify_post(NOTIFY_DISMISSAL_HUD);
 #endif
 
+    static char *executablePath = NULL;
+    uint32_t executablePathSize = 0;
+    _NSGetExecutablePath(NULL, &executablePathSize);
+    executablePath = (char *)calloc(1, executablePathSize);
+    _NSGetExecutablePath(executablePath, &executablePathSize);
+
+    posix_spawnattr_t attr;
+    posix_spawnattr_init(&attr);
+
+    posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
+    posix_spawnattr_set_persona_uid_np(&attr, 0);
+    posix_spawnattr_set_persona_gid_np(&attr, 0);
+
     if (isEnabled)
     {
-        static char *executablePath = NULL;
-        uint32_t executablePathSize = 0;
-        _NSGetExecutablePath(NULL, &executablePathSize);
-        executablePath = (char *)calloc(1, executablePathSize);
-        _NSGetExecutablePath(executablePath, &executablePathSize);
-
-        posix_spawnattr_t attr;
-        posix_spawnattr_init(&attr);
         posix_spawnattr_setpgroup(&attr, 0);
         posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETPGROUP);
 
@@ -78,10 +82,22 @@ void SetHUDEnabled(BOOL isEnabled)
         posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
         posix_spawnattr_destroy(&attr);
 
-        NSString *pidString = [NSString stringWithFormat:@"%d", task_pid];
-        [pidString writeToFile:hudPIDFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -hud pid = %{public}d", executablePath, task_pid);
+    }
+    else
+    {
+        pid_t task_pid;
+        const char *args[] = { executablePath, "-exit", NULL };
+        posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
+        posix_spawnattr_destroy(&attr);
 
-        os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s pid = %{public}d", executablePath, task_pid);
+        os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -exit pid = %{public}d", executablePath, task_pid);
+        
+        int status;
+        do {
+            if (waitpid(task_pid, &status, 0) != -1)
+                os_log_debug(OS_LOG_DEFAULT, "child status %d", WEXITSTATUS(status));
+        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
     }
 }
 
@@ -112,23 +128,23 @@ typedef struct {
 
 static NSString* formattedSpeed(long long bytes)
 {
-	if (0 == DATAUNIT)
-	{
-		if (bytes < KILOBYTES) return @"0 KB/s";
-		else if (bytes < MEGABYTES) return [NSString stringWithFormat:@"%.0f KB/s", (double)bytes / KILOBYTES];
-		else return [NSString stringWithFormat:@"%.2f MB/s", (double)bytes / MEGABYTES];
-	}
-	else
-	{
-		if (bytes < KILOBITS) return @"0 Kb/s";
-		else if (bytes < MEGABITS) return [NSString stringWithFormat:@"%.0f Kb/s", (double)bytes / KILOBITS];
-		else return [NSString stringWithFormat:@"%.2f Mb/s", (double)bytes / MEGABITS];
-	}
+    if (0 == DATAUNIT)
+    {
+        if (bytes < KILOBYTES) return @"0 KB/s";
+        else if (bytes < MEGABYTES) return [NSString stringWithFormat:@"%.0f KB/s", (double)bytes / KILOBYTES];
+        else return [NSString stringWithFormat:@"%.2f MB/s", (double)bytes / MEGABYTES];
+    }
+    else
+    {
+        if (bytes < KILOBITS) return @"0 Kb/s";
+        else if (bytes < MEGABITS) return [NSString stringWithFormat:@"%.0f Kb/s", (double)bytes / KILOBITS];
+        else return [NSString stringWithFormat:@"%.2f Mb/s", (double)bytes / MEGABITS];
+    }
 }
 
 static UpDownBytes getUpDownBytes()
 {
-	struct ifaddrs *ifa_list = 0, *ifa;
+    struct ifaddrs *ifa_list = 0, *ifa;
     UpDownBytes upDownBytes;
     upDownBytes.inputBytes = 0;
     upDownBytes.outputBytes = 0;
@@ -156,61 +172,61 @@ static long long oldUpSpeed = 0, oldDownSpeed = 0;
 
 static NSMutableString* formattedString()
 {
-	@autoreleasepool
-	{
-		NSMutableString* mutableString = [[NSMutableString alloc] init];
-		
-		UpDownBytes upDownBytes = getUpDownBytes();
-		long long upDiff = (upDownBytes.outputBytes - oldUpSpeed) / UPDATE_INTERVAL;
-		long long downDiff = (upDownBytes.inputBytes - oldDownSpeed) / UPDATE_INTERVAL;
-		
+    @autoreleasepool
+    {
+        NSMutableString* mutableString = [[NSMutableString alloc] init];
+        
+        UpDownBytes upDownBytes = getUpDownBytes();
+        long long upDiff = (upDownBytes.outputBytes - oldUpSpeed) / UPDATE_INTERVAL;
+        long long downDiff = (upDownBytes.inputBytes - oldDownSpeed) / UPDATE_INTERVAL;
+        
         oldUpSpeed = upDownBytes.outputBytes;
-		oldDownSpeed = upDownBytes.inputBytes;
+        oldDownSpeed = upDownBytes.inputBytes;
 
-		if (!SHOW_ALWAYS && ((upDiff < 2 * KILOBYTES && downDiff < 2 * KILOBYTES) || (upDiff > 500 * MEGABYTES && downDiff > 500 * MEGABYTES)))
-		{
-			shouldUpdateSpeedLabel = NO;
-			return nil;
-		}
-		else shouldUpdateSpeedLabel = YES;
-
-		if (DATAUNIT == 1)
+        if (!SHOW_ALWAYS && ((upDiff < 2 * KILOBYTES && downDiff < 2 * KILOBYTES) || (upDiff > 500 * MEGABYTES && downDiff > 500 * MEGABYTES)))
         {
-			upDiff *= 8;
-			downDiff *= 8;
-		}
+            shouldUpdateSpeedLabel = NO;
+            return nil;
+        }
+        else shouldUpdateSpeedLabel = YES;
 
-		if(SHOW_DOWNLOAD_SPEED_FIRST)
-		{
-			if (SHOW_DOWNLOAD_SPEED) [mutableString appendString: [NSString stringWithFormat: @"%@ %@", @DOWNLOAD_PREFIX, formattedSpeed(downDiff)]];
-			if (SHOW_UPLOAD_SPEED)
-			{
-				if ([mutableString length] > 0)
-				{
-					if (SHOW_SECOND_SPEED_IN_NEW_LINE) [mutableString appendString: @"\n"];
-					else [mutableString appendString:@INLINE_SEPARATOR];
-				}
+        if (DATAUNIT == 1)
+        {
+            upDiff *= 8;
+            downDiff *= 8;
+        }
 
-				[mutableString appendString:[NSString stringWithFormat: @"%@ %@", @UPLOAD_PREFIX, formattedSpeed(upDiff)]];
-			}
-		}
-		else
-		{
-			if (SHOW_UPLOAD_SPEED) [mutableString appendString: [NSString stringWithFormat: @"%@ %@", @UPLOAD_PREFIX, formattedSpeed(upDiff)]];
-			if (SHOW_DOWNLOAD_SPEED)
-			{
-				if ([mutableString length] > 0)
-				{
-					if (SHOW_SECOND_SPEED_IN_NEW_LINE) [mutableString appendString: @"\n"];
-					else [mutableString appendString:@INLINE_SEPARATOR];
-				}
+        if(SHOW_DOWNLOAD_SPEED_FIRST)
+        {
+            if (SHOW_DOWNLOAD_SPEED) [mutableString appendString: [NSString stringWithFormat: @"%@ %@", @DOWNLOAD_PREFIX, formattedSpeed(downDiff)]];
+            if (SHOW_UPLOAD_SPEED)
+            {
+                if ([mutableString length] > 0)
+                {
+                    if (SHOW_SECOND_SPEED_IN_NEW_LINE) [mutableString appendString: @"\n"];
+                    else [mutableString appendString:@INLINE_SEPARATOR];
+                }
 
-				[mutableString appendString:[NSString stringWithFormat: @"%@ %@", @DOWNLOAD_PREFIX, formattedSpeed(downDiff)]];
-			}
-		}
-		
-		return [mutableString copy];
-	}
+                [mutableString appendString:[NSString stringWithFormat: @"%@ %@", @UPLOAD_PREFIX, formattedSpeed(upDiff)]];
+            }
+        }
+        else
+        {
+            if (SHOW_UPLOAD_SPEED) [mutableString appendString: [NSString stringWithFormat: @"%@ %@", @UPLOAD_PREFIX, formattedSpeed(upDiff)]];
+            if (SHOW_DOWNLOAD_SPEED)
+            {
+                if ([mutableString length] > 0)
+                {
+                    if (SHOW_SECOND_SPEED_IN_NEW_LINE) [mutableString appendString: @"\n"];
+                    else [mutableString appendString:@INLINE_SEPARATOR];
+                }
+
+                [mutableString appendString:[NSString stringWithFormat: @"%@ %@", @DOWNLOAD_PREFIX, formattedSpeed(downDiff)]];
+            }
+        }
+        
+        return [mutableString copy];
+    }
 }
 
 
@@ -254,13 +270,7 @@ static NSMutableString* formattedString()
 {
     if (self = [super init]) {
         os_log_debug(OS_LOG_DEFAULT, "- [HUDMainApplication init]");
-        
-        [[NSNotificationCenter defaultCenter] addObserverForName:nil object:nil queue:[NSOperationQueue mainQueue]
-            usingBlock:^(NSNotification *notification) {
-                if ([[notification name] rangeOfString:@"kBKSDisplayServerDiedNotification"].location != NSNotFound ||
-                    [[notification name] rangeOfString:@"kBKSHIDServerDiedNotification"].location != NSNotFound)
-                    [self terminateWithSuccess];
-            }];
+        notify_post(NOTIFY_LAUNCHED_HUD);
         
 #ifdef NOTIFY_DISMISSAL_HUD
         {
@@ -301,11 +311,6 @@ static NSMutableString* formattedString()
         os_log_debug(OS_LOG_DEFAULT, "- [HUDMainApplicationDelegate init]");
     }
     return self;
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-	[application terminateWithSuccess];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary <UIApplicationLaunchOptionsKey, id> *)launchOptions
@@ -429,7 +434,7 @@ static NSMutableString* formattedString()
     /* Make speed label right below the top safe area guide */
     UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;
     [_contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:-20].active = YES;
+    [_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:-16].active = YES;
     [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active = YES;
     [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
     [_contentView.heightAnchor constraintEqualToConstant:20].active = YES;
