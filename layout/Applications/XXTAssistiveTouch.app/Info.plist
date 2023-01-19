@@ -24,6 +24,8 @@
 	<string>????</string>
 	<key>UIApplicationShowsViewsWhileLocked</key>
 	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>NSHumanReadableCopyright</key>

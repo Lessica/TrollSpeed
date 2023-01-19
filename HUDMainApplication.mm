@@ -7,6 +7,7 @@
 #import <net/if.h>
 #import <ifaddrs.h>
 #import <sys/wait.h>
+#import <sys/types.h>
 #import <sys/sysctl.h>
 #import <mach-o/dyld.h>
 #import <objc/runtime.h>
@@ -233,10 +234,24 @@ static NSMutableString* formattedString()
 @interface UIApplication (Private)
 - (void)suspend;
 - (void)terminateWithSuccess;
+- (void)_run;
 @end
 
 @interface UIWindow (Private)
 - (unsigned int)_contextId;
+@end
+
+@interface UIEventDispatcher : NSObject
+- (void)_installEventRunLoopSources:(CFRunLoopRef)arg1;
+@end
+
+@interface UIEventFetcher : NSObject
+- (void)setEventFetcherSink:(id)arg1;
+- (void)displayLinkDidFire:(id)arg1;
+@end
+
+@interface _UIHIDEventSynchronizer : NSObject
+- (void)_renderEvents:(id)arg1;
 @end
 
 @interface SBSAccessibilityWindowHostingController : NSObject
@@ -261,6 +276,28 @@ static NSMutableString* formattedString()
 
 #pragma mark - HUDMainApplication
 
+#import <pthread.h>
+#import <mach/mach.h>
+
+#import "pac_helper.h"
+
+static void DumpThreads(void) {
+    char name[256];
+    mach_msg_type_number_t count;
+    thread_act_array_t list;
+    task_threads(mach_task_self(), &list, &count);
+    for (int i = 0; i < count; ++i) {
+        pthread_t pt = pthread_from_mach_thread_np(list[i]);
+        if (pt) {
+            name[0] = '\0';
+            int rc = pthread_getname_np(pt, name, sizeof name);
+            os_log_debug(OS_LOG_DEFAULT, "mach thread %u: getname returned %d: %{public}s", list[i], rc, name);
+        } else {
+            os_log_debug(OS_LOG_DEFAULT, "mach thread %u: no pthread found", list[i]);
+        }
+    }
+}
+
 @interface HUDMainApplication : UIApplication
 @end
 
@@ -281,6 +318,201 @@ static NSMutableString* formattedString()
             });
         }
 #endif
+
+// #if 0
+        do {
+            UIEventDispatcher *dispatcher = (UIEventDispatcher *)[self valueForKey:@"eventDispatcher"];
+            if (!dispatcher)
+            {
+                os_log_error(OS_LOG_DEFAULT, "failed to get ivar _eventDispatcher");
+                break;
+            }
+
+            os_log_debug(OS_LOG_DEFAULT, "got ivar _eventDispatcher: %p", dispatcher);
+
+            if ([dispatcher respondsToSelector:@selector(_installEventRunLoopSources:)])
+            {
+                CFRunLoopRef mainRunLoop = CFRunLoopGetMain();
+                [dispatcher _installEventRunLoopSources:mainRunLoop];
+            }
+            else
+            {
+                IMP runMethodIMP = class_getMethodImplementation([self class], @selector(_run));
+                if (!runMethodIMP)
+                {
+                    os_log_error(OS_LOG_DEFAULT, "failed to get - [UIApplication _run] method");
+                    break;
+                }
+
+                uint32_t *runMethodPtr = (uint32_t *)make_sym_readable((void *)runMethodIMP);
+                os_log_debug(OS_LOG_DEFAULT, "- [UIApplication _run]: %p", runMethodPtr);
+
+                void (*orig_UIEventDispatcher__installEventRunLoopSources_)(id _Nonnull, SEL _Nonnull, CFRunLoopRef) = NULL;
+                for (int i = 0; i < 0x140; i++)
+                {
+                    // mov x2, x0
+                    // mov x0, x?
+                    if (runMethodPtr[i] != 0xaa0003e2 || (runMethodPtr[i + 1] & 0xff000000) != 0xaa000000)
+                        continue;
+                    
+                    // bl -[UIEventDispatcher _installEventRunLoopSources:]
+                    uint32_t blInst = runMethodPtr[i + 2];
+                    uint32_t *blInstPtr = &runMethodPtr[i + 2];
+                    if ((blInst & 0xfc000000) != 0x94000000)
+                    {
+                        os_log_error(OS_LOG_DEFAULT, "not a BL instruction: 0x%x, address %p", blInst, blInstPtr);
+                        continue;
+                    }
+
+                    os_log_debug(OS_LOG_DEFAULT, "found BL instruction: 0x%x, address %p", blInst, blInstPtr);
+
+                    int32_t blOffset = blInst & 0x03ffffff;
+                    if (blOffset & 0x02000000)
+                        blOffset |= 0xfc000000;
+                    blOffset <<= 2;
+                    os_log_debug(OS_LOG_DEFAULT, "BL offset: 0x%x", blOffset);
+
+                    uint64_t blAddr = (uint64_t)blInstPtr + blOffset;
+                    os_log_debug(OS_LOG_DEFAULT, "BL target address: %p", (void *)blAddr);
+                    
+                    // cbz x0, loc_?????????
+                    uint32_t cbzInst = *((uint32_t *)make_sym_readable((void *)blAddr));
+                    if ((cbzInst & 0xff000000) != 0xb4000000)
+                    {
+                        os_log_error(OS_LOG_DEFAULT, "not a CBZ instruction: 0x%x", cbzInst);
+                        continue;
+                    }
+
+                    os_log_debug(OS_LOG_DEFAULT, "found CBZ instruction: 0x%x, address %p", cbzInst, (void *)blAddr);
+                    
+                    orig_UIEventDispatcher__installEventRunLoopSources_ = (void (*)(id  _Nonnull __strong, SEL _Nonnull, CFRunLoopRef))make_sym_callable((void *)blAddr);
+                }
+
+                if (!orig_UIEventDispatcher__installEventRunLoopSources_)
+                {
+                    os_log_error(OS_LOG_DEFAULT, "failed to find -[UIEventDispatcher _installEventRunLoopSources:]");
+                    break;
+                }
+
+                os_log_debug(OS_LOG_DEFAULT, "- [UIEventDispatcher _installEventRunLoopSources:]: %p", orig_UIEventDispatcher__installEventRunLoopSources_);
+                
+                CFRunLoopRef mainRunLoop = CFRunLoopGetMain();
+                orig_UIEventDispatcher__installEventRunLoopSources_(dispatcher, @selector(_installEventRunLoopSources:), mainRunLoop);
+            }
+
+// #if 0
+            // Get image base with dyld, the image is /System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore.
+            uint64_t imageUIKitCore = 0;
+            {
+                uint32_t imageCount = _dyld_image_count();
+                for (uint32_t i = 0; i < imageCount; i++)
+                {
+                    const char *imageName = _dyld_get_image_name(i);
+                    if (imageName && !strcmp(imageName, "/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore"))
+                    {
+                        imageUIKitCore = _dyld_get_image_vmaddr_slide(i);
+                        break;
+                    }
+                }
+            }
+            os_log_debug(OS_LOG_DEFAULT, "UIKitCore: %p", (void *)imageUIKitCore);
+
+            UIEventFetcher *fetcher = [[objc_getClass("UIEventFetcher") alloc] init];
+            [dispatcher setValue:fetcher forKey:@"eventFetcher"];
+
+            if ([fetcher respondsToSelector:@selector(setEventFetcherSink:)])
+                [fetcher setEventFetcherSink:dispatcher];
+            else
+            {
+                /* Tested on iOS 15.1.1 and below */
+                [fetcher setValue:dispatcher forKey:@"eventFetcherSink"];
+
+                /* Print NSThread names */
+                DumpThreads();
+
+#if DEBUG
+                /* Force HIDTransformer to print logs */
+                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogTouch" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogGesture" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogEventDispatch" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogGestureEnvironment" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogGestureExclusion" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogSystemGestureUpdate" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogGesturePerformance" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogHIDTransformer" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+#endif
+
+#if 0
+                do {
+                    IMP displayLinkDidFireMethodIMP = 
+                        class_getMethodImplementation([fetcher class], @selector(displayLinkDidFire:));
+                    if (!displayLinkDidFireMethodIMP)
+                    {
+                        os_log_error(OS_LOG_DEFAULT, "failed to get - [UIEventFetcher displayLinkDidFire:] method");
+                        break;
+                    }
+
+                    uint32_t *displayLinkDidFireMethodPtr = (uint32_t *)make_sym_readable((void *)displayLinkDidFireMethodIMP);
+                    os_log_debug(OS_LOG_DEFAULT, "- [UIEventFetcher displayLinkDidFire:]: %p", displayLinkDidFireMethodPtr);
+                    
+                    void (*orig_UIEventFetcher_signalEventsAvailableWithReason_filteredEventCount_)(id _Nonnull, SEL _Nonnull, int, int) = NULL;
+                    for (int i = 0; i < 0x200; i++)
+                    {
+                        // mov x0, x?
+                        // mov w2, #0x2
+                        if ((displayLinkDidFireMethodPtr[i] & 0xff000000) != 0xaa000000 || displayLinkDidFireMethodPtr[i + 1] != 0x52800042)
+                            continue;
+                        
+                        // bl -[UIEventFetcher signalEventsAvailableWithReason:filteredEventCount:]
+                        uint32_t blInst = displayLinkDidFireMethodPtr[i + 2];
+                        uint32_t *blInstPtr = &displayLinkDidFireMethodPtr[i + 2];
+                        if ((blInst & 0xfc000000) != 0x94000000)
+                        {
+                            os_log_error(OS_LOG_DEFAULT, "not a BL instruction: 0x%x, address %p", blInst, blInstPtr);
+                            continue;
+                        }
+
+                        os_log_debug(OS_LOG_DEFAULT, "found BL instruction: 0x%x, address %p", blInst, blInstPtr);
+
+                        int32_t blOffset = blInst & 0x03ffffff;
+                        if (blOffset & 0x02000000)
+                            blOffset |= 0xfc000000;
+                        blOffset <<= 2;
+                        os_log_debug(OS_LOG_DEFAULT, "BL offset: 0x%x", blOffset);
+
+                        uint64_t blAddr = (uint64_t)blInstPtr + blOffset;
+                        os_log_debug(OS_LOG_DEFAULT, "BL target address: %p", (void *)blAddr);
+
+                        // cbz x0, loc_?????????
+                        uint32_t cbzInst = *((uint32_t *)make_sym_readable((void *)blAddr));
+                        if ((cbzInst & 0xff000000) != 0xb4000000)
+                        {
+                            os_log_error(OS_LOG_DEFAULT, "not a CBZ instruction: 0x%x", cbzInst);
+                            continue;
+                        }
+
+                        os_log_debug(OS_LOG_DEFAULT, "found CBZ instruction: 0x%x, address %p", cbzInst, (void *)blAddr);
+
+                        orig_UIEventFetcher_signalEventsAvailableWithReason_filteredEventCount_ = (void (*)(id _Nonnull, SEL _Nonnull, int, int))make_sym_callable((void *)blAddr);
+                    }
+
+                    if (!orig_UIEventFetcher_signalEventsAvailableWithReason_filteredEventCount_)
+                    {
+                        os_log_error(OS_LOG_DEFAULT, "failed to find -[UIEventFetcher signalEventsAvailableWithReason:filteredEventCount:]");
+                        break;
+                    }
+
+                    os_log_debug(OS_LOG_DEFAULT, "- [UIEventFetcher signalEventsAvailableWithReason:filteredEventCount:]: %p", orig_UIEventFetcher_signalEventsAvailableWithReason_filteredEventCount_);
+                    orig_UIEventFetcher_signalEventsAvailableWithReason_filteredEventCount_(fetcher, @selector(signalEventsAvailableWithReason:filteredEventCount:), 1, 0);
+                } while (NO);
+#endif
+            }
+
+            [self setValue:fetcher forKey:@"eventFetcher"];
+// #endif
+        } while (NO);
+// #endif
     }
     return self;
 }
@@ -350,9 +582,9 @@ static NSMutableString* formattedString()
 }
 
 - (BOOL)_isWindowServerHostingManaged { return NO; }
+// - (BOOL)_ignoresHitTest { return YES; }
 // - (BOOL)keepContextInBackground { return YES; }
 // + (BOOL)_isSystemWindow { return YES; }
-// - (BOOL)_ignoresHitTest { return NO; }
 // - (BOOL)_usesWindowServerHitTesting { return NO; }
 // - (BOOL)_isSecure { return YES; }
 // - (BOOL)_wantsSceneAssociation { return NO; }
@@ -370,6 +602,7 @@ static NSMutableString* formattedString()
     UIView *_contentView;
     UILabel *_speedLabel;
     NSTimer *_timer;
+    UITapGestureRecognizer *_tapGestureRecognizer;
 }
 
 - (instancetype)init
@@ -452,6 +685,17 @@ static NSMutableString* formattedString()
 
     [self updateSpeedLabel];
     _timer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_INTERVAL target:self selector:@selector(updateSpeedLabel) userInfo:nil repeats:YES];
+
+    _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognized:)];
+    _tapGestureRecognizer.numberOfTapsRequired = 1;
+    _tapGestureRecognizer.numberOfTouchesRequired = 1;
+    [_speedLabel addGestureRecognizer:_tapGestureRecognizer];
+    [_speedLabel setUserInteractionEnabled:YES];
+}
+
+- (void)tapGestureRecognized:(UITapGestureRecognizer *)sender
+{
+    os_log_info(OS_LOG_DEFAULT, "tapped");
 }
 
 @end

@@ -40,7 +40,10 @@ void GSEventRegisterEventCallBack(void (*)(GSEventRef));
 - (void)_accessibilityInit;
 - (void)_enqueueHIDEvent:(IOHIDEventRef)event;
 - (void)__completeAndRunAsPlugin;
-- (void)_run;
+@end
+
+@interface UIEventFetcher : NSObject
+- (void)_receiveHIDEvent:(IOHIDEventRef)arg1;
 @end
 
 
@@ -48,11 +51,9 @@ void GSEventRegisterEventCallBack(void (*)(GSEventRef));
 
 static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHIDEventRef event)
 {
+    os_log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", event);
     static UIApplication *app = [UIApplication sharedApplication];
     [app _enqueueHIDEvent:event];
-
-    /* Not Implemented: Event Fetcher & Dispatcher */
-    os_log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", event);
 }
 
 
