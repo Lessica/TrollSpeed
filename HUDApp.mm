@@ -99,16 +99,19 @@ int main(int argc, char *argv[])
             BKSDisplayServicesStart();
             UIApplicationInitialize();
 
-            [NSRunLoop currentRunLoop];
-            BKSHIDEventRegisterEventCallback(_HUDEventCallback);
-
-            GSEventInitialize(0);
-            GSEventPushRunLoopMode(kCFRunLoopDefaultMode);
-
             UIApplicationInstantiateSingleton(objc_getClass("HUDMainApplication"));
             static id<UIApplicationDelegate> appDelegate = [[objc_getClass("HUDMainApplicationDelegate") alloc] init];
             [UIApplication.sharedApplication setDelegate:appDelegate];
             [UIApplication.sharedApplication _accessibilityInit];
+
+            [NSRunLoop currentRunLoop];
+            BKSHIDEventRegisterEventCallback(_HUDEventCallback);
+
+            if (@available(iOS 15.0, *)) {
+                GSEventInitialize(0);
+                GSEventPushRunLoopMode(kCFRunLoopDefaultMode);
+            }
+            
             [UIApplication.sharedApplication __completeAndRunAsPlugin];
             
             CFRunLoopRun();

@@ -318,8 +318,6 @@ static void DumpThreads(void) {
             });
         }
 #endif
-
-// #if 0
         do {
             UIEventDispatcher *dispatcher = (UIEventDispatcher *)[self valueForKey:@"eventDispatcher"];
             if (!dispatcher)
@@ -400,7 +398,6 @@ static void DumpThreads(void) {
                 orig_UIEventDispatcher__installEventRunLoopSources_(dispatcher, @selector(_installEventRunLoopSources:), mainRunLoop);
             }
 
-// #if 0
             // Get image base with dyld, the image is /System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore.
             uint64_t imageUIKitCore = 0;
             {
@@ -432,87 +429,20 @@ static void DumpThreads(void) {
 
 #if DEBUG
                 /* Force HIDTransformer to print logs */
-                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogTouch" inDomain:@"com.apple.UIKit"];
-                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogGesture" inDomain:@"com.apple.UIKit"];
-                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogEventDispatch" inDomain:@"com.apple.UIKit"];
-                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogGestureEnvironment" inDomain:@"com.apple.UIKit"];
-                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogGestureExclusion" inDomain:@"com.apple.UIKit"];
-                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogSystemGestureUpdate" inDomain:@"com.apple.UIKit"];
-                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogGesturePerformance" inDomain:@"com.apple.UIKit"];
-                [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogHIDTransformer" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogTouch" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogGesture" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogEventDispatch" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogGestureEnvironment" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogGestureExclusion" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogSystemGestureUpdate" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogGesturePerformance" inDomain:@"com.apple.UIKit"];
+                [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogHIDTransformer" inDomain:@"com.apple.UIKit"];
                 [[NSUserDefaults standardUserDefaults] synchronize];
-#endif
-
-#if 0
-                do {
-                    IMP displayLinkDidFireMethodIMP = 
-                        class_getMethodImplementation([fetcher class], @selector(displayLinkDidFire:));
-                    if (!displayLinkDidFireMethodIMP)
-                    {
-                        os_log_error(OS_LOG_DEFAULT, "failed to get - [UIEventFetcher displayLinkDidFire:] method");
-                        break;
-                    }
-
-                    uint32_t *displayLinkDidFireMethodPtr = (uint32_t *)make_sym_readable((void *)displayLinkDidFireMethodIMP);
-                    os_log_debug(OS_LOG_DEFAULT, "- [UIEventFetcher displayLinkDidFire:]: %p", displayLinkDidFireMethodPtr);
-                    
-                    void (*orig_UIEventFetcher_signalEventsAvailableWithReason_filteredEventCount_)(id _Nonnull, SEL _Nonnull, int, int) = NULL;
-                    for (int i = 0; i < 0x200; i++)
-                    {
-                        // mov x0, x?
-                        // mov w2, #0x2
-                        if ((displayLinkDidFireMethodPtr[i] & 0xff000000) != 0xaa000000 || displayLinkDidFireMethodPtr[i + 1] != 0x52800042)
-                            continue;
-                        
-                        // bl -[UIEventFetcher signalEventsAvailableWithReason:filteredEventCount:]
-                        uint32_t blInst = displayLinkDidFireMethodPtr[i + 2];
-                        uint32_t *blInstPtr = &displayLinkDidFireMethodPtr[i + 2];
-                        if ((blInst & 0xfc000000) != 0x94000000)
-                        {
-                            os_log_error(OS_LOG_DEFAULT, "not a BL instruction: 0x%x, address %p", blInst, blInstPtr);
-                            continue;
-                        }
-
-                        os_log_debug(OS_LOG_DEFAULT, "found BL instruction: 0x%x, address %p", blInst, blInstPtr);
-
-                        int32_t blOffset = blInst & 0x03ffffff;
-                        if (blOffset & 0x02000000)
-                            blOffset |= 0xfc000000;
-                        blOffset <<= 2;
-                        os_log_debug(OS_LOG_DEFAULT, "BL offset: 0x%x", blOffset);
-
-                        uint64_t blAddr = (uint64_t)blInstPtr + blOffset;
-                        os_log_debug(OS_LOG_DEFAULT, "BL target address: %p", (void *)blAddr);
-
-                        // cbz x0, loc_?????????
-                        uint32_t cbzInst = *((uint32_t *)make_sym_readable((void *)blAddr));
-                        if ((cbzInst & 0xff000000) != 0xb4000000)
-                        {
-                            os_log_error(OS_LOG_DEFAULT, "not a CBZ instruction: 0x%x", cbzInst);
-                            continue;
-                        }
-
-                        os_log_debug(OS_LOG_DEFAULT, "found CBZ instruction: 0x%x, address %p", cbzInst, (void *)blAddr);
-
-                        orig_UIEventFetcher_signalEventsAvailableWithReason_filteredEventCount_ = (void (*)(id _Nonnull, SEL _Nonnull, int, int))make_sym_callable((void *)blAddr);
-                    }
-
-                    if (!orig_UIEventFetcher_signalEventsAvailableWithReason_filteredEventCount_)
-                    {
-                        os_log_error(OS_LOG_DEFAULT, "failed to find -[UIEventFetcher signalEventsAvailableWithReason:filteredEventCount:]");
-                        break;
-                    }
-
-                    os_log_debug(OS_LOG_DEFAULT, "- [UIEventFetcher signalEventsAvailableWithReason:filteredEventCount:]: %p", orig_UIEventFetcher_signalEventsAvailableWithReason_filteredEventCount_);
-                    orig_UIEventFetcher_signalEventsAvailableWithReason_filteredEventCount_(fetcher, @selector(signalEventsAvailableWithReason:filteredEventCount:), 1, 0);
-                } while (NO);
 #endif
             }
 
             [self setValue:fetcher forKey:@"eventFetcher"];
-// #endif
         } while (NO);
-// #endif
     }
     return self;
 }
@@ -597,6 +527,7 @@ static void DumpThreads(void) {
 #pragma mark - HUDRootViewController
 
 @implementation HUDRootViewController {
+    NSMutableArray <NSLayoutConstraint *> *_constraints;
     FBSOrientationObserver *_orientationObserver;
     UIVisualEffectView *_blurView;
     UIView *_contentView;
@@ -609,6 +540,7 @@ static void DumpThreads(void) {
 {
     self = [super init];
     if (self) {
+        _constraints = [NSMutableArray array];
         _orientationObserver = [[objc_getClass("FBSOrientationObserver") alloc] init];
         __weak HUDRootViewController *weakSelf = self;
         [_orientationObserver setHandler:^(FBSOrientationUpdate *orientationUpdate) {
@@ -651,37 +583,21 @@ static void DumpThreads(void) {
 
     _contentView = [[UIView alloc] init];
     _contentView.backgroundColor = [UIColor clearColor];
+    _contentView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:_contentView];
 
     _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
     _blurView.layer.cornerRadius = 4;
     _blurView.layer.masksToBounds = YES;
+    _blurView.translatesAutoresizingMaskIntoConstraints = NO;
     [_contentView addSubview:_blurView];
 
     _speedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 20)];
     _speedLabel.textAlignment = NSTextAlignmentCenter;
     _speedLabel.textColor = [UIColor whiteColor];
     _speedLabel.font = [UIFont systemFontOfSize:8];
+    _speedLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [_contentView addSubview:_speedLabel];
-    
-    /* Make speed label right below the top safe area guide */
-    UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;
-    [_contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:-16].active = YES;
-    [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active = YES;
-    [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
-    [_contentView.heightAnchor constraintEqualToConstant:20].active = YES;
-
-    [_speedLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_speedLabel.centerXAnchor constraintEqualToAnchor:_contentView.centerXAnchor].active = YES;
-    [_speedLabel.centerYAnchor constraintEqualToAnchor:_contentView.centerYAnchor].active = YES;
-
-    /* Make blur view around the speed label with a little padding */
-    [_blurView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_blurView.topAnchor constraintEqualToAnchor:_speedLabel.topAnchor constant:-2].active = YES;
-    [_blurView.leadingAnchor constraintEqualToAnchor:_speedLabel.leadingAnchor constant:-4].active = YES;
-    [_blurView.trailingAnchor constraintEqualToAnchor:_speedLabel.trailingAnchor constant:4].active = YES;
-    [_blurView.bottomAnchor constraintEqualToAnchor:_speedLabel.bottomAnchor constant:2].active = YES;
 
     [self updateSpeedLabel];
     _timer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_INTERVAL target:self selector:@selector(updateSpeedLabel) userInfo:nil repeats:YES];
@@ -691,6 +607,48 @@ static void DumpThreads(void) {
     _tapGestureRecognizer.numberOfTouchesRequired = 1;
     [_speedLabel addGestureRecognizer:_tapGestureRecognizer];
     [_speedLabel setUserInteractionEnabled:YES];
+
+    [self updateViewConstraints];
+}
+
+- (void)viewSafeAreaInsetsDidChange
+{
+    [super viewSafeAreaInsetsDidChange];
+    [self updateViewConstraints];
+}
+
+- (void)updateViewConstraints
+{
+    [NSLayoutConstraint deactivateConstraints:_constraints];
+    [_constraints removeAllObjects];
+
+    UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;
+    
+    [_constraints addObjectsFromArray:@[
+        [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        [_contentView.heightAnchor constraintEqualToConstant:20],
+    ]];
+    
+    if (layoutGuide.layoutFrame.origin.y > 1)
+        [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:-16]];
+    else
+        [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:20]];
+    
+    [_constraints addObjectsFromArray:@[
+        [_speedLabel.centerXAnchor constraintEqualToAnchor:_contentView.centerXAnchor],
+        [_speedLabel.centerYAnchor constraintEqualToAnchor:_contentView.centerYAnchor],
+    ]];
+
+    [_constraints addObjectsFromArray:@[
+        [_blurView.topAnchor constraintEqualToAnchor:_speedLabel.topAnchor constant:-2],
+        [_blurView.leadingAnchor constraintEqualToAnchor:_speedLabel.leadingAnchor constant:-4],
+        [_blurView.trailingAnchor constraintEqualToAnchor:_speedLabel.trailingAnchor constant:4],
+        [_blurView.bottomAnchor constraintEqualToAnchor:_speedLabel.bottomAnchor constant:2],
+    ]];
+
+    [NSLayoutConstraint activateConstraints:_constraints];
+    [super updateViewConstraints];
 }
 
 - (void)tapGestureRecognized:(UITapGestureRecognizer *)sender

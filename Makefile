@@ -1,5 +1,5 @@
 ARCHS := arm64 arm64e
-TARGET := iphone:clang:14.5:14.0
+TARGET := iphone:clang:14.5:13.0
 INSTALL_TARGET_PROCESSES := XXTAssistiveTouch
 
 include $(THEOS)/makefiles/common.mk

@@ -19,14 +19,14 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     {
 #if DEBUG
         /* Force HIDTransformer to print logs */
-        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogTouch" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogGesture" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogEventDispatch" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogGestureEnvironment" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogGestureExclusion" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogSystemGestureUpdate" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogGesturePerformance" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"LogHIDTransformer" inDomain:@"com.apple.UIKit"];
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogTouch" inDomain:@"com.apple.UIKit"];
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogGesture" inDomain:@"com.apple.UIKit"];
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogEventDispatch" inDomain:@"com.apple.UIKit"];
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogGestureEnvironment" inDomain:@"com.apple.UIKit"];
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogGestureExclusion" inDomain:@"com.apple.UIKit"];
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogSystemGestureUpdate" inDomain:@"com.apple.UIKit"];
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogGesturePerformance" inDomain:@"com.apple.UIKit"];
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogHIDTransformer" inDomain:@"com.apple.UIKit"];
         [[NSUserDefaults standardUserDefaults] synchronize];
 #endif
     }
