@@ -1,5 +1,5 @@
 ARCHS := arm64 arm64e
-TARGET := iphone:clang:14.5:13.0
+TARGET := iphone:clang:14.5:14.0
 INSTALL_TARGET_PROCESSES := XXTAssistiveTouch
 
 include $(THEOS)/makefiles/common.mk
@@ -7,7 +7,7 @@ include $(THEOS)/makefiles/common.mk
 APPLICATION_NAME = XXTAssistiveTouch
 
 XXTAssistiveTouch_USE_MODULES := 0
-XXTAssistiveTouch_FILES += $(wildcard *.mm)
+XXTAssistiveTouch_FILES += $(wildcard *.mm *m)
 XXTAssistiveTouch_CFLAGS += -fobjc-arc
 XXTAssistiveTouch_CFLAGS += -Iinclude
 XXTAssistiveTouch_CFLAGS += -include hud-prefix.pch

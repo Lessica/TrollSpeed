@@ -4,6 +4,7 @@
 #import <dlfcn.h>
 #import <spawn.h>
 #import <unistd.h>
+#import <sys/param.h>
 #import <sys/sysctl.h>
 #import <mach-o/dyld.h>
 #import <objc/runtime.h>
@@ -46,14 +47,77 @@ void GSEventRegisterEventCallBack(void (*)(GSEventRef));
 - (void)_receiveHIDEvent:(IOHIDEventRef)arg1;
 @end
 
+@interface AXEventPathInfoRepresentation : NSObject
+@property (assign, nonatomic) unsigned char pathIdentity;
+@end
+
+@interface AXEventHandInfoRepresentation : NSObject
+- (NSArray <AXEventPathInfoRepresentation *> *)paths;
+@end
+
+@interface AXEventRepresentation : NSObject
+@property (nonatomic, readonly) BOOL isTouchDown; 
+@property (nonatomic, readonly) BOOL isMove; 
+@property (nonatomic, readonly) BOOL isChordChange; 
+@property (nonatomic, readonly) BOOL isLift; 
+@property (nonatomic, readonly) BOOL isInRange; 
+@property (nonatomic, readonly) BOOL isInRangeLift; 
+@property (nonatomic, readonly) BOOL isCancel; 
++ (instancetype)representationWithHIDEvent:(IOHIDEventRef)event hidStreamIdentifier:(NSString *)identifier;
+- (AXEventHandInfoRepresentation *)handInfo;
+- (CGPoint)location;
+@end
+
 
 #pragma mark -
 
+#import "TSEventFetcher.h"
+
 static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHIDEventRef event)
 {
-    os_log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", event);
     static UIApplication *app = [UIApplication sharedApplication];
     [app _enqueueHIDEvent:event];
+
+    if (@available(iOS 15.2, *))
+    {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            [[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/AccessibilityUtilities.framework"] load];
+        });
+        
+        AXEventRepresentation *rep = [objc_getClass("AXEventRepresentation") representationWithHIDEvent:event hidStreamIdentifier:@"UIApplicationEvents"];
+        os_log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", rep.handInfo);
+
+        /* I don't like this. It's too hacky, but it works. */
+        {
+            static UIWindow *keyWindow = nil;
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    keyWindow = [[app windows] firstObject];
+                });
+            });
+
+            UIView *keyView = [keyWindow hitTest:[rep location] withEvent:nil];
+            
+            UITouchPhase phase = UITouchPhaseCancelled;
+            if ([rep isTouchDown])
+                phase = UITouchPhaseBegan;
+            else if ([rep isMove])
+                phase = UITouchPhaseMoved;
+            else if ([rep isCancel])
+                phase = UITouchPhaseCancelled;
+            else if ([rep isLift] || [rep isInRange] || [rep isInRangeLift])
+                phase = UITouchPhaseEnded;
+            
+            NSInteger pointerId = [[[[rep handInfo] paths] firstObject] pathIdentity];
+            if (pointerId > 0)
+                [TSEventFetcher receiveAXEventID:MIN(MAX(pointerId, 1), 98) atGlobalCoordinate:[rep location] withTouchPhase:phase inWindow:keyWindow onView:keyView];
+        }
+    }
+    else {
+        os_log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", event);
+    }
 }
 
 
