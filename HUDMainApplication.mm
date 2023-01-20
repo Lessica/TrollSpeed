@@ -121,6 +121,7 @@ void SetHUDEnabled(BOOL isEnabled)
 #define UPLOAD_PREFIX "↑"
 #define DOWNLOAD_PREFIX "↓"
 #define INLINE_SEPARATOR "\t"
+#define IDLE_INTERVAL 10.0
 
 typedef struct {
     uint32_t inputBytes;
@@ -605,10 +606,11 @@ static void DumpThreads(void) {
     _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognized:)];
     _tapGestureRecognizer.numberOfTapsRequired = 1;
     _tapGestureRecognizer.numberOfTouchesRequired = 1;
-    [_speedLabel addGestureRecognizer:_tapGestureRecognizer];
-    [_speedLabel setUserInteractionEnabled:YES];
+    [_contentView addGestureRecognizer:_tapGestureRecognizer];
+    [_contentView setUserInteractionEnabled:YES];
 
     [self updateViewConstraints];
+    [self performSelector:@selector(onBlur:) withObject:_contentView afterDelay:IDLE_INTERVAL];
 }
 
 - (void)viewSafeAreaInsetsDidChange
@@ -651,9 +653,32 @@ static void DumpThreads(void) {
     [super updateViewConstraints];
 }
 
+- (void)onFocus:(UIView *)view
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onBlur:) object:view];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onFocus:) object:view];
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        view.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        [self performSelector:@selector(onBlur:) withObject:view afterDelay:IDLE_INTERVAL];
+    }];
+}
+
+- (void)onBlur:(UIView *)view
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onBlur:) object:view];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onFocus:) object:view];
+
+    [UIView animateWithDuration:0.6 animations:^{
+        view.alpha = 0.667;
+    }];
+}
+
 - (void)tapGestureRecognized:(UITapGestureRecognizer *)sender
 {
-    os_log_info(OS_LOG_DEFAULT, "tapped");
+    os_log_info(OS_LOG_DEFAULT, "TAPPED");
+    [self onFocus:sender.view];
 }
 
 @end
