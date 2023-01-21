@@ -12,8 +12,9 @@ XXTAssistiveTouch_CFLAGS += -fobjc-arc
 XXTAssistiveTouch_CFLAGS += -Iinclude
 XXTAssistiveTouch_CFLAGS += -include hud-prefix.pch
 XXTAssistiveTouch_CCFLAGS += -std=c++14
-XXTAssistiveTouch_CCFLAGS += -DNOTIFY_LAUNCHED_HUD=\"ch.xxtou.notification.launched.hud\"
-XXTAssistiveTouch_CCFLAGS += -DNOTIFY_DISMISSAL_HUD=\"ch.xxtou.notification.dismissal.hud\"
+XXTAssistiveTouch_CCFLAGS += -DNOTIFY_LAUNCHED_HUD=\"ch.xxtou.notification.hud.launched\"
+XXTAssistiveTouch_CCFLAGS += -DNOTIFY_DISMISSAL_HUD=\"ch.xxtou.notification.hud.dismissal\"
+XXTAssistiveTouch_CCFLAGS += -DNOTIFY_RELOAD_HUD=\"ch.xxtou.notification.hud.reload\"
 XXTAssistiveTouch_FRAMEWORKS += CoreGraphics QuartzCore UIKit
 XXTAssistiveTouch_PRIVATE_FRAMEWORKS += AppSupport BackBoardServices GraphicsServices IOKit SpringBoardServices
 ifeq ($(TARGET_CODESIGN),ldid)

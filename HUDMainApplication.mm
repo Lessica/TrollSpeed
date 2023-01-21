@@ -87,6 +87,8 @@ void SetHUDEnabled(BOOL isEnabled)
     }
     else
     {
+        [NSThread sleepForTimeInterval:0.25];
+
         pid_t task_pid;
         const char *args[] = { executablePath, "-exit", NULL };
         posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
@@ -110,37 +112,62 @@ void SetHUDEnabled(BOOL isEnabled)
 #define DATAUNIT 0
 #define KILOBITS 1000
 #define MEGABITS 1000000
+#define GIGABITS 1000000000
 #define KILOBYTES (1 << 10)
 #define MEGABYTES (1 << 20)
+#define GIGABYTES (1 << 30)
 #define UPDATE_INTERVAL 1.0
 #define SHOW_ALWAYS 1
 #define SHOW_UPLOAD_SPEED 1
 #define SHOW_DOWNLOAD_SPEED 1
-#define SHOW_DOWNLOAD_SPEED_FIRST 1
-#define SHOW_SECOND_SPEED_IN_NEW_LINE 0
 #define UPLOAD_PREFIX "↑"
 #define DOWNLOAD_PREFIX "↓"
 #define INLINE_SEPARATOR "\t"
-#define IDLE_INTERVAL 10.0
+#define IDLE_INTERVAL 3.0
+#define FONT_SIZE 8.0
+
+static uint8_t SHOW_DOWNLOAD_SPEED_FIRST = 1;
+static uint8_t SHOW_SECOND_SPEED_IN_NEW_LINE = 0;
 
 typedef struct {
-    uint32_t inputBytes;
-    uint32_t outputBytes;
+    uint64_t inputBytes;
+    uint64_t outputBytes;
 } UpDownBytes;
 
-static NSString* formattedSpeed(long long bytes)
+static NSString* formattedSpeed(uint64_t bytes, BOOL isFocused)
 {
-    if (0 == DATAUNIT)
+    if (isFocused)
     {
-        if (bytes < KILOBYTES) return @"0 KB/s";
-        else if (bytes < MEGABYTES) return [NSString stringWithFormat:@"%.0f KB/s", (double)bytes / KILOBYTES];
-        else return [NSString stringWithFormat:@"%.2f MB/s", (double)bytes / MEGABYTES];
+        if (0 == DATAUNIT)
+        {
+            if (bytes < KILOBYTES) return @"0 KB";
+            else if (bytes < MEGABYTES) return [NSString stringWithFormat:@"%.0f KB", (double)bytes / KILOBYTES];
+            else if (bytes < GIGABYTES) return [NSString stringWithFormat:@"%.2f MB", (double)bytes / MEGABYTES];
+            else return [NSString stringWithFormat:@"%.2f GB", (double)bytes / GIGABYTES];
+        }
+        else
+        {
+            if (bytes < KILOBITS) return @"0 Kb";
+            else if (bytes < MEGABITS) return [NSString stringWithFormat:@"%.0f Kb", (double)bytes / KILOBITS];
+            else if (bytes < GIGABITS) return [NSString stringWithFormat:@"%.2f Mb", (double)bytes / MEGABITS];
+            else return [NSString stringWithFormat:@"%.2f Gb", (double)bytes / GIGABITS];
+        }
     }
-    else
-    {
-        if (bytes < KILOBITS) return @"0 Kb/s";
-        else if (bytes < MEGABITS) return [NSString stringWithFormat:@"%.0f Kb/s", (double)bytes / KILOBITS];
-        else return [NSString stringWithFormat:@"%.2f Mb/s", (double)bytes / MEGABITS];
+    else {
+        if (0 == DATAUNIT)
+        {
+            if (bytes < KILOBYTES) return @"0 KB/s";
+            else if (bytes < MEGABYTES) return [NSString stringWithFormat:@"%.0f KB/s", (double)bytes / KILOBYTES];
+            else if (bytes < GIGABYTES) return [NSString stringWithFormat:@"%.2f MB/s", (double)bytes / MEGABYTES];
+            else return [NSString stringWithFormat:@"%.2f GB/s", (double)bytes / GIGABYTES];
+        }
+        else
+        {
+            if (bytes < KILOBITS) return @"0 Kb/s";
+            else if (bytes < MEGABITS) return [NSString stringWithFormat:@"%.0f Kb/s", (double)bytes / KILOBITS];
+            else if (bytes < GIGABITS) return [NSString stringWithFormat:@"%.2f Mb/s", (double)bytes / MEGABITS];
+            else return [NSString stringWithFormat:@"%.2f Gb/s", (double)bytes / GIGABITS];
+        }
     }
 }
 
@@ -170,20 +197,45 @@ static UpDownBytes getUpDownBytes()
 }
 
 static BOOL shouldUpdateSpeedLabel;
-static long long oldUpSpeed = 0, oldDownSpeed = 0;
+static uint64_t prevOutputBytes = 0, prevInputBytes = 0;
 
-static NSMutableString* formattedString()
+static NSAttributedString* formattedAttributedString(BOOL isFocused)
 {
     @autoreleasepool
     {
-        NSMutableString* mutableString = [[NSMutableString alloc] init];
+        static NSAttributedString *attributedUploadPrefix = nil;
+        static NSAttributedString *attributedDownloadPrefix = nil;
+        static NSAttributedString *attributedInlineSeparator = nil;
+        static NSAttributedString *attributedLineSeparator = nil;
+
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            attributedUploadPrefix = [[NSAttributedString alloc] initWithString:[[NSString stringWithUTF8String:UPLOAD_PREFIX] stringByAppendingString:@" "] attributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:FONT_SIZE]}];
+            attributedDownloadPrefix = [[NSAttributedString alloc] initWithString:[[NSString stringWithUTF8String:DOWNLOAD_PREFIX] stringByAppendingString:@" "] attributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:FONT_SIZE]}];
+            attributedInlineSeparator = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:INLINE_SEPARATOR] attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:FONT_SIZE]}];
+            attributedLineSeparator = [[NSAttributedString alloc] initWithString:@"\n" attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:FONT_SIZE]}];
+        });
+
+        NSMutableAttributedString* mutableString = [[NSMutableAttributedString alloc] init];
         
         UpDownBytes upDownBytes = getUpDownBytes();
-        long long upDiff = (upDownBytes.outputBytes - oldUpSpeed) / UPDATE_INTERVAL;
-        long long downDiff = (upDownBytes.inputBytes - oldDownSpeed) / UPDATE_INTERVAL;
+
+        uint64_t upDiff;
+        uint64_t downDiff;
+
+        if (isFocused)
+        {
+            upDiff = upDownBytes.outputBytes;
+            downDiff = upDownBytes.inputBytes;
+        }
+        else
+        {
+            upDiff = (upDownBytes.outputBytes - prevOutputBytes) / UPDATE_INTERVAL;
+            downDiff = (upDownBytes.inputBytes - prevInputBytes) / UPDATE_INTERVAL;
+        }
         
-        oldUpSpeed = upDownBytes.outputBytes;
-        oldDownSpeed = upDownBytes.inputBytes;
+        prevOutputBytes = upDownBytes.outputBytes;
+        prevInputBytes = upDownBytes.inputBytes;
 
         if (!SHOW_ALWAYS && ((upDiff < 2 * KILOBYTES && downDiff < 2 * KILOBYTES) || (upDiff > 500 * MEGABYTES && downDiff > 500 * MEGABYTES)))
         {
@@ -198,32 +250,43 @@ static NSMutableString* formattedString()
             downDiff *= 8;
         }
 
-        if(SHOW_DOWNLOAD_SPEED_FIRST)
+        if (SHOW_DOWNLOAD_SPEED_FIRST)
         {
-            if (SHOW_DOWNLOAD_SPEED) [mutableString appendString: [NSString stringWithFormat: @"%@ %@", @DOWNLOAD_PREFIX, formattedSpeed(downDiff)]];
+            if (SHOW_DOWNLOAD_SPEED)
+            {
+                [mutableString appendAttributedString:attributedDownloadPrefix];
+                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(downDiff, isFocused) attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:FONT_SIZE]}]];
+            }
+
             if (SHOW_UPLOAD_SPEED)
             {
                 if ([mutableString length] > 0)
                 {
-                    if (SHOW_SECOND_SPEED_IN_NEW_LINE) [mutableString appendString: @"\n"];
-                    else [mutableString appendString:@INLINE_SEPARATOR];
+                    if (SHOW_SECOND_SPEED_IN_NEW_LINE) [mutableString appendAttributedString:attributedLineSeparator];
+                    else [mutableString appendAttributedString:attributedInlineSeparator];
                 }
 
-                [mutableString appendString:[NSString stringWithFormat: @"%@ %@", @UPLOAD_PREFIX, formattedSpeed(upDiff)]];
+                [mutableString appendAttributedString:attributedUploadPrefix];
+                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(upDiff, isFocused) attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:FONT_SIZE]}]];
             }
         }
         else
         {
-            if (SHOW_UPLOAD_SPEED) [mutableString appendString: [NSString stringWithFormat: @"%@ %@", @UPLOAD_PREFIX, formattedSpeed(upDiff)]];
+            if (SHOW_UPLOAD_SPEED)
+            {
+                [mutableString appendAttributedString:attributedUploadPrefix];
+                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(upDiff, isFocused) attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:FONT_SIZE]}]];
+            }
             if (SHOW_DOWNLOAD_SPEED)
             {
                 if ([mutableString length] > 0)
                 {
-                    if (SHOW_SECOND_SPEED_IN_NEW_LINE) [mutableString appendString: @"\n"];
-                    else [mutableString appendString:@INLINE_SEPARATOR];
+                    if (SHOW_SECOND_SPEED_IN_NEW_LINE) [mutableString appendAttributedString:attributedLineSeparator];
+                    else [mutableString appendAttributedString:attributedInlineSeparator];
                 }
 
-                [mutableString appendString:[NSString stringWithFormat: @"%@ %@", @DOWNLOAD_PREFIX, formattedSpeed(downDiff)]];
+                [mutableString appendAttributedString:attributedDownloadPrefix];
+                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(downDiff, isFocused) attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:FONT_SIZE]}]];
             }
         }
         
@@ -282,18 +345,23 @@ static NSMutableString* formattedString()
 
 #import "pac_helper.h"
 
-static void DumpThreads(void) {
+static void DumpThreads(void)
+{
     char name[256];
     mach_msg_type_number_t count;
     thread_act_array_t list;
     task_threads(mach_task_self(), &list, &count);
-    for (int i = 0; i < count; ++i) {
+    for (int i = 0; i < count; ++i)
+    {
         pthread_t pt = pthread_from_mach_thread_np(list[i]);
-        if (pt) {
+        if (pt)
+        {
             name[0] = '\0';
             int rc = pthread_getname_np(pt, name, sizeof name);
             os_log_debug(OS_LOG_DEFAULT, "mach thread %u: getname returned %d: %{public}s", list[i], rc, name);
-        } else {
+        }
+        else
+        {
             os_log_debug(OS_LOG_DEFAULT, "mach thread %u: no pthread found", list[i]);
         }
     }
@@ -306,7 +374,8 @@ static void DumpThreads(void) {
 
 - (instancetype)init
 {
-    if (self = [super init]) {
+    if (self = [super init])
+    {
         os_log_debug(OS_LOG_DEFAULT, "- [HUDMainApplication init]");
         notify_post(NOTIFY_LAUNCHED_HUD);
         
@@ -315,7 +384,14 @@ static void DumpThreads(void) {
             int token;
             notify_register_dispatch(NOTIFY_DISMISSAL_HUD, &token, dispatch_get_main_queue(), ^(int token) {
                 notify_cancel(token);
-                [self terminateWithSuccess];
+                
+                // Fade out the HUD window
+                [UIView animateWithDuration:0.25f animations:^{
+                    [[self.windows firstObject] setAlpha:0.0];
+                } completion:^(BOOL finished) {
+                    // Terminate the HUD app
+                    [self terminateWithSuccess];
+                }];
             });
         }
 #endif
@@ -470,9 +546,8 @@ static void DumpThreads(void) {
 
 - (instancetype)init
 {
-    if (self = [super init]) {
+    if (self = [super init])
         os_log_debug(OS_LOG_DEFAULT, "- [HUDMainApplicationDelegate init]");
-    }
     return self;
 }
 
@@ -506,9 +581,8 @@ static void DumpThreads(void) {
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-    if (self = [super initWithFrame:frame]) {
+    if (self = [super initWithFrame:frame])
         self.backgroundColor = [UIColor clearColor];
-    }
     return self;
 }
 
@@ -535,6 +609,35 @@ static void DumpThreads(void) {
     UILabel *_speedLabel;
     NSTimer *_timer;
     UITapGestureRecognizer *_tapGestureRecognizer;
+    BOOL _isFocused;
+}
+
+#define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
+
+- (void)registerNotifications
+{
+    int token;
+    notify_register_dispatch(NOTIFY_RELOAD_HUD, &token, dispatch_get_main_queue(), ^(int token) {
+        [self reloadUserDefaults];
+    });
+}
+
+- (void)reloadUserDefaults
+{
+    NSInteger mode = [HUDRootViewController selectedMode];
+
+    _speedLabel.textAlignment = (mode == 1 ? NSTextAlignmentCenter : NSTextAlignmentLeft);
+    
+    SHOW_DOWNLOAD_SPEED_FIRST = (mode == 1);
+    SHOW_SECOND_SPEED_IN_NEW_LINE = (mode == 0 || mode == 2);
+
+    [self updateViewConstraints];
+    [self updateSpeedLabel];
+}
+
++ (NSInteger)selectedMode
+{
+    return [[[NSDictionary dictionaryWithContentsOfFile:USER_DEFAULTS_PATH] objectForKey:@"selectedMode"] integerValue];
 }
 
 - (instancetype)init
@@ -550,27 +653,32 @@ static void DumpThreads(void) {
                 [strongSelf updateOrientation:(UIInterfaceOrientation)orientationUpdate.orientation animateWithDuration:orientationUpdate.duration];
             });
         }];
+        [self registerNotifications];
     }
     return self;
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
     [_orientationObserver invalidate];
 }
 
 - (void)updateSpeedLabel
 {
-    [_speedLabel setText:formattedString()];
+    [_speedLabel setAttributedText:formattedAttributedString(_isFocused)];
     [_speedLabel sizeToFit];
 }
 
 - (void)updateOrientation:(UIInterfaceOrientation)orientation animateWithDuration:(NSTimeInterval)duration
 {
-    if (orientation == UIInterfaceOrientationPortrait) {
+    if (orientation == UIInterfaceOrientationPortrait)
+    {
         [UIView animateWithDuration:duration animations:^{
             self->_contentView.alpha = 1.0;
         }];
-    } else {
+    }
+    else
+    {
         [UIView animateWithDuration:duration animations:^{
             self->_contentView.alpha = 0.0;
         }];
@@ -594,14 +702,12 @@ static void DumpThreads(void) {
     [_contentView addSubview:_blurView];
 
     _speedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 20)];
+    _speedLabel.numberOfLines = 0;
     _speedLabel.textAlignment = NSTextAlignmentCenter;
     _speedLabel.textColor = [UIColor whiteColor];
-    _speedLabel.font = [UIFont systemFontOfSize:8];
+    _speedLabel.font = [UIFont systemFontOfSize:FONT_SIZE];
     _speedLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    [_contentView addSubview:_speedLabel];
-
-    [self updateSpeedLabel];
-    _timer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_INTERVAL target:self selector:@selector(updateSpeedLabel) userInfo:nil repeats:YES];
+    [_blurView.contentView addSubview:_speedLabel];
 
     _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognized:)];
     _tapGestureRecognizer.numberOfTapsRequired = 1;
@@ -609,8 +715,17 @@ static void DumpThreads(void) {
     [_contentView addGestureRecognizer:_tapGestureRecognizer];
     [_contentView setUserInteractionEnabled:YES];
 
-    [self updateViewConstraints];
+    _isFocused = YES;
+    [self reloadUserDefaults];
+
+    [self resetLoopTimer];
     [self performSelector:@selector(onBlur:) withObject:_contentView afterDelay:IDLE_INTERVAL];
+}
+
+- (void)resetLoopTimer
+{
+    [_timer invalidate];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_INTERVAL target:self selector:@selector(updateSpeedLabel) userInfo:nil repeats:YES];
 }
 
 - (void)viewSafeAreaInsetsDidChange
@@ -629,18 +744,25 @@ static void DumpThreads(void) {
     [_constraints addObjectsFromArray:@[
         [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
         [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-        [_contentView.heightAnchor constraintEqualToConstant:20],
     ]];
     
     if (layoutGuide.layoutFrame.origin.y > 1)
-        [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:-16]];
+        [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:-10]];
     else
         [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:20]];
     
     [_constraints addObjectsFromArray:@[
-        [_speedLabel.centerXAnchor constraintEqualToAnchor:_contentView.centerXAnchor],
-        [_speedLabel.centerYAnchor constraintEqualToAnchor:_contentView.centerYAnchor],
+        [_speedLabel.topAnchor constraintEqualToAnchor:_contentView.topAnchor],
+        [_speedLabel.bottomAnchor constraintEqualToAnchor:_contentView.bottomAnchor],
     ]];
+    
+    NSInteger mode = [HUDRootViewController selectedMode];
+    if (mode == 1)
+        [_constraints addObject:[_speedLabel.centerXAnchor constraintEqualToAnchor:_contentView.centerXAnchor]];
+    else if (mode == 0)
+        [_constraints addObject:[_speedLabel.leadingAnchor constraintEqualToAnchor:_contentView.leadingAnchor constant:8]];
+    else
+        [_constraints addObject:[_speedLabel.trailingAnchor constraintEqualToAnchor:_contentView.trailingAnchor constant:-8]];
 
     [_constraints addObjectsFromArray:@[
         [_blurView.topAnchor constraintEqualToAnchor:_speedLabel.topAnchor constant:-2],
@@ -658,6 +780,10 @@ static void DumpThreads(void) {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onBlur:) object:view];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onFocus:) object:view];
     
+    _isFocused = YES;
+    [self updateSpeedLabel];
+    [self resetLoopTimer];
+
     [UIView animateWithDuration:0.2 animations:^{
         view.alpha = 1.0;
     } completion:^(BOOL finished) {
@@ -669,6 +795,10 @@ static void DumpThreads(void) {
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onBlur:) object:view];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onFocus:) object:view];
+    
+    _isFocused = NO;
+    [self updateSpeedLabel];
+    [self resetLoopTimer];
 
     [UIView animateWithDuration:0.6 animations:^{
         view.alpha = 0.667;
