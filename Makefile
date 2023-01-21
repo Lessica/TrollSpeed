@@ -1,5 +1,5 @@
 ARCHS := arm64 arm64e
-TARGET := iphone:clang:14.5:14.0
+TARGET := iphone:clang:15.4.1:14.0
 INSTALL_TARGET_PROCESSES := XXTAssistiveTouch
 
 include $(THEOS)/makefiles/common.mk
@@ -7,7 +7,7 @@ include $(THEOS)/makefiles/common.mk
 APPLICATION_NAME = XXTAssistiveTouch
 
 XXTAssistiveTouch_USE_MODULES := 0
-XXTAssistiveTouch_FILES += $(wildcard *.mm *m)
+XXTAssistiveTouch_FILES += $(wildcard *.mm *.m *.swift)
 XXTAssistiveTouch_CFLAGS += -fobjc-arc
 XXTAssistiveTouch_CFLAGS += -Iinclude
 XXTAssistiveTouch_CFLAGS += -include hud-prefix.pch
@@ -16,7 +16,7 @@ XXTAssistiveTouch_CCFLAGS += -DNOTIFY_LAUNCHED_HUD=\"ch.xxtou.notification.hud.l
 XXTAssistiveTouch_CCFLAGS += -DNOTIFY_DISMISSAL_HUD=\"ch.xxtou.notification.hud.dismissal\"
 XXTAssistiveTouch_CCFLAGS += -DNOTIFY_RELOAD_HUD=\"ch.xxtou.notification.hud.reload\"
 XXTAssistiveTouch_FRAMEWORKS += CoreGraphics QuartzCore UIKit
-XXTAssistiveTouch_PRIVATE_FRAMEWORKS += AppSupport BackBoardServices GraphicsServices IOKit SpringBoardServices
+XXTAssistiveTouch_PRIVATE_FRAMEWORKS += BackBoardServices GraphicsServices IOKit SpringBoardServices
 ifeq ($(TARGET_CODESIGN),ldid)
 XXTAssistiveTouch_CODESIGN_FLAGS += -Sent.plist
 else

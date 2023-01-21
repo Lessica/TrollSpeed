@@ -93,9 +93,14 @@ static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef
             static UIWindow *keyWindow = nil;
             static dispatch_once_t onceToken;
             dispatch_once(&onceToken, ^{
-                dispatch_sync(dispatch_get_main_queue(), ^{
+                if ([NSThread isMainThread])
                     keyWindow = [[app windows] firstObject];
-                });
+                else
+                {
+                    dispatch_sync(dispatch_get_main_queue(), ^{
+                        keyWindow = [[app windows] firstObject];
+                    });
+                }
             });
 
             UIView *keyView = [keyWindow hitTest:[rep location] withEvent:nil];

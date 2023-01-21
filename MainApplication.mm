@@ -1,5 +1,6 @@
 #import <notify.h>
 #import <UIKit/UIKit.h>
+#import "XXTAssistiveTouch-Swift.h"
 
 OBJC_EXTERN BOOL IsHUDEnabled(void);
 OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
@@ -38,11 +39,13 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
 #pragma mark - RootViewController
 
-@interface RootViewController: UIViewController
+@interface RootViewController: UIViewController <TSSettingsControllerDelegate>
 @end
 
 @implementation RootViewController {
+    NSMutableDictionary *_userDefaults;
     UIButton *_mainButton;
+    UIButton *_settingsButton;
     UIButton *_topLeftButton;
     UIButton *_topRightButton;
     UIButton *_topCenterButton;
@@ -66,8 +69,8 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     _topLeftButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_topLeftButton setTintColor:[UIColor whiteColor]];
     [_topLeftButton addTarget:self action:@selector(tapTopLeftButton:) forControlEvents:UIControlEventTouchUpInside];
-    [_topLeftButton setImage:[UIImage systemImageNamed:@"1.circle"] forState:UIControlStateNormal];
-    [_topLeftButton setImage:[UIImage systemImageNamed:@"1.circle.fill"] forState:UIControlStateSelected];
+    [_topLeftButton setImage:[UIImage systemImageNamed:@"arrow.up.left.square.fill"] forState:UIControlStateNormal];
+    [_topLeftButton setAdjustsImageWhenHighlighted:NO];
     [self.view addSubview:_topLeftButton];
 
     UILayoutGuide *safeArea = self.view.safeAreaLayoutGuide;
@@ -82,8 +85,8 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     _topRightButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_topRightButton setTintColor:[UIColor whiteColor]];
     [_topRightButton addTarget:self action:@selector(tapTopRightButton:) forControlEvents:UIControlEventTouchUpInside];
-    [_topRightButton setImage:[UIImage systemImageNamed:@"3.circle"] forState:UIControlStateNormal];
-    [_topRightButton setImage:[UIImage systemImageNamed:@"3.circle.fill"] forState:UIControlStateSelected];
+    [_topRightButton setImage:[UIImage systemImageNamed:@"arrow.up.right.square.fill"] forState:UIControlStateNormal];
+    [_topRightButton setAdjustsImageWhenHighlighted:NO];
     [self.view addSubview:_topRightButton];
 
     [_topRightButton setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -97,8 +100,8 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     _topCenterButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_topCenterButton setTintColor:[UIColor whiteColor]];
     [_topCenterButton addTarget:self action:@selector(tapTopCenterButton:) forControlEvents:UIControlEventTouchUpInside];
-    [_topCenterButton setImage:[UIImage systemImageNamed:@"2.circle"] forState:UIControlStateNormal];
-    [_topCenterButton setImage:[UIImage systemImageNamed:@"2.circle.fill"] forState:UIControlStateSelected];
+    [_topCenterButton setImage:[UIImage systemImageNamed:@"arrow.up.square.fill"] forState:UIControlStateNormal];
+    [_topCenterButton setAdjustsImageWhenHighlighted:NO];
     [self.view addSubview:_topCenterButton];
 
     [_topCenterButton setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -124,6 +127,20 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
         [_mainButton.widthAnchor constraintEqualToAnchor:self.view.widthAnchor],
     ]];
 
+    _settingsButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_settingsButton setTintColor:[UIColor whiteColor]];
+    [_settingsButton addTarget:self action:@selector(tapSettingsButton:) forControlEvents:UIControlEventTouchUpInside];
+    [_settingsButton setImage:[UIImage systemImageNamed:@"gear"] forState:UIControlStateNormal];
+    [self.view addSubview:_settingsButton];
+
+    [_settingsButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [NSLayoutConstraint activateConstraints:@[
+        [_settingsButton.bottomAnchor constraintEqualToAnchor:safeArea.bottomAnchor constant:-20.0f],
+        [_settingsButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+        [_settingsButton.widthAnchor constraintEqualToConstant:40.0f],
+        [_settingsButton.heightAnchor constraintEqualToConstant:40.0f],
+    ]];
+
     _authorLabel = [[UILabel alloc] init];
     [_authorLabel setNumberOfLines:0];
     [_authorLabel setTextAlignment:NSTextAlignmentCenter];
@@ -135,7 +152,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [_authorLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
         [_authorLabel.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
-        [_authorLabel.bottomAnchor constraintEqualToAnchor:safeArea.bottomAnchor constant:-20],
+        [_authorLabel.bottomAnchor constraintEqualToAnchor:_settingsButton.topAnchor constant:-20],
     ]];
 
     [self reloadMainButtonState];
@@ -143,27 +160,86 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
 #define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
 
-+ (void)load {
-    [self registerPreferences];
+- (void)loadUserDefaults:(BOOL)forceReload
+{
+    if (forceReload || !_userDefaults)
+        _userDefaults = [[NSDictionary dictionaryWithContentsOfFile:USER_DEFAULTS_PATH] mutableCopy] ?: [NSMutableDictionary dictionary];
 }
 
-+ (void)registerPreferences {
-    NSDictionary *defaults = @{ @"mode": @(1) };
-    if (![[NSFileManager defaultManager] fileExistsAtPath:USER_DEFAULTS_PATH])
-        [defaults writeToFile:USER_DEFAULTS_PATH atomically:YES];
-}
-
-+ (NSInteger)selectedMode {
-    return [[[NSDictionary dictionaryWithContentsOfFile:USER_DEFAULTS_PATH] objectForKey:@"selectedMode"] integerValue];
-}
-
-+ (void)setSelectedMode:(NSInteger)selectedMode {
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithContentsOfFile:USER_DEFAULTS_PATH];
-    if (!dict) dict = [NSMutableDictionary dictionary];
-    [dict setObject:@(selectedMode) forKey:@"selectedMode"];
-    [dict writeToFile:USER_DEFAULTS_PATH atomically:YES];
-
+- (void)saveUserDefaults
+{
+    [_userDefaults writeToFile:USER_DEFAULTS_PATH atomically:YES];
     notify_post(NOTIFY_RELOAD_HUD);
+}
+
+- (NSInteger)selectedMode
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"selectedMode"];
+    return mode ? [mode integerValue] : 1;
+}
+
+- (void)setSelectedMode:(NSInteger)selectedMode
+{
+    [self loadUserDefaults:NO];
+    [_userDefaults setObject:@(selectedMode) forKey:@"selectedMode"];
+    [self saveUserDefaults];
+}
+
+- (BOOL)passthroughMode
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"passthroughMode"];
+    return mode ? [mode boolValue] : NO;
+}
+
+- (void)setPassthroughMode:(BOOL)passthroughMode
+{
+    [self loadUserDefaults:NO];
+    [_userDefaults setObject:@(passthroughMode) forKey:@"passthroughMode"];
+    [self saveUserDefaults];
+}
+
+- (BOOL)singleLineMode
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"singleLineMode"];
+    return mode ? [mode boolValue] : NO;
+}
+
+- (void)setSingleLineMode:(BOOL)singleLineMode
+{
+    [self loadUserDefaults:NO];
+    [_userDefaults setObject:@(singleLineMode) forKey:@"singleLineMode"];
+    [self saveUserDefaults];
+}
+
+- (BOOL)usesBitrate
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"usesBitrate"];
+    return mode ? [mode boolValue] : NO;
+}
+
+- (void)setUsesBitrate:(BOOL)usesBitrate
+{
+    [self loadUserDefaults:NO];
+    [_userDefaults setObject:@(usesBitrate) forKey:@"usesBitrate"];
+    [self saveUserDefaults];
+}
+
+- (BOOL)usesArrowPrefixes
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"usesArrowPrefixes"];
+    return mode ? [mode boolValue] : NO;
+}
+
+- (void)setUsesArrowPrefixes:(BOOL)usesArrowPrefixes
+{
+    [self loadUserDefaults:NO];
+    [_userDefaults setObject:@(usesArrowPrefixes) forKey:@"usesArrowPrefixes"];
+    [self saveUserDefaults];
 }
 
 - (void)reloadMainButtonState
@@ -175,11 +251,25 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     } completion:nil];
 }
 
+- (BOOL)settingHighlightedWithKey:(NSString * _Nonnull)key
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:key];
+    return mode ? [mode boolValue] : NO;
+}
+
+- (void)settingDidSelectWithKey:(NSString * _Nonnull)key
+{
+    BOOL highlighted = [self settingHighlightedWithKey:key];
+    [_userDefaults setObject:@(!highlighted) forKey:key];
+    [self saveUserDefaults];
+}
+
 - (void)reloadModeButtonState
 {
-    [_topLeftButton setSelected:([RootViewController selectedMode] == 0)];
-    [_topCenterButton setSelected:([RootViewController selectedMode] == 1)];
-    [_topRightButton setSelected:([RootViewController selectedMode] == 2)];
+    [_topLeftButton setSelected:([self selectedMode] == 0)];
+    [_topCenterButton setSelected:([self selectedMode] == 1)];
+    [_topRightButton setSelected:([self selectedMode] == 2)];
 }
 
 - (void)tapView:(UITapGestureRecognizer *)sender
@@ -190,21 +280,21 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 - (void)tapTopLeftButton:(UIButton *)sender
 {
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopLeftButton:%{public}@]", sender);
-    [RootViewController setSelectedMode:0];
+    [self setSelectedMode:0];
     [self reloadModeButtonState];
 }
 
 - (void)tapTopRightButton:(UIButton *)sender
 {
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopRightButton:%{public}@]", sender);
-    [RootViewController setSelectedMode:2];
+    [self setSelectedMode:2];
     [self reloadModeButtonState];
 }
 
 - (void)tapTopCenterButton:(UIButton *)sender
 {
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopCenterButton:%{public}@]", sender);
-    [RootViewController setSelectedMode:1];
+    [self setSelectedMode:1];
     [self reloadModeButtonState];
 }
 
@@ -245,6 +335,21 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
             [sender setEnabled:YES];
         });
     }
+}
+
+- (void)tapSettingsButton:(UIButton *)sender
+{
+    if (![_mainButton isEnabled]) return;
+    os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapSettingsButton:%{public}@]", sender);
+
+    TSSettingsController *settingsViewController = [[TSSettingsController alloc] init];
+    settingsViewController.delegate = self;
+    settingsViewController.alreadyLaunched = IsHUDEnabled();
+    SPLarkTransitioningDelegate *transitioningDelegate = [[SPLarkTransitioningDelegate alloc] init];
+    settingsViewController.transitioningDelegate = transitioningDelegate;
+    settingsViewController.modalPresentationStyle = UIModalPresentationCustom;
+    settingsViewController.modalPresentationCapturesStatusBarAppearance = YES;
+    [self presentViewController:settingsViewController animated:YES completion:nil];
 }
 
 @end

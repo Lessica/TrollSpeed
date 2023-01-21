@@ -8,6 +8,7 @@
     #endif
     
     #import <Foundation/Foundation.h>
+    #import <Foundation/NSUserDefaults+Private.h>
     #import <UIKit/UIKit.h>
     #import <os/log.h>
 #endif
