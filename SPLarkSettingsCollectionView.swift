@@ -26,7 +26,7 @@ open class SPLarkSettingsCollectionView: UICollectionView {
     
     let layout = UICollectionViewFlowLayout()
     let cellIdentificator: String = "SPLarkSettingsCollectionViewCell"
-    var cellSize: CGSize = CGSize.init(width: 160, height: 60)
+    var cellSize: CGSize = CGSize.init(width: 156, height: 60)
     var sideInset: CGFloat = 27
     
     required public init?(coder aDecoder: NSCoder) {

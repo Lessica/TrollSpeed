@@ -736,7 +736,7 @@ static void DumpThreads(void)
     if (orientation == UIInterfaceOrientationPortrait)
     {
         [UIView animateWithDuration:duration animations:^{
-            self->_contentView.alpha = 1.0;
+            self->_contentView.alpha = self->_isFocused ? 1.0 : 0.667;
         }];
     }
     else
