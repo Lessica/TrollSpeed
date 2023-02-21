@@ -12,15 +12,17 @@ import UIKit
     internal var restartRequired = false
 
     open override func settingsCount() -> Int {
-        return 4;
+        return 5;
     }
     
     open override func settingTitle(index: Int, highlighted: Bool) -> String {
         if index == 0 {
             return "Pass-through"
         } else if index == 1 {
-            return "Incoming Only"
+            return "Mode"
         } else if index == 2 {
+            return "Incoming Only"
+        } else if index == 3 {
             return "Unit"
         } else {
             return "Prefixes"
@@ -43,11 +45,17 @@ import UIKit
             }
         } else if index == 1 {
             if (highlighted) {
+                return "Refresh Rate"
+            } else {
+                return "Network Speed"
+            }
+        } else if index == 2 {
+            if (highlighted) {
                 return "ON";
             } else {
                 return "OFF";
             }
-        } else if index == 2 {
+        } else if index == 3 {
             if (highlighted) {
                 return "b/s";
             } else {
@@ -66,8 +74,10 @@ import UIKit
         if index == 0 {
             return "passthroughMode"
         } else if index == 1 {
-            return "singleLineMode"
+            return "displayMode"
         } else if index == 2 {
+            return "singleLineMode"
+        } else if index == 3 {
             return "usesBitrate"
         } else {
             return "usesArrowPrefixes"

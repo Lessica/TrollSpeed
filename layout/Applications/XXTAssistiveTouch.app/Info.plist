@@ -11,7 +11,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>TrollSpeed</string>
 	<key>CFBundleVersion</key>
-	<string>1.6</string>
+	<string>1.7</string>
 	<key>CFBundleExecutable</key>
 	<string>XXTAssistiveTouch</string>
 	<key>NSPrincipalClass</key>
@@ -39,6 +39,6 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2009 Apple Inc. All Rights Reserved.</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.6</string>
+	<string>1.7</string>
 </dict>
 </plist>

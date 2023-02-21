@@ -7,7 +7,8 @@ include $(THEOS)/makefiles/common.mk
 APPLICATION_NAME = XXTAssistiveTouch
 
 XXTAssistiveTouch_USE_MODULES := 0
-XXTAssistiveTouch_FILES += $(wildcard *.mm *.m *.swift)
+XXTAssistiveTouch_FILES += $(wildcard *.mm *.m)
+XXTAssistiveTouch_FILES += $(wildcard *.swift)
 XXTAssistiveTouch_CFLAGS += -fobjc-arc
 XXTAssistiveTouch_CFLAGS += -Iinclude
 XXTAssistiveTouch_CFLAGS += -include hud-prefix.pch
