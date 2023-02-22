@@ -200,20 +200,6 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [self saveUserDefaults];
 }
 
-- (BOOL)displayMode
-{
-    [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"displayMode"];
-    return mode ? [mode boolValue] : NO;
-}
-
-- (void)setDisplayMode:(BOOL)displayMode
-{
-    [self loadUserDefaults:NO];
-    [_userDefaults setObject:@(displayMode) forKey:@"displayMode"];
-    [self saveUserDefaults];
-}
-
 - (BOOL)singleLineMode
 {
     [self loadUserDefaults:NO];

@@ -126,7 +126,6 @@ static uint8_t SHOW_UPLOAD_SPEED = 1;
 static uint8_t SHOW_DOWNLOAD_SPEED = 1;
 static uint8_t SHOW_DOWNLOAD_SPEED_FIRST = 1;
 static uint8_t SHOW_SECOND_SPEED_IN_NEW_LINE = 0;
-static uint8_t SHOW_FPS = 0;
 static const char *UPLOAD_PREFIX = "▲";
 static const char *DOWNLOAD_PREFIX = "▼";
 
@@ -183,12 +182,24 @@ static UpDownBytes getUpDownBytes()
 
     for (ifa = ifa_list; ifa; ifa = ifa->ifa_next)
     {
-        if (AF_LINK != ifa->ifa_addr->sa_family || 
-            (!(ifa->ifa_flags & IFF_UP) && !(ifa->ifa_flags & IFF_RUNNING)) || 
-            ifa->ifa_data == 0) continue;
+        /* Skip invalid interfaces */
+        if (ifa->ifa_name == NULL || ifa->ifa_addr == NULL || ifa->ifa_data == NULL)
+            continue;
+        
+        /* Skip interfaces that are not link level interfaces */
+        if (AF_LINK != ifa->ifa_addr->sa_family)
+            continue;
+
+        /* Skip interfaces that are not up or running */
+        if (!(ifa->ifa_flags & IFF_UP) && !(ifa->ifa_flags & IFF_RUNNING))
+            continue;
+        
+        /* Skip interfaces that are not ethernet or cellular */
+        if (strncmp(ifa->ifa_name, "en", 2) && strncmp(ifa->ifa_name, "pdp_ip", 6))
+            continue;
         
         struct if_data *if_data = (struct if_data *)ifa->ifa_data;
-
+        
         upDownBytes.inputBytes += if_data->ifi_ibytes;
         upDownBytes.outputBytes += if_data->ifi_obytes;
     }
@@ -197,78 +208,17 @@ static UpDownBytes getUpDownBytes()
     return upDownBytes;
 }
 
-#import <QuartzCore/QuartzCore.h>
-
-@interface HUDDisplayLinkCounter : NSObject
-@property (nonatomic, assign) uint64_t ticks;
-@end
-
-@implementation HUDDisplayLinkCounter {
-    CADisplayLink *displayLink;
-}
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self)
-    {
-        displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkTick:)];
-        [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
-    }
-    return self;
-}
-
-- (void)dealloc {
-    [displayLink invalidate];
-    displayLink = nil;
-}
-
-- (void)displayLinkTick:(CADisplayLink *)sender {
-    self.ticks++;
-}
-
-- (void)reset {
-    self.ticks = 0;
-}
-
-@end
-
 static BOOL shouldUpdateSpeedLabel;
 static uint64_t prevOutputBytes = 0, prevInputBytes = 0;
-static uint64_t lastTicks = 0;
 static NSAttributedString *attributedUploadPrefix = nil;
 static NSAttributedString *attributedDownloadPrefix = nil;
 static NSAttributedString *attributedInlineSeparator = nil;
 static NSAttributedString *attributedLineSeparator = nil;
-static HUDDisplayLinkCounter *displayLinkCounter = nil;
 
 static NSAttributedString* formattedAttributedString(BOOL isFocused)
 {
     @autoreleasepool
     {
-        if (SHOW_FPS)
-        {
-            if (!displayLinkCounter)
-                displayLinkCounter = [[HUDDisplayLinkCounter alloc] init];
-
-            uint64_t currentTicks = displayLinkCounter.ticks;
-            uint64_t deltaTicks = currentTicks - lastTicks;
-            lastTicks = currentTicks;
-            
-            if (deltaTicks == 0 || deltaTicks > 300)
-                return nil;
-
-            NSAttributedString *attrStr = 
-                [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%llu fps", deltaTicks] attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:FONT_SIZE]}];
-
-            return attrStr;
-        }
-        else
-        {
-            if (displayLinkCounter)
-                displayLinkCounter = nil;
-        }
-
         if (!attributedUploadPrefix)
             attributedUploadPrefix = [[NSAttributedString alloc] initWithString:[[NSString stringWithUTF8String:UPLOAD_PREFIX] stringByAppendingString:@" "] attributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:FONT_SIZE]}];
         if (!attributedDownloadPrefix)
@@ -706,7 +656,6 @@ static void DumpThreads(void)
     [self loadUserDefaults:YES];
 
     NSInteger selectedMode = [self selectedMode];
-    BOOL displayMode = [self displayMode];
     BOOL singleLineMode = [self singleLineMode];
     BOOL usesBitrate = [self usesBitrate];
     BOOL usesArrowPrefixes = [self usesArrowPrefixes];
@@ -717,16 +666,12 @@ static void DumpThreads(void)
     SHOW_UPLOAD_SPEED = !singleLineMode;
     SHOW_DOWNLOAD_SPEED_FIRST = (selectedMode == 1);
     SHOW_SECOND_SPEED_IN_NEW_LINE = (selectedMode == 0 || selectedMode == 2);
-    SHOW_FPS = displayMode;
     
     UPLOAD_PREFIX = (usesArrowPrefixes ? "↑" : "▲");
     DOWNLOAD_PREFIX = (usesArrowPrefixes ? "↓" : "▼");
     
     prevInputBytes = 0;
     prevOutputBytes = 0;
-    
-    [displayLinkCounter reset];
-    lastTicks = 0;
     
     attributedUploadPrefix = nil;
     attributedDownloadPrefix = nil;
@@ -746,13 +691,6 @@ static void DumpThreads(void)
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"selectedMode"];
     return mode ? [mode integerValue] : 1;
-}
-
-- (BOOL)displayMode
-{
-    [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"displayMode"];
-    return mode ? [mode boolValue] : NO;
 }
 
 - (BOOL)singleLineMode
@@ -802,9 +740,8 @@ static void DumpThreads(void)
 - (void)updateSpeedLabel
 {
     NSAttributedString *attributedText = formattedAttributedString(_isFocused);
-    if (!attributedText)
-        return;
-    [_speedLabel setAttributedText:attributedText];
+    if (attributedText)
+        [_speedLabel setAttributedText:attributedText];
     [_speedLabel sizeToFit];
 }
 
@@ -840,7 +777,7 @@ static void DumpThreads(void)
     _blurView.translatesAutoresizingMaskIntoConstraints = NO;
     [_contentView addSubview:_blurView];
 
-    _speedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 20)];
+    _speedLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     _speedLabel.numberOfLines = 0;
     _speedLabel.textAlignment = NSTextAlignmentCenter;
     _speedLabel.textColor = [UIColor whiteColor];
