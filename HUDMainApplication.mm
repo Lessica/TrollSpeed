@@ -856,7 +856,21 @@ static void DumpThreads(void)
     [self updateSpeedLabel];
     [self resetLoopTimer];
 
+    NSInteger mode = [self selectedMode];
+    
+    CGFloat scaleFactor = 0.05;
+    CGFloat topTrans = CGRectGetHeight(view.bounds) * (scaleFactor / 2);
+    CGFloat leadingTrans = (mode == 1 ? 0 : (mode == 0 ? CGRectGetWidth(view.bounds) * (scaleFactor / 2) : -CGRectGetWidth(view.bounds) * (scaleFactor / 2)));
+
+    // [view setUserInteractionEnabled:NO];
+    [view setTransform:CGAffineTransformIdentity];
     [UIView animateWithDuration:0.2 animations:^{
+        if (ABS(leadingTrans) > 1e-6 || ABS(topTrans) > 1e-6)
+        {
+            CGAffineTransform transform = CGAffineTransformMakeTranslation(leadingTrans, topTrans);
+            view.transform = CGAffineTransformScale(transform, 1.0 + scaleFactor, 1.0 + scaleFactor);
+        }
+        
         view.alpha = 1.0;
     } completion:^(BOOL finished) {
         [self performSelector:@selector(onBlur:) withObject:view afterDelay:IDLE_INTERVAL];
@@ -873,7 +887,10 @@ static void DumpThreads(void)
     [self resetLoopTimer];
 
     [UIView animateWithDuration:0.6 animations:^{
+        view.transform = CGAffineTransformIdentity;
         view.alpha = 0.667;
+    } completion:^(BOOL finished) {
+        // [view setUserInteractionEnabled:YES];
     }];
 }
 
