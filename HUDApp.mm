@@ -80,13 +80,17 @@ static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef
 
     if (@available(iOS 15.2, *))
     {
+        static Class AXEventRepresentationCls = nil;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             [[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/AccessibilityUtilities.framework"] load];
+            AXEventRepresentationCls = objc_getClass("AXEventRepresentation");
         });
         
-        AXEventRepresentation *rep = [objc_getClass("AXEventRepresentation") representationWithHIDEvent:event hidStreamIdentifier:@"UIApplicationEvents"];
+        AXEventRepresentation *rep = [AXEventRepresentationCls representationWithHIDEvent:event hidStreamIdentifier:@"UIApplicationEvents"];
+#if DEBUG
         os_log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", rep.handInfo);
+#endif
 
         /* I don't like this. It's too hacky, but it works. */
         {
@@ -121,7 +125,9 @@ static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef
         }
     }
     else {
+#if DEBUG
         os_log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", event);
+#endif
     }
 }
 
@@ -148,7 +154,9 @@ int main(int argc, char *argv[])
 {
     @autoreleasepool
     {
+#if DEBUG
         os_log_debug(OS_LOG_DEFAULT, "launched argc %{public}d, argv[1] %{public}s", argc, argc > 1 ? argv[1] : "NULL");
+#endif
 
         if (argc <= 1)
             return UIApplicationMain(argc, argv, @"MainApplication", @"MainApplicationDelegate");

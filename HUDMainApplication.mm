@@ -42,12 +42,18 @@ BOOL IsHUDEnabled(void)
     posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
     posix_spawnattr_destroy(&attr);
 
+#if DEBUG
     os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -check pid = %{public}d", executablePath, task_pid);
+#endif
     
     int status;
     do {
         if (waitpid(task_pid, &status, 0) != -1)
+        {
+#if DEBUG
             os_log_debug(OS_LOG_DEFAULT, "child status %d", WEXITSTATUS(status));
+#endif
+        }
     } while (!WIFEXITED(status) && !WIFSIGNALED(status));
 
     return WEXITSTATUS(status) != 0;
@@ -83,7 +89,9 @@ void SetHUDEnabled(BOOL isEnabled)
         posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
         posix_spawnattr_destroy(&attr);
 
+#if DEBUG
         os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -hud pid = %{public}d", executablePath, task_pid);
+#endif
     }
     else
     {
@@ -94,12 +102,18 @@ void SetHUDEnabled(BOOL isEnabled)
         posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
         posix_spawnattr_destroy(&attr);
 
+#if DEBUG
         os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -exit pid = %{public}d", executablePath, task_pid);
+#endif
         
         int status;
         do {
             if (waitpid(task_pid, &status, 0) != -1)
+            {
+#if DEBUG
                 os_log_debug(OS_LOG_DEFAULT, "child status %d", WEXITSTATUS(status));
+#endif
+            }
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
     }
 }
@@ -307,6 +321,8 @@ static NSAttributedString* formattedAttributedString(BOOL isFocused)
 }
 
 
+#pragma mark -
+
 @interface UIApplication (Private)
 - (void)suspend;
 - (void)terminateWithSuccess;
@@ -361,10 +377,89 @@ static NSAttributedString* formattedAttributedString(BOOL isFocused)
 
 @interface HUDRootViewController: UIApplicationRotationFollowingControllerNoTouches
 + (BOOL)passthroughMode;
+- (void)resetLoopTimer;
+- (void)stopLoopTimer;
 @end
 
 @interface HUDMainWindow : UIAutoRotatingWindow
 @end
+
+
+#pragma mark - Darwin Notification
+
+#define NOTIFY_UI_LOCKCOMPLETE "com.apple.springboard.lockcomplete"
+#define NOTIFY_UI_LOCKSTATE    "com.apple.springboard.lockstate"
+#define NOTIFY_LS_APP_CHANGED  "com.apple.LaunchServices.ApplicationsChanged"
+
+#import "LSApplicationProxy.h"
+#import "LSApplicationWorkspace.h"
+
+static void LaunchServicesApplicationStateChanged
+(CFNotificationCenterRef center,
+ void *observer,
+ CFStringRef name,
+ const void *object,
+ CFDictionaryRef userInfo)
+{
+    /* Application installed or uninstalled */
+
+    BOOL isAppInstalled = NO;
+    
+    for (LSApplicationProxy *app in [[objc_getClass("LSApplicationWorkspace") defaultWorkspace] allApplications])
+    {
+        if ([app.applicationIdentifier isEqualToString:@"ch.xxtou.hudapp"])
+        {
+            isAppInstalled = YES;
+            break;
+        }
+    }
+
+    if (!isAppInstalled)
+    {
+        UIApplication *app = [UIApplication sharedApplication];
+        [app terminateWithSuccess];
+    }
+}
+
+#import "SpringBoardServices.h"
+
+static void SpringBoardLockStatusChanged
+(CFNotificationCenterRef center,
+ void *observer,
+ CFStringRef name,
+ const void *object,
+ CFDictionaryRef userInfo)
+{
+    HUDRootViewController *rootViewController = (__bridge HUDRootViewController *)observer;
+    NSString *lockState = (__bridge NSString *)name;
+    if ([lockState isEqualToString:@NOTIFY_UI_LOCKCOMPLETE])
+    {
+        [rootViewController stopLoopTimer];
+        [rootViewController.view setHidden:YES];
+    }
+    else if ([lockState isEqualToString:@NOTIFY_UI_LOCKSTATE])
+    {
+        mach_port_t sbsPort = SBSSpringBoardServerPort();
+        
+        if (sbsPort == MACH_PORT_NULL)
+            return;
+        
+        BOOL isLocked;
+        BOOL isPasscodeSet;
+        SBGetScreenLockStatus(sbsPort, &isLocked, &isPasscodeSet);
+
+        if (!isLocked)
+        {
+            [rootViewController.view setHidden:NO];
+            [rootViewController resetLoopTimer];
+        }
+        else
+        {
+            [rootViewController stopLoopTimer];
+            [rootViewController.view setHidden:YES];
+        }
+    }
+}
 
 
 #pragma mark - HUDMainApplication
@@ -386,12 +481,16 @@ static void DumpThreads(void)
         if (pt)
         {
             name[0] = '\0';
+#if DEBUG
             int rc = pthread_getname_np(pt, name, sizeof name);
             os_log_debug(OS_LOG_DEFAULT, "mach thread %u: getname returned %d: %{public}s", list[i], rc, name);
+#endif
         }
         else
         {
+#if DEBUG
             os_log_debug(OS_LOG_DEFAULT, "mach thread %u: no pthread found", list[i]);
+#endif
         }
     }
 }
@@ -405,7 +504,9 @@ static void DumpThreads(void)
 {
     if (self = [super init])
     {
+#if DEBUG
         os_log_debug(OS_LOG_DEFAULT, "- [HUDMainApplication init]");
+#endif
         notify_post(NOTIFY_LAUNCHED_HUD);
         
 #ifdef NOTIFY_DISMISSAL_HUD
@@ -428,11 +529,15 @@ static void DumpThreads(void)
             UIEventDispatcher *dispatcher = (UIEventDispatcher *)[self valueForKey:@"eventDispatcher"];
             if (!dispatcher)
             {
+#if DEBUG
                 os_log_error(OS_LOG_DEFAULT, "failed to get ivar _eventDispatcher");
+#endif
                 break;
             }
 
+#if DEBUG
             os_log_debug(OS_LOG_DEFAULT, "got ivar _eventDispatcher: %p", dispatcher);
+#endif
 
             if ([dispatcher respondsToSelector:@selector(_installEventRunLoopSources:)])
             {
@@ -444,12 +549,16 @@ static void DumpThreads(void)
                 IMP runMethodIMP = class_getMethodImplementation([self class], @selector(_run));
                 if (!runMethodIMP)
                 {
+#if DEBUG
                     os_log_error(OS_LOG_DEFAULT, "failed to get - [UIApplication _run] method");
+#endif
                     break;
                 }
 
                 uint32_t *runMethodPtr = (uint32_t *)make_sym_readable((void *)runMethodIMP);
+#if DEBUG
                 os_log_debug(OS_LOG_DEFAULT, "- [UIApplication _run]: %p", runMethodPtr);
+#endif
 
                 void (*orig_UIEventDispatcher__installEventRunLoopSources_)(id _Nonnull, SEL _Nonnull, CFRunLoopRef) = NULL;
                 for (int i = 0; i < 0x140; i++)
@@ -464,46 +573,65 @@ static void DumpThreads(void)
                     uint32_t *blInstPtr = &runMethodPtr[i + 2];
                     if ((blInst & 0xfc000000) != 0x94000000)
                     {
+#if DEBUG
                         os_log_error(OS_LOG_DEFAULT, "not a BL instruction: 0x%x, address %p", blInst, blInstPtr);
+#endif
                         continue;
                     }
 
+#if DEBUG
                     os_log_debug(OS_LOG_DEFAULT, "found BL instruction: 0x%x, address %p", blInst, blInstPtr);
+#endif
 
                     int32_t blOffset = blInst & 0x03ffffff;
                     if (blOffset & 0x02000000)
                         blOffset |= 0xfc000000;
                     blOffset <<= 2;
+
+#if DEBUG
                     os_log_debug(OS_LOG_DEFAULT, "BL offset: 0x%x", blOffset);
+#endif
 
                     uint64_t blAddr = (uint64_t)blInstPtr + blOffset;
+
+#if DEBUG
                     os_log_debug(OS_LOG_DEFAULT, "BL target address: %p", (void *)blAddr);
+#endif
                     
                     // cbz x0, loc_?????????
                     uint32_t cbzInst = *((uint32_t *)make_sym_readable((void *)blAddr));
                     if ((cbzInst & 0xff000000) != 0xb4000000)
                     {
+#if DEBUG
                         os_log_error(OS_LOG_DEFAULT, "not a CBZ instruction: 0x%x", cbzInst);
+#endif
                         continue;
                     }
 
+#if DEBUG
                     os_log_debug(OS_LOG_DEFAULT, "found CBZ instruction: 0x%x, address %p", cbzInst, (void *)blAddr);
+#endif
                     
                     orig_UIEventDispatcher__installEventRunLoopSources_ = (void (*)(id  _Nonnull __strong, SEL _Nonnull, CFRunLoopRef))make_sym_callable((void *)blAddr);
                 }
 
                 if (!orig_UIEventDispatcher__installEventRunLoopSources_)
                 {
+#if DEBUG
                     os_log_error(OS_LOG_DEFAULT, "failed to find -[UIEventDispatcher _installEventRunLoopSources:]");
+#endif
                     break;
                 }
 
+#if DEBUG
                 os_log_debug(OS_LOG_DEFAULT, "- [UIEventDispatcher _installEventRunLoopSources:]: %p", orig_UIEventDispatcher__installEventRunLoopSources_);
-                
+#endif
+
                 CFRunLoopRef mainRunLoop = CFRunLoopGetMain();
                 orig_UIEventDispatcher__installEventRunLoopSources_(dispatcher, @selector(_installEventRunLoopSources:), mainRunLoop);
             }
 
+#if DEBUG
             // Get image base with dyld, the image is /System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore.
             uint64_t imageUIKitCore = 0;
             {
@@ -518,7 +646,9 @@ static void DumpThreads(void)
                     }
                 }
             }
+
             os_log_debug(OS_LOG_DEFAULT, "UIKitCore: %p", (void *)imageUIKitCore);
+#endif
 
             UIEventFetcher *fetcher = [[objc_getClass("UIEventFetcher") alloc] init];
             [dispatcher setValue:fetcher forKey:@"eventFetcher"];
@@ -566,14 +696,20 @@ static void DumpThreads(void)
 - (instancetype)init
 {
     if (self = [super init])
+    {
+#if DEBUG
         os_log_debug(OS_LOG_DEFAULT, "- [HUDMainApplicationDelegate init]");
+#endif
+    }
     return self;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary <UIApplicationLaunchOptionsKey, id> *)launchOptions
 {
+#if DEBUG
     os_log_debug(OS_LOG_DEFAULT, "- [HUDMainApplicationDelegate application:%{public}@ didFinishLaunchingWithOptions:%{public}@]", application, launchOptions);
-    
+#endif
+
     _rootViewController = [[HUDRootViewController alloc] init];
 
     self.window = [[HUDMainWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -641,6 +777,35 @@ static void DumpThreads(void)
     notify_register_dispatch(NOTIFY_RELOAD_HUD, &token, dispatch_get_main_queue(), ^(int token) {
         [self reloadUserDefaults];
     });
+
+    CFNotificationCenterRef darwinCenter = CFNotificationCenterGetDarwinNotifyCenter();
+    
+    CFNotificationCenterAddObserver(
+        darwinCenter,
+        (__bridge const void *)self,
+        LaunchServicesApplicationStateChanged,
+        CFSTR(NOTIFY_LS_APP_CHANGED),
+        NULL,
+        CFNotificationSuspensionBehaviorDeliverImmediately
+    );
+    
+    CFNotificationCenterAddObserver(
+        darwinCenter,
+        (__bridge const void *)self,
+        SpringBoardLockStatusChanged,
+        CFSTR(NOTIFY_UI_LOCKCOMPLETE),
+        NULL,
+        CFNotificationSuspensionBehaviorDeliverImmediately
+    );
+    
+    CFNotificationCenterAddObserver(
+        darwinCenter,
+        (__bridge const void *)self,
+        SpringBoardLockStatusChanged,
+        CFSTR(NOTIFY_UI_LOCKSTATE),
+        NULL,
+        CFNotificationSuspensionBehaviorDeliverImmediately
+    );
 }
 
 #define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
@@ -739,6 +904,9 @@ static void DumpThreads(void)
 
 - (void)updateSpeedLabel
 {
+#if DEBUG
+    os_log_debug(OS_LOG_DEFAULT, "updateSpeedLabel");
+#endif
     NSAttributedString *attributedText = formattedAttributedString(_isFocused);
     if (attributedText)
         [_speedLabel setAttributedText:attributedText];
@@ -798,6 +966,12 @@ static void DumpThreads(void)
 {
     [_timer invalidate];
     _timer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_INTERVAL target:self selector:@selector(updateSpeedLabel) userInfo:nil repeats:YES];
+}
+
+- (void)stopLoopTimer
+{
+    [_timer invalidate];
+    _timer = nil;
 }
 
 - (void)viewSafeAreaInsetsDidChange
@@ -896,7 +1070,9 @@ static void DumpThreads(void)
 
 - (void)tapGestureRecognized:(UITapGestureRecognizer *)sender
 {
+#if DEBUG
     os_log_info(OS_LOG_DEFAULT, "TAPPED");
+#endif
     [self onFocus:sender.view];
 }
 
