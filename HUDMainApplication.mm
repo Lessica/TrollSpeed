@@ -133,8 +133,8 @@ void SetHUDEnabled(BOOL isEnabled)
 #define SHOW_ALWAYS 1
 #define INLINE_SEPARATOR "\t"
 #define IDLE_INTERVAL 3.0
-#define FONT_SIZE 8.0
 
+static double FONT_SIZE = 8.0;
 static uint8_t DATAUNIT = 0;
 static uint8_t SHOW_UPLOAD_SPEED = 1;
 static uint8_t SHOW_DOWNLOAD_SPEED = 1;
@@ -824,6 +824,7 @@ static void DumpThreads(void)
     BOOL singleLineMode = [self singleLineMode];
     BOOL usesBitrate = [self usesBitrate];
     BOOL usesArrowPrefixes = [self usesArrowPrefixes];
+    BOOL usesLargeFont = [self usesLargeFont];
 
     _speedLabel.textAlignment = (selectedMode == 1 ? NSTextAlignmentCenter : NSTextAlignmentLeft);
     
@@ -831,6 +832,7 @@ static void DumpThreads(void)
     SHOW_UPLOAD_SPEED = !singleLineMode;
     SHOW_DOWNLOAD_SPEED_FIRST = (selectedMode == 1);
     SHOW_SECOND_SPEED_IN_NEW_LINE = (selectedMode == 0 || selectedMode == 2);
+    FONT_SIZE = (usesLargeFont ? 9.0 : 8.0);
     
     UPLOAD_PREFIX = (usesArrowPrefixes ? "↑" : "▲");
     DOWNLOAD_PREFIX = (usesArrowPrefixes ? "↓" : "▼");
@@ -876,6 +878,13 @@ static void DumpThreads(void)
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"usesArrowPrefixes"];
+    return mode ? [mode boolValue] : NO;
+}
+
+- (BOOL)usesLargeFont
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"usesLargeFont"];
     return mode ? [mode boolValue] : NO;
 }
 

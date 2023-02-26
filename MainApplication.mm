@@ -242,6 +242,20 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [self saveUserDefaults];
 }
 
+- (BOOL)usesLargeFont
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"usesLargeFont"];
+    return mode ? [mode boolValue] : NO;
+}
+
+- (void)setUsesLargeFont:(BOOL)usesLargeFont
+{
+    [self loadUserDefaults:NO];
+    [_userDefaults setObject:@(usesLargeFont) forKey:@"usesLargeFont"];
+    [self saveUserDefaults];
+}
+
 - (void)reloadMainButtonState
 {
     [_mainButton setTitle:(IsHUDEnabled() ? @"Exit HUD" : @"Open HUD") forState:UIControlStateNormal];

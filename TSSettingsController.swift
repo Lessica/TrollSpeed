@@ -12,7 +12,7 @@ import UIKit
     internal var restartRequired = false
 
     open override func settingsCount() -> Int {
-        return 4;
+        return 5;
     }
     
     open override func settingTitle(index: Int, highlighted: Bool) -> String {
@@ -22,8 +22,10 @@ import UIKit
             return "Incoming Only"
         } else if index == 2 {
             return "Unit"
-        } else {
+        } else if index == 3 {
             return "Prefixes"
+        } else {
+            return "Size"
         }
     }
     
@@ -53,11 +55,17 @@ import UIKit
             } else {
                 return "B/s";
             }
-        } else {
+        } else if index == 3 {
             if (highlighted) {
                 return "↑↓";
             } else {
                 return "▲▼";
+            }
+        } else {
+            if (highlighted) {
+                return "Large";
+            } else {
+                return "Standard";
             }
         }
     }
@@ -69,8 +77,10 @@ import UIKit
             return "singleLineMode"
         } else if index == 2 {
             return "usesBitrate"
-        } else {
+        } else if index == 3 {
             return "usesArrowPrefixes"
+        } else {
+            return "usesLargeFont"
         }
     }
     
