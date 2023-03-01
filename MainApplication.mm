@@ -39,12 +39,36 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
 #pragma mark - RootViewController
 
-@interface RootViewController: UIViewController <TSSettingsControllerDelegate>
+@interface MainButton : UIButton
+@end
+
+@implementation MainButton
+
+- (void)setHighlighted:(BOOL)highlighted
+{
+    [super setHighlighted:highlighted];
+    if (highlighted)
+    {
+        [UIView animateWithDuration:0.27 delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:(UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState) animations:^{
+            self.transform = CGAffineTransformMakeScale(0.92, 0.92);
+        } completion:nil];
+    }
+    else
+    {
+        [UIView animateWithDuration:0.27 delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:(UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState) animations:^{
+            self.transform = CGAffineTransformIdentity;
+        } completion:nil];
+    }
+}
+
+@end
+
+@interface RootViewController : UIViewController <TSSettingsControllerDelegate>
 @end
 
 @implementation RootViewController {
     NSMutableDictionary *_userDefaults;
-    UIButton *_mainButton;
+    MainButton *_mainButton;
     UIButton *_settingsButton;
     UIButton *_topLeftButton;
     UIButton *_topRightButton;
@@ -72,7 +96,12 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [_topLeftButton setImage:[UIImage systemImageNamed:@"arrow.up.left.square.fill"] forState:UIControlStateNormal];
     [_topLeftButton setAdjustsImageWhenHighlighted:NO];
     [self.view addSubview:_topLeftButton];
-
+    if (@available(iOS 15.0, *))
+    {
+        UIButtonConfiguration *config = [UIButtonConfiguration plainButtonConfiguration];
+        [config setCornerStyle:UIButtonConfigurationCornerStyleLarge];
+        [_topLeftButton setConfiguration:config];
+    }
     UILayoutGuide *safeArea = self.view.safeAreaLayoutGuide;
     [_topLeftButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
@@ -88,7 +117,12 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [_topRightButton setImage:[UIImage systemImageNamed:@"arrow.up.right.square.fill"] forState:UIControlStateNormal];
     [_topRightButton setAdjustsImageWhenHighlighted:NO];
     [self.view addSubview:_topRightButton];
-
+    if (@available(iOS 15.0, *))
+    {
+        UIButtonConfiguration *config = [UIButtonConfiguration plainButtonConfiguration];
+        [config setCornerStyle:UIButtonConfigurationCornerStyleLarge];
+        [_topRightButton setConfiguration:config];
+    }
     [_topRightButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
         [_topRightButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:20.0f],
@@ -103,7 +137,12 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [_topCenterButton setImage:[UIImage systemImageNamed:@"arrow.up.square.fill"] forState:UIControlStateNormal];
     [_topCenterButton setAdjustsImageWhenHighlighted:NO];
     [self.view addSubview:_topCenterButton];
-
+    if (@available(iOS 15.0, *))
+    {
+        UIButtonConfiguration *config = [UIButtonConfiguration plainButtonConfiguration];
+        [config setCornerStyle:UIButtonConfigurationCornerStyleLarge];
+        [_topCenterButton setConfiguration:config];
+    }
     [_topCenterButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
         [_topCenterButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:20.0f],
@@ -114,17 +153,30 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
     [self reloadModeButtonState];
 
-    _mainButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    _mainButton = [MainButton buttonWithType:UIButtonTypeSystem];
     [_mainButton setTintColor:[UIColor whiteColor]];
     [_mainButton addTarget:self action:@selector(tapMainButton:) forControlEvents:UIControlEventTouchUpInside];
-    [_mainButton.titleLabel setFont:[UIFont boldSystemFontOfSize:32.0]];
+    if (@available(iOS 15.0, *))
+    {
+        UIButtonConfiguration *config = [UIButtonConfiguration tintedButtonConfiguration];
+        [config setTitleTextAttributesTransformer:^NSDictionary <NSAttributedStringKey, id> * _Nonnull(NSDictionary <NSAttributedStringKey, id> * _Nonnull textAttributes) {
+            NSMutableDictionary *newAttributes = [textAttributes mutableCopy];
+            [newAttributes setObject:[UIFont boldSystemFontOfSize:32.0] forKey:NSFontAttributeName];
+            return newAttributes;
+        }];
+        [config setCornerStyle:UIButtonConfigurationCornerStyleLarge];
+        [_mainButton setConfiguration:config];
+    }
+    else
+    {
+        [_mainButton.titleLabel setFont:[UIFont boldSystemFontOfSize:32.0]];
+    }
     [self.view addSubview:_mainButton];
 
     [_mainButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
         [_mainButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
         [_mainButton.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor],
-        [_mainButton.widthAnchor constraintEqualToAnchor:self.view.widthAnchor],
     ]];
 
     _settingsButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -132,7 +184,12 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [_settingsButton addTarget:self action:@selector(tapSettingsButton:) forControlEvents:UIControlEventTouchUpInside];
     [_settingsButton setImage:[UIImage systemImageNamed:@"gear"] forState:UIControlStateNormal];
     [self.view addSubview:_settingsButton];
-
+    if (@available(iOS 15.0, *))
+    {
+        UIButtonConfiguration *config = [UIButtonConfiguration tintedButtonConfiguration];
+        [config setCornerStyle:UIButtonConfigurationCornerStyleLarge];
+        [_settingsButton setConfiguration:config];
+    }
     [_settingsButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
         [_settingsButton.bottomAnchor constraintEqualToAnchor:safeArea.bottomAnchor constant:-20.0f],
@@ -258,9 +315,8 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
 - (void)reloadMainButtonState
 {
-    [_mainButton setTitle:(IsHUDEnabled() ? @"Exit HUD" : @"Open HUD") forState:UIControlStateNormal];
-    [_mainButton sizeToFit];
-    [UIView transitionWithView:_authorLabel duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+    [UIView transitionWithView:self.view duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+        [_mainButton setTitle:(IsHUDEnabled() ? @"Exit HUD" : @"Open HUD") forState:UIControlStateNormal];
         [_authorLabel setText:(IsHUDEnabled() ? @"You can quit this app now.\nThe HUD will persist on your screen." : @"Made with ♥ by @i_82 and @jmpews")];
     } completion:nil];
 }
@@ -330,7 +386,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
             dispatch_semaphore_signal(semaphore);
         });
 
-        [sender setEnabled:NO];
+        [self.view setUserInteractionEnabled:NO];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
             int timedOut = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)));
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -338,15 +394,16 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
                     os_log_error(OS_LOG_DEFAULT, "Timed out waiting for HUD to launch");
                 
                 [self reloadMainButtonState];
-                [sender setEnabled:YES];
+                [self.view setUserInteractionEnabled:YES];
             });
         });
     }
-    else {
-        [sender setEnabled:NO];
+    else
+    {
+        [self.view setUserInteractionEnabled:NO];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self reloadMainButtonState];
-            [sender setEnabled:YES];
+            [self.view setUserInteractionEnabled:YES];
         });
     }
 }
@@ -359,6 +416,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     TSSettingsController *settingsViewController = [[TSSettingsController alloc] init];
     settingsViewController.delegate = self;
     settingsViewController.alreadyLaunched = IsHUDEnabled();
+    
     SPLarkTransitioningDelegate *transitioningDelegate = [[SPLarkTransitioningDelegate alloc] init];
     settingsViewController.transitioningDelegate = transitioningDelegate;
     settingsViewController.modalPresentationStyle = UIModalPresentationCustom;
