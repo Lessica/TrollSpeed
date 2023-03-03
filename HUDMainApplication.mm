@@ -769,6 +769,7 @@ static void DumpThreads(void)
     NSTimer *_timer;
     UITapGestureRecognizer *_tapGestureRecognizer;
     BOOL _isFocused;
+    UIInterfaceOrientation _orientation;
 }
 
 - (void)registerNotifications
@@ -922,20 +923,48 @@ static void DumpThreads(void)
     [_speedLabel sizeToFit];
 }
 
+static inline CGFloat orientationAngle(UIInterfaceOrientation orientation)
+{
+    switch (orientation) {
+        case UIInterfaceOrientationPortraitUpsideDown:
+            return M_PI;
+        case UIInterfaceOrientationLandscapeLeft:
+            return -M_PI_2;
+        case UIInterfaceOrientationLandscapeRight:
+            return M_PI_2;
+        default:
+            return 0;
+    }
+}
+
+static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRect bounds)
+{
+    switch (orientation) {
+        case UIInterfaceOrientationLandscapeLeft:
+        case UIInterfaceOrientationLandscapeRight:
+            return CGRectMake(0, 0, bounds.size.height, bounds.size.width);
+        default:
+            return bounds;
+    }
+}
+
 - (void)updateOrientation:(UIInterfaceOrientation)orientation animateWithDuration:(NSTimeInterval)duration
 {
-    if (orientation == UIInterfaceOrientationPortrait)
-    {
-        [UIView animateWithDuration:duration animations:^{
-            self->_contentView.alpha = self->_isFocused ? 1.0 : 0.667;
-        }];
-    }
-    else
-    {
-        [UIView animateWithDuration:duration animations:^{
-            self->_contentView.alpha = 0.0;
-        }];
-    }
+    if (orientation == _orientation)
+        return;
+    _orientation = orientation;
+
+    CGRect bounds = orientationBounds(orientation, [UIScreen mainScreen].bounds);
+    [self.view setNeedsUpdateConstraints];
+    [self.view setHidden:YES];
+    [self.view setBounds:bounds];
+    
+    [self onBlur:self->_contentView duration:duration];
+    [UIView animateWithDuration:duration animations:^{
+        [self.view setTransform:CGAffineTransformMakeRotation(orientationAngle(orientation))];
+    } completion:^(BOOL finished) {
+        [self.view setHidden:NO];
+    }];
 }
 
 - (void)viewDidLoad
@@ -996,15 +1025,39 @@ static void DumpThreads(void)
 
     UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;
     
-    [_constraints addObjectsFromArray:@[
-        [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
-        [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-    ]];
-    
-    if (layoutGuide.layoutFrame.origin.y > 1)
-        [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:-10]];
+    if (_orientation == UIInterfaceOrientationLandscapeLeft || _orientation == UIInterfaceOrientationLandscapeRight)
+    {
+        if (_orientation == UIInterfaceOrientationLandscapeLeft)
+        {
+            [_constraints addObjectsFromArray:@[
+                [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:20],
+                // [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-CGRectGetMinY(layoutGuide.layoutFrame)],
+                [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-20],
+            ]];
+        }
+        else
+        {
+            [_constraints addObjectsFromArray:@[
+                // [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:CGRectGetMinY(layoutGuide.layoutFrame)],
+                [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:20],
+                [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-20],
+            ]];
+        }
+
+        [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:10]];
+    }
     else
-        [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:20]];
+    {
+        [_constraints addObjectsFromArray:@[
+            [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        ]];
+        
+        if (layoutGuide.layoutFrame.origin.y > 1)
+            [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:-10]];
+        else
+            [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:20]];
+    }
     
     [_constraints addObjectsFromArray:@[
         [_speedLabel.topAnchor constraintEqualToAnchor:_contentView.topAnchor],
@@ -1032,6 +1085,11 @@ static void DumpThreads(void)
 
 - (void)onFocus:(UIView *)view
 {
+    [self onFocus:view duration:0.2];
+}
+
+- (void)onFocus:(UIView *)view duration:(NSTimeInterval)duration
+{
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onBlur:) object:view];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onFocus:) object:view];
     
@@ -1047,7 +1105,7 @@ static void DumpThreads(void)
 
     // [view setUserInteractionEnabled:NO];
     [view setTransform:CGAffineTransformIdentity];
-    [UIView animateWithDuration:0.2 animations:^{
+    [UIView animateWithDuration:duration animations:^{
         if (ABS(leadingTrans) > 1e-6 || ABS(topTrans) > 1e-6)
         {
             CGAffineTransform transform = CGAffineTransformMakeTranslation(leadingTrans, topTrans);
@@ -1062,6 +1120,11 @@ static void DumpThreads(void)
 
 - (void)onBlur:(UIView *)view
 {
+    [self onBlur:view duration:0.6];
+}
+
+- (void)onBlur:(UIView *)view duration:(NSTimeInterval)duration
+{
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onBlur:) object:view];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onFocus:) object:view];
     
@@ -1069,7 +1132,7 @@ static void DumpThreads(void)
     [self updateSpeedLabel];
     [self resetLoopTimer];
 
-    [UIView animateWithDuration:0.6 animations:^{
+    [UIView animateWithDuration:duration animations:^{
         view.transform = CGAffineTransformIdentity;
         view.alpha = 0.667;
     } completion:^(BOOL finished) {
