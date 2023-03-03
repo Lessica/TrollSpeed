@@ -1027,22 +1027,10 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     
     if (_orientation == UIInterfaceOrientationLandscapeLeft || _orientation == UIInterfaceOrientationLandscapeRight)
     {
-        if (_orientation == UIInterfaceOrientationLandscapeLeft)
-        {
-            [_constraints addObjectsFromArray:@[
-                [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:20],
-                // [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-CGRectGetMinY(layoutGuide.layoutFrame)],
-                [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-20],
-            ]];
-        }
-        else
-        {
-            [_constraints addObjectsFromArray:@[
-                // [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:CGRectGetMinY(layoutGuide.layoutFrame)],
-                [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:20],
-                [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-20],
-            ]];
-        }
+        [_constraints addObjectsFromArray:@[
+            [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:(layoutGuide.layoutFrame.origin.y > 1) ? 20 : 4],
+            [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:(layoutGuide.layoutFrame.origin.y > 1) ? -20 : -4],
+        ]];
 
         [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:10]];
     }
