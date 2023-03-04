@@ -256,14 +256,21 @@ static NSAttributedString* formattedAttributedString(BOOL isFocused)
         }
         else
         {
-            upDiff = (upDownBytes.outputBytes - prevOutputBytes) / UPDATE_INTERVAL;
-            downDiff = (upDownBytes.inputBytes - prevInputBytes) / UPDATE_INTERVAL;
+            if (upDownBytes.outputBytes > prevOutputBytes)
+                upDiff = upDownBytes.outputBytes - prevOutputBytes;
+            else
+                upDiff = 0;
+            
+            if (upDownBytes.inputBytes > prevInputBytes)
+                downDiff = upDownBytes.inputBytes - prevInputBytes;
+            else
+                downDiff = 0;
         }
         
         prevOutputBytes = upDownBytes.outputBytes;
         prevInputBytes = upDownBytes.inputBytes;
 
-        if (!SHOW_ALWAYS && ((upDiff < 2 * KILOBYTES && downDiff < 2 * KILOBYTES) || (upDiff > 500 * MEGABYTES && downDiff > 500 * MEGABYTES)))
+        if (!SHOW_ALWAYS && (upDiff < 2 * KILOBYTES && downDiff < 2 * KILOBYTES))
         {
             shouldUpdateSpeedLabel = NO;
             return nil;
@@ -722,7 +729,18 @@ static void DumpThreads(void)
     _windowHostingController = [[objc_getClass("SBSAccessibilityWindowHostingController") alloc] init];
     unsigned int _contextId = [self.window _contextId];
     double windowLevel = [self.window windowLevel];
-    [_windowHostingController registerWindowWithContextID:_contextId atLevel:windowLevel];
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    // [_windowHostingController registerWindowWithContextID:_contextId atLevel:windowLevel];
+    NSMethodSignature *signature = [NSMethodSignature signatureWithObjCTypes:"v@:Id"];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+    [invocation setTarget:_windowHostingController];
+    [invocation setSelector:NSSelectorFromString(@"registerWindowWithContextID:atLevel:")];
+    [invocation setArgument:&_contextId atIndex:2];
+    [invocation setArgument:&windowLevel atIndex:3];
+    [invocation invoke];
+#pragma clang diagnostic pop
 
     return YES;
 }
@@ -1023,6 +1041,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     [NSLayoutConstraint deactivateConstraints:_constraints];
     [_constraints removeAllObjects];
 
+    BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
     UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;
     
     if (_orientation == UIInterfaceOrientationLandscapeLeft || _orientation == UIInterfaceOrientationLandscapeRight)
@@ -1032,7 +1051,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
             [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:(layoutGuide.layoutFrame.origin.y > 1) ? -20 : -4],
         ]];
 
-        [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:10]];
+        [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:(isPad ? 30 : 10)]];
     }
     else
     {
@@ -1044,7 +1063,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
         if (layoutGuide.layoutFrame.origin.y > 1)
             [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:-10]];
         else
-            [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:20]];
+            [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:(isPad ? 30 : 20)]];
     }
     
     [_constraints addObjectsFromArray:@[

@@ -90,6 +90,8 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [self.view addGestureRecognizer:tap];
     [self.view setUserInteractionEnabled:YES];
 
+    BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
+
     _topLeftButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_topLeftButton setTintColor:[UIColor whiteColor]];
     [_topLeftButton addTarget:self action:@selector(tapTopLeftButton:) forControlEvents:UIControlEventTouchUpInside];
@@ -105,7 +107,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     UILayoutGuide *safeArea = self.view.safeAreaLayoutGuide;
     [_topLeftButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
-        [_topLeftButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:28.0f],
+        [_topLeftButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:(isPad ? 40.0f : 28.f)],
         [_topLeftButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:20.0f],
         [_topLeftButton.widthAnchor constraintEqualToConstant:40.0f],
         [_topLeftButton.heightAnchor constraintEqualToConstant:40.0f],
@@ -125,7 +127,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     }
     [_topRightButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
-        [_topRightButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:28.0f],
+        [_topRightButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:(isPad ? 40.0f : 28.f)],
         [_topRightButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-20.0f],
         [_topRightButton.widthAnchor constraintEqualToConstant:40.0f],
         [_topRightButton.heightAnchor constraintEqualToConstant:40.0f],
@@ -145,7 +147,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     }
     [_topCenterButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
-        [_topCenterButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:28.0f],
+        [_topCenterButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:(isPad ? 40.0f : 28.f)],
         [_topCenterButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
         [_topCenterButton.widthAnchor constraintEqualToConstant:40.0f],
         [_topCenterButton.heightAnchor constraintEqualToConstant:40.0f],
