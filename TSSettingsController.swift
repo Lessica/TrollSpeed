@@ -17,55 +17,55 @@ import UIKit
     
     open override func settingTitle(index: Int, highlighted: Bool) -> String {
         if index == 0 {
-            return "Pass-through"
+            return NSLocalizedString("Pass-through", comment: "")
         } else if index == 1 {
-            return "Incoming Only"
+            return NSLocalizedString("Incoming Only", comment: "")
         } else if index == 2 {
-            return "Unit"
+            return NSLocalizedString("Unit", comment: "")
         } else if index == 3 {
-            return "Prefixes"
+            return NSLocalizedString("Prefixes", comment: "")
         } else {
-            return "Size"
+            return NSLocalizedString("Size", comment: "")
         }
     }
     
     open override func settingSubtitle(index: Int, highlighted: Bool) -> String? {
         if index == 0 {
             if restartRequired {
-                return "Re-open to apply"
+                return NSLocalizedString("Re-open to apply", comment: "")
             } else {
                 if alreadyLaunched {
                     restartRequired = true
                 }
                 if (highlighted) {
-                    return "ON";
+                    return NSLocalizedString("ON", comment: "")
                 } else {
-                    return "OFF";
+                    return NSLocalizedString("OFF", comment: "")
                 }
             }
         } else if index == 1 {
             if (highlighted) {
-                return "ON";
+                return NSLocalizedString("ON", comment: "")
             } else {
-                return "OFF";
+                return NSLocalizedString("OFF", comment: "")
             }
         } else if index == 2 {
             if (highlighted) {
-                return "b/s";
+                return NSLocalizedString("b/s", comment: "")
             } else {
-                return "B/s";
+                return NSLocalizedString("B/s", comment: "")
             }
         } else if index == 3 {
             if (highlighted) {
-                return "↑↓";
+                return NSLocalizedString("↑↓", comment: "")
             } else {
-                return "▲▼";
+                return NSLocalizedString("▲▼", comment: "")
             }
         } else {
             if (highlighted) {
-                return "Large";
+                return NSLocalizedString("Large", comment: "")
             } else {
-                return "Standard";
+                return NSLocalizedString("Standard", comment: "")
             }
         }
     }

@@ -61,7 +61,7 @@ open class SPLarkSettingsController: UIViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        self.titleLabel.text = "Settings"
+        self.titleLabel.text = NSLocalizedString("Settings", comment: "")
         self.titleLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         self.titleLabel.textAlignment = .left
         self.titleLabel.textColor = UIColor.white

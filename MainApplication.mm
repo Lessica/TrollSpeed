@@ -318,8 +318,8 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 - (void)reloadMainButtonState
 {
     [UIView transitionWithView:self.view duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-        [_mainButton setTitle:(IsHUDEnabled() ? @"Exit HUD" : @"Open HUD") forState:UIControlStateNormal];
-        [_authorLabel setText:(IsHUDEnabled() ? @"You can quit this app now.\nThe HUD will persist on your screen." : @"Made with ♥ by @i_82 and @jmpews")];
+        [_mainButton setTitle:(IsHUDEnabled() ? NSLocalizedString(@"Exit HUD", nil) : NSLocalizedString(@"Open HUD", nil)) forState:UIControlStateNormal];
+        [_authorLabel setText:(IsHUDEnabled() ? NSLocalizedString(@"You can quit this app now.\nThe HUD will persist on your screen.", nil) : NSLocalizedString(@"Made with ♥ by @i_82 and @jmpews", nil))];
     } completion:nil];
 }
 
