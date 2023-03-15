@@ -907,6 +907,13 @@ static void DumpThreads(void)
     return mode ? [mode boolValue] : NO;
 }
 
+- (BOOL)usesRotation
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"usesRotation"];
+    return mode ? [mode boolValue] : NO;
+}
+
 - (instancetype)init
 {
     self = [super init];
@@ -968,6 +975,25 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
 
 - (void)updateOrientation:(UIInterfaceOrientation)orientation animateWithDuration:(NSTimeInterval)duration
 {
+    BOOL usesRotation = [self usesRotation];
+    
+    if (!usesRotation)
+    {
+        if (orientation == UIInterfaceOrientationPortrait)
+        {
+            [UIView animateWithDuration:duration animations:^{
+                self->_contentView.alpha = self->_isFocused ? 1.0 : 0.667;
+            }];
+        }
+        else
+        {
+            [UIView animateWithDuration:duration animations:^{
+                self->_contentView.alpha = 0.0;
+            }];
+        }
+        return;
+    }
+
     if (orientation == _orientation)
         return;
     _orientation = orientation;
@@ -978,6 +1004,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     [self.view setBounds:bounds];
     
     [self onBlur:self->_contentView duration:duration];
+    
     [UIView animateWithDuration:duration animations:^{
         [self.view setTransform:CGAffineTransformMakeRotation(orientationAngle(orientation))];
     } completion:^(BOOL finished) {

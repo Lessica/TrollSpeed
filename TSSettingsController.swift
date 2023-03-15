@@ -12,7 +12,7 @@ import UIKit
     internal var restartRequired = false
 
     open override func settingsCount() -> Int {
-        return 5;
+        return 6;
     }
     
     open override func settingTitle(index: Int, highlighted: Bool) -> String {
@@ -24,8 +24,10 @@ import UIKit
             return NSLocalizedString("Unit", comment: "")
         } else if index == 3 {
             return NSLocalizedString("Prefixes", comment: "")
-        } else {
+        } else if index == 4 {
             return NSLocalizedString("Size", comment: "")
+        } else {
+            return NSLocalizedString("Landscape", comment: "")
         }
     }
     
@@ -61,11 +63,17 @@ import UIKit
             } else {
                 return NSLocalizedString("▲▼", comment: "")
             }
-        } else {
+        } else if index == 4 {
             if (highlighted) {
                 return NSLocalizedString("Large", comment: "")
             } else {
                 return NSLocalizedString("Standard", comment: "")
+            }
+        } else {
+            if (highlighted) {
+                return NSLocalizedString("Follow", comment: "")
+            } else {
+                return NSLocalizedString("Hide", comment: "")
             }
         }
     }
@@ -79,8 +87,10 @@ import UIKit
             return "usesBitrate"
         } else if index == 3 {
             return "usesArrowPrefixes"
-        } else {
+        } else if index == 4 {
             return "usesLargeFont"
+        } else {
+            return "usesRotation"
         }
     }
     

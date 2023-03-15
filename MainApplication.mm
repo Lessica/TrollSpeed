@@ -315,6 +315,20 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [self saveUserDefaults];
 }
 
+- (BOOL)usesRotation
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"usesRotation"];
+    return mode ? [mode boolValue] : NO;
+}
+
+- (void)setUsesRotation:(BOOL)usesRotation
+{
+    [self loadUserDefaults:NO];
+    [_userDefaults setObject:@(usesRotation) forKey:@"usesRotation"];
+    [self saveUserDefaults];
+}
+
 - (void)reloadMainButtonState
 {
     [UIView transitionWithView:self.view duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
