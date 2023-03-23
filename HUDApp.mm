@@ -124,7 +124,7 @@ static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef
 
             UIView *keyView = [keyWindow hitTest:[rep location] withEvent:nil];
             
-            UITouchPhase phase = UITouchPhaseCancelled;
+            UITouchPhase phase = UITouchPhaseEnded;
             if ([rep isTouchDown])
                 phase = UITouchPhaseBegan;
             else if ([rep isMove])

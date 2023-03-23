@@ -16,6 +16,7 @@ TrollSpeed_CFLAGS += -include hud-prefix.pch
 TrollSpeed_CCFLAGS += -DNOTIFY_LAUNCHED_HUD=\"ch.xxtou.notification.hud.launched\"
 TrollSpeed_CCFLAGS += -DNOTIFY_DISMISSAL_HUD=\"ch.xxtou.notification.hud.dismissal\"
 TrollSpeed_CCFLAGS += -DNOTIFY_RELOAD_HUD=\"ch.xxtou.notification.hud.reload\"
+TrollSpeed_CCFLAGS += -DNOTIFY_RELOAD_APP=\"ch.xxtou.notification.app.reload\"
 MainApplication.mm_CCFLAGS += -std=c++14
 TrollSpeed_FRAMEWORKS += CoreGraphics QuartzCore UIKit
 TrollSpeed_PRIVATE_FRAMEWORKS += BackBoardServices GraphicsServices IOKit SpringBoardServices

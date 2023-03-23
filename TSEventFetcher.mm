@@ -105,7 +105,7 @@ static void __TSEventFetcherCallback(void *info)
   BOOL newState = !oldState;
   if (newState)
   {
-    if (phase == UITouchPhaseEnded)
+    if (phase == UITouchPhaseEnded || phase == UITouchPhaseCancelled)
       return deleted;
     touch = [[UITouch alloc] initAtPoint:coordinate inWindow:window onView:view];
     [_livingTouchAry addObject:touch];

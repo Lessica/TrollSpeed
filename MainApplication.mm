@@ -94,6 +94,16 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
     BOOL _supportsCenterMost;
 }
 
+- (void)registerNotifications
+{
+    int token;
+    notify_register_dispatch(NOTIFY_RELOAD_APP, &token, dispatch_get_main_queue(), ^(int token) {
+        [self loadUserDefaults:YES];
+    });
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHUDNotificationReceived:) name:kToggleHUDAfterLaunchNotificationName object:nil];
+}
+
 - (void)loadView
 {
     CGRect bounds = UIScreen.mainScreen.bounds;
@@ -244,7 +254,7 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHUDNotificationReceived:) name:kToggleHUDAfterLaunchNotificationName object:nil];
+    [self registerNotifications];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -315,6 +325,10 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
 - (void)setSelectedMode:(NSInteger)selectedMode
 {
     [self loadUserDefaults:NO];
+    // Remove some keys that are not persistent
+    [_userDefaults removeObjectsForKeys:@[
+        @"currentPositionY",
+    ]];
     [_userDefaults setObject:@(selectedMode) forKey:@"selectedMode"];
     [self saveUserDefaults];
 }
@@ -400,6 +414,20 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
 {
     [self loadUserDefaults:NO];
     [_userDefaults setObject:@(usesRotation) forKey:@"usesRotation"];
+    [self saveUserDefaults];
+}
+
+- (BOOL)keepInPlace
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"keepInPlace"];
+    return mode ? [mode boolValue] : NO;
+}
+
+- (void)setKeepInPlace:(BOOL)keepInPlace
+{
+    [self loadUserDefaults:NO];
+    [_userDefaults setObject:@(keepInPlace) forKey:@"keepInPlace"];
     [self saveUserDefaults];
 }
 

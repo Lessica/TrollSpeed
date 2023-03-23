@@ -12,22 +12,24 @@ import UIKit
     internal var restartRequired = false
 
     open override func settingsCount() -> Int {
-        return 6;
+        return 7;
     }
     
     open override func settingTitle(index: Int, highlighted: Bool) -> String {
         if index == 0 {
             return NSLocalizedString("Pass-through", comment: "")
         } else if index == 1 {
-            return NSLocalizedString("Incoming Only", comment: "")
+            return NSLocalizedString("Keep In-place", comment: "")
         } else if index == 2 {
-            return NSLocalizedString("Unit", comment: "")
+            return NSLocalizedString("Incoming Only", comment: "")
         } else if index == 3 {
-            return NSLocalizedString("Prefixes", comment: "")
+            return NSLocalizedString("Landscape", comment: "")
         } else if index == 4 {
             return NSLocalizedString("Size", comment: "")
+        } else if index == 5 {
+            return NSLocalizedString("Unit", comment: "")
         } else {
-            return NSLocalizedString("Landscape", comment: "")
+            return NSLocalizedString("Prefixes", comment: "")
         }
     }
     
@@ -36,32 +38,23 @@ import UIKit
             if restartRequired {
                 return NSLocalizedString("Re-open to apply", comment: "")
             } else {
-                if alreadyLaunched {
-                    restartRequired = true
-                }
                 if (highlighted) {
                     return NSLocalizedString("ON", comment: "")
                 } else {
                     return NSLocalizedString("OFF", comment: "")
                 }
             }
-        } else if index == 1 {
+        } else if index == 1 || index == 2 {
             if (highlighted) {
                 return NSLocalizedString("ON", comment: "")
             } else {
                 return NSLocalizedString("OFF", comment: "")
             }
-        } else if index == 2 {
-            if (highlighted) {
-                return NSLocalizedString("b/s", comment: "")
-            } else {
-                return NSLocalizedString("B/s", comment: "")
-            }
         } else if index == 3 {
             if (highlighted) {
-                return NSLocalizedString("↑↓", comment: "")
+                return NSLocalizedString("Follow", comment: "")
             } else {
-                return NSLocalizedString("▲▼", comment: "")
+                return NSLocalizedString("Hide", comment: "")
             }
         } else if index == 4 {
             if (highlighted) {
@@ -69,11 +62,17 @@ import UIKit
             } else {
                 return NSLocalizedString("Standard", comment: "")
             }
+        } else if index == 5 {
+            if (highlighted) {
+                return NSLocalizedString("b/s", comment: "")
+            } else {
+                return NSLocalizedString("B/s", comment: "")
+            }
         } else {
             if (highlighted) {
-                return NSLocalizedString("Follow", comment: "")
+                return NSLocalizedString("↑↓", comment: "")
             } else {
-                return NSLocalizedString("Hide", comment: "")
+                return NSLocalizedString("▲▼", comment: "")
             }
         }
     }
@@ -82,15 +81,17 @@ import UIKit
         if index == 0 {
             return "passthroughMode"
         } else if index == 1 {
-            return "singleLineMode"
+            return "keepInPlace"
         } else if index == 2 {
-            return "usesBitrate"
+            return "singleLineMode"
         } else if index == 3 {
-            return "usesArrowPrefixes"
+            return "usesRotation"
         } else if index == 4 {
             return "usesLargeFont"
+        } else if index == 5 {
+            return "usesBitrate"
         } else {
-            return "usesRotation"
+            return "usesArrowPrefixes"
         }
     }
     
@@ -104,6 +105,9 @@ import UIKit
     }
     
     open override func settingDidSelect(index: Int, completion: @escaping () -> ()) {
+        if index == 0 && alreadyLaunched {
+            restartRequired = true
+        }
         delegate?.settingDidSelect(key: settingKey(index: index))
         completion()
     }

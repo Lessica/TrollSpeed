@@ -1,2 +1,1 @@
-- Add `UILaunchStoryboardName` entry to Info.plist
-- Fix touches on iOS 17
+- Adjust vertical position of the HUD by tapping and long-pressing (Not available for centered HUD)
