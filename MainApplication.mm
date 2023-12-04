@@ -77,6 +77,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     UIButton *_topCenterButton;
     UIButton *_topCenterMostButton;
     UILabel *_authorLabel;
+    BOOL _supportsCenterMost;
 }
 
 - (void)loadView
@@ -224,6 +225,11 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [self reloadMainButtonState];
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    _supportsCenterMost = self.view.window.safeAreaLayoutGuide.layoutFrame.origin.y >= 51;
+}
+
 #define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
 
 - (void)loadUserDefaults:(BOOL)forceReload
@@ -344,6 +350,11 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     } completion:nil];
 }
 
+- (void)presentTopCenterMostHints
+{
+    [_authorLabel setText:NSLocalizedString(@"Tap that button on the center again,\nto toggle ON/OFF “Dynamic Island” mode.", nil)];
+}
+
 - (BOOL)settingHighlightedWithKey:(NSString * _Nonnull)key
 {
     [self loadUserDefaults:NO];
@@ -360,9 +371,14 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
 - (void)reloadModeButtonState
 {
+    NSInteger selectedMode = [self selectedMode];
+    BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
+    BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
     [_topLeftButton setSelected:([self selectedMode] == HUDPresetPositionTopLeft)];
-    [_topCenterButton setSelected:([self selectedMode] == HUDPresetPositionTopCenter)];
+    [_topCenterButton setSelected:isCentered];
     [_topRightButton setSelected:([self selectedMode] == HUDPresetPositionTopRight)];
+    UIImage *topCenterImage = (isCenteredMost ? [UIImage systemImageNamed:@"arrow.up.to.line"] : [UIImage systemImageNamed:@"arrow.up"]);
+    [_topCenterButton setImage:topCenterImage forState:UIControlStateNormal];
 }
 
 - (void)tapView:(UITapGestureRecognizer *)sender
@@ -387,7 +403,20 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 - (void)tapTopCenterButton:(UIButton *)sender
 {
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopCenterButton:%{public}@]", sender);
-    [self setSelectedMode:HUDPresetPositionTopCenter];
+    NSInteger selectedMode = [self selectedMode];
+    BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
+    if (!sender.isSelected || !_supportsCenterMost) {
+        [self setSelectedMode:HUDPresetPositionTopCenter];
+        if (_supportsCenterMost) {
+            [self presentTopCenterMostHints];
+        }
+    } else {
+        if (isCenteredMost) {
+            [self setSelectedMode:HUDPresetPositionTopCenter];
+        } else {
+            [self setSelectedMode:HUDPresetPositionTopCenterMost];
+        }
+    }
     [self reloadModeButtonState];
 }
 

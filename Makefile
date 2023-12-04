@@ -4,7 +4,7 @@ INSTALL_TARGET_PROCESSES := XXTAssistiveTouch
 
 include $(THEOS)/makefiles/common.mk
 
-APPLICATION_VERSION = 1.8.3
+APPLICATION_VERSION = 1.8.5
 APPLICATION_NAME = XXTAssistiveTouch
 
 XXTAssistiveTouch_USE_MODULES := 0

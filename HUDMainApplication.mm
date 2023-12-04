@@ -841,12 +841,15 @@ static void DumpThreads(void)
     [self loadUserDefaults:YES];
 
     NSInteger selectedMode = [self selectedMode];
+    BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
+    BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
+    
     BOOL singleLineMode = [self singleLineMode];
     BOOL usesBitrate = [self usesBitrate];
     BOOL usesArrowPrefixes = [self usesArrowPrefixes];
-    BOOL usesLargeFont = [self usesLargeFont];
+    BOOL usesLargeFont = [self usesLargeFont] && !isCenteredMost;
 
-    BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
+    _blurView.layer.maskedCorners = (isCenteredMost ? kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner : kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner);
     _speedLabel.textAlignment = (isCentered ? NSTextAlignmentCenter : NSTextAlignmentLeft);
     
     DATAUNIT = usesBitrate;
@@ -1070,6 +1073,10 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     [NSLayoutConstraint deactivateConstraints:_constraints];
     [_constraints removeAllObjects];
 
+    NSInteger selectedMode = [self selectedMode];
+    BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
+    BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
+
     BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
     UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;
     
@@ -1089,10 +1096,14 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
             [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
         ]];
         
-        if (layoutGuide.layoutFrame.origin.y > 1)
-            [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:-10]];
-        else
-            [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:(isPad ? 30 : 20)]];
+        if (isCenteredMost && !isPad) {
+            [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:0]];
+        } else {
+            if (layoutGuide.layoutFrame.origin.y > 1)
+                [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:-10]];
+            else
+                [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:(isPad ? 30 : 20)]];
+        }
     }
     
     [_constraints addObjectsFromArray:@[
@@ -1100,8 +1111,6 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
         [_speedLabel.bottomAnchor constraintEqualToAnchor:_contentView.bottomAnchor],
     ]];
     
-    NSInteger selectedMode = [self selectedMode];
-    BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
     if (isCentered)
         [_constraints addObject:[_speedLabel.centerXAnchor constraintEqualToAnchor:_contentView.centerXAnchor]];
     else if (selectedMode == HUDPresetPositionTopLeft)
