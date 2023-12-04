@@ -102,7 +102,7 @@ class SPLarkPresentationController: UIPresentationController, UIGestureRecognize
         self.snapshotViewContainer.frame = containerView.bounds
         window.addSubview(self.snapshotViewContainer)
         
-        self.gradeView.backgroundColor = self.presentedView?.backgroundColor ?? UIColor.black
+        self.gradeView.backgroundColor = self.presentedView?.backgroundColor ?? UIColor.clear
         containerView.addSubview(self.gradeView)
         self.constraints(view: gradeView, to: containerView)
         

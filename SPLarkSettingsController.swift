@@ -82,7 +82,7 @@ open class SPLarkSettingsController: UIViewController {
         self.titleLabel.sizeToFit()
         self.titleLabel.frame = CGRect.init(x: 27, y: 40, width: self.view.frame.width - 27 * 2, height: self.titleLabel.frame.height)
         self.collectionView.layout(y: self.titleLabel.frame.origin.y + self.titleLabel.frame.height + 24)
-        self.closeButton.layout(bottomX: self.view.frame.width - 19, y: 19)
+        self.closeButton.layout(bottomX: self.view.frame.width - 19, y: self.titleLabel.frame.origin.y + self.titleLabel.frame.height / 2 - self.closeButton.frame.height / 2 - 2)
     }
     
     @objc func tapCloseButton() {

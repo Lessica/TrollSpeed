@@ -25,6 +25,9 @@ public final class SPLarkPresentingAnimationController: NSObject, UIViewControll
     
     public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         
+        if let presentingViewController = transitionContext.viewController(forKey: .from) {
+            presentingViewController.view.subviews.forEach { $0.alpha = 0 }
+        }
         guard let presentedViewController = transitionContext.viewController(forKey: .to) else { return }
         
         let containerView = transitionContext.containerView
@@ -50,4 +53,3 @@ public final class SPLarkPresentingAnimationController: NSObject, UIViewControll
         return 0.45
     }
 }
-

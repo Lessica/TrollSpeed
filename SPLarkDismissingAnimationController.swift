@@ -24,6 +24,8 @@ import UIKit
 public final class SPLarkDismissingAnimationController: NSObject, UIViewControllerAnimatedTransitioning {
     
     public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+
+        guard let presentingViewController = transitionContext.viewController(forKey: .to) else { return }
         
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
@@ -34,6 +36,9 @@ public final class SPLarkDismissingAnimationController: NSObject, UIViewControll
             animations: {
                 
         }) { finished in
+            if finished {
+                presentingViewController.view.subviews.forEach { $0.alpha = 1 }
+            }
             transitionContext.completeTransition(finished)
         }
     }
@@ -42,4 +47,3 @@ public final class SPLarkDismissingAnimationController: NSObject, UIViewControll
         return 0.45
     }
 }
-

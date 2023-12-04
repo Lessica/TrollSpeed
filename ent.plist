@@ -186,6 +186,8 @@
 	<true/>
 	<key>com.apple.springboard.activateassistant</key>
 	<true/>
+	<key>com.apple.springboard.appbackgroundstyle</key>
+	<true/>
 	<key>com.apple.springboard.launchapplications</key>
 	<true/>
 	<key>com.apple.system-task-ports</key>

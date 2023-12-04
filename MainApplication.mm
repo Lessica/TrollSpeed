@@ -64,6 +64,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 @end
 
 @interface RootViewController : UIViewController <TSSettingsControllerDelegate>
+@property (nonatomic, strong) UIView *backgroundView;
 @end
 
 @implementation RootViewController {
@@ -79,16 +80,20 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 - (void)loadView
 {
     CGRect bounds = UIScreen.mainScreen.bounds;
+
     self.view = [[UIView alloc] initWithFrame:bounds];
+    self.view.backgroundColor = [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:.580f/1.0f];  // rgba(0, 0, 0, 0.580)
 
-    // rgba(26, 188, 156, 1.0)
-    self.view.backgroundColor = [UIColor colorWithRed:26.0f/255.0f green:188.0f/255.0f blue:156.0f/255.0f alpha:1.0f];
+    self.backgroundView = [[UIView alloc] initWithFrame:bounds];
+    self.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.backgroundView.backgroundColor = [UIColor colorWithRed:26.0f/255.0f green:188.0f/255.0f blue:156.0f/255.0f alpha:1.0f];  // rgba(26, 188, 156, 1.0)
+    [self.view addSubview:self.backgroundView];
 
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapView:)];
-    tap.numberOfTapsRequired = 1;
-    tap.numberOfTouchesRequired = 1;
-    [self.view addGestureRecognizer:tap];
-    [self.view setUserInteractionEnabled:YES];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapView:)];
+    tapGesture.numberOfTapsRequired = 1;
+    tapGesture.numberOfTouchesRequired = 1;
+    [self.backgroundView addGestureRecognizer:tapGesture];
+    [self.backgroundView setUserInteractionEnabled:YES];
 
     BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
 
@@ -97,18 +102,18 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [_topLeftButton addTarget:self action:@selector(tapTopLeftButton:) forControlEvents:UIControlEventTouchUpInside];
     [_topLeftButton setImage:[UIImage systemImageNamed:@"arrow.up.left.square.fill"] forState:UIControlStateNormal];
     [_topLeftButton setAdjustsImageWhenHighlighted:NO];
-    [self.view addSubview:_topLeftButton];
+    [self.backgroundView addSubview:_topLeftButton];
     if (@available(iOS 15.0, *))
     {
         UIButtonConfiguration *config = [UIButtonConfiguration plainButtonConfiguration];
         [config setCornerStyle:UIButtonConfigurationCornerStyleLarge];
         [_topLeftButton setConfiguration:config];
     }
-    UILayoutGuide *safeArea = self.view.safeAreaLayoutGuide;
+    UILayoutGuide *safeArea = self.backgroundView.safeAreaLayoutGuide;
     [_topLeftButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
         [_topLeftButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:(isPad ? 40.0f : 28.f)],
-        [_topLeftButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:20.0f],
+        [_topLeftButton.leadingAnchor constraintEqualToAnchor:self.backgroundView.leadingAnchor constant:20.0f],
         [_topLeftButton.widthAnchor constraintEqualToConstant:40.0f],
         [_topLeftButton.heightAnchor constraintEqualToConstant:40.0f],
     ]];
@@ -118,7 +123,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [_topRightButton addTarget:self action:@selector(tapTopRightButton:) forControlEvents:UIControlEventTouchUpInside];
     [_topRightButton setImage:[UIImage systemImageNamed:@"arrow.up.right.square.fill"] forState:UIControlStateNormal];
     [_topRightButton setAdjustsImageWhenHighlighted:NO];
-    [self.view addSubview:_topRightButton];
+    [self.backgroundView addSubview:_topRightButton];
     if (@available(iOS 15.0, *))
     {
         UIButtonConfiguration *config = [UIButtonConfiguration plainButtonConfiguration];
@@ -128,7 +133,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [_topRightButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
         [_topRightButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:(isPad ? 40.0f : 28.f)],
-        [_topRightButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-20.0f],
+        [_topRightButton.trailingAnchor constraintEqualToAnchor:self.backgroundView.trailingAnchor constant:-20.0f],
         [_topRightButton.widthAnchor constraintEqualToConstant:40.0f],
         [_topRightButton.heightAnchor constraintEqualToConstant:40.0f],
     ]];
@@ -138,7 +143,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [_topCenterButton addTarget:self action:@selector(tapTopCenterButton:) forControlEvents:UIControlEventTouchUpInside];
     [_topCenterButton setImage:[UIImage systemImageNamed:@"arrow.up.square.fill"] forState:UIControlStateNormal];
     [_topCenterButton setAdjustsImageWhenHighlighted:NO];
-    [self.view addSubview:_topCenterButton];
+    [self.backgroundView addSubview:_topCenterButton];
     if (@available(iOS 15.0, *))
     {
         UIButtonConfiguration *config = [UIButtonConfiguration plainButtonConfiguration];
@@ -148,7 +153,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [_topCenterButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
         [_topCenterButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:(isPad ? 40.0f : 28.f)],
-        [_topCenterButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+        [_topCenterButton.centerXAnchor constraintEqualToAnchor:self.backgroundView.centerXAnchor],
         [_topCenterButton.widthAnchor constraintEqualToConstant:40.0f],
         [_topCenterButton.heightAnchor constraintEqualToConstant:40.0f],
     ]];
@@ -173,19 +178,19 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     {
         [_mainButton.titleLabel setFont:[UIFont boldSystemFontOfSize:32.0]];
     }
-    [self.view addSubview:_mainButton];
+    [self.backgroundView addSubview:_mainButton];
 
     [_mainButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
-        [_mainButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
-        [_mainButton.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor],
+        [_mainButton.centerXAnchor constraintEqualToAnchor:self.backgroundView.centerXAnchor],
+        [_mainButton.centerYAnchor constraintEqualToAnchor:self.backgroundView.centerYAnchor],
     ]];
 
     _settingsButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_settingsButton setTintColor:[UIColor whiteColor]];
     [_settingsButton addTarget:self action:@selector(tapSettingsButton:) forControlEvents:UIControlEventTouchUpInside];
     [_settingsButton setImage:[UIImage systemImageNamed:@"gear"] forState:UIControlStateNormal];
-    [self.view addSubview:_settingsButton];
+    [self.backgroundView addSubview:_settingsButton];
     if (@available(iOS 15.0, *))
     {
         UIButtonConfiguration *config = [UIButtonConfiguration tintedButtonConfiguration];
@@ -195,7 +200,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [_settingsButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
         [_settingsButton.bottomAnchor constraintEqualToAnchor:safeArea.bottomAnchor constant:-20.0f],
-        [_settingsButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+        [_settingsButton.centerXAnchor constraintEqualToAnchor:self.backgroundView.centerXAnchor],
         [_settingsButton.widthAnchor constraintEqualToConstant:40.0f],
         [_settingsButton.heightAnchor constraintEqualToConstant:40.0f],
     ]];
@@ -206,11 +211,11 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     [_authorLabel setTextColor:[UIColor whiteColor]];
     [_authorLabel setFont:[UIFont systemFontOfSize:14.0]];
     [_authorLabel sizeToFit];
-    [self.view addSubview:_authorLabel];
+    [self.backgroundView addSubview:_authorLabel];
 
     [_authorLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
-        [_authorLabel.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+        [_authorLabel.centerXAnchor constraintEqualToAnchor:self.backgroundView.centerXAnchor],
         [_authorLabel.bottomAnchor constraintEqualToAnchor:_settingsButton.topAnchor constant:-20],
     ]];
 
@@ -331,7 +336,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
 - (void)reloadMainButtonState
 {
-    [UIView transitionWithView:self.view duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+    [UIView transitionWithView:self.backgroundView duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         [_mainButton setTitle:(IsHUDEnabled() ? NSLocalizedString(@"Exit HUD", nil) : NSLocalizedString(@"Open HUD", nil)) forState:UIControlStateNormal];
         [_authorLabel setText:(IsHUDEnabled() ? NSLocalizedString(@"You can quit this app now.\nThe HUD will persist on your screen.", nil) : NSLocalizedString(@"Made with ♥ by @i_82 and @jmpews", nil))];
     } completion:nil];
@@ -360,7 +365,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
 - (void)tapView:(UITapGestureRecognizer *)sender
 {
-    os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapView:%{public}@]: %{public}@", sender, NSStringFromCGPoint([sender locationInView:self.view]));
+    os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapView:%{public}@]: %{public}@", sender, NSStringFromCGPoint([sender locationInView:self.backgroundView]));
 }
 
 - (void)tapTopLeftButton:(UIButton *)sender
@@ -402,7 +407,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
             dispatch_semaphore_signal(semaphore);
         });
 
-        [self.view setUserInteractionEnabled:NO];
+        [self.backgroundView setUserInteractionEnabled:NO];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
             int timedOut = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)));
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -410,16 +415,16 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
                     os_log_error(OS_LOG_DEFAULT, "Timed out waiting for HUD to launch");
                 
                 [self reloadMainButtonState];
-                [self.view setUserInteractionEnabled:YES];
+                [self.backgroundView setUserInteractionEnabled:YES];
             });
         });
     }
     else
     {
-        [self.view setUserInteractionEnabled:NO];
+        [self.backgroundView setUserInteractionEnabled:NO];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self reloadMainButtonState];
-            [self.view setUserInteractionEnabled:YES];
+            [self.backgroundView setUserInteractionEnabled:YES];
         });
     }
 }
