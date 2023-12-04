@@ -11,6 +11,7 @@
 #import <sys/sysctl.h>
 #import <mach-o/dyld.h>
 #import <objc/runtime.h>
+#import "HUDPresetPosition.h"
 
 
 extern "C" char **environ;
@@ -845,12 +846,13 @@ static void DumpThreads(void)
     BOOL usesArrowPrefixes = [self usesArrowPrefixes];
     BOOL usesLargeFont = [self usesLargeFont];
 
-    _speedLabel.textAlignment = (selectedMode == 1 ? NSTextAlignmentCenter : NSTextAlignmentLeft);
+    BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
+    _speedLabel.textAlignment = (isCentered ? NSTextAlignmentCenter : NSTextAlignmentLeft);
     
     DATAUNIT = usesBitrate;
     SHOW_UPLOAD_SPEED = !singleLineMode;
-    SHOW_DOWNLOAD_SPEED_FIRST = (selectedMode == 1);
-    SHOW_SECOND_SPEED_IN_NEW_LINE = (selectedMode == 0 || selectedMode == 2);
+    SHOW_DOWNLOAD_SPEED_FIRST = isCentered;
+    SHOW_SECOND_SPEED_IN_NEW_LINE = !isCentered;
     FONT_SIZE = (usesLargeFont ? 9.0 : 8.0);
     
     UPLOAD_PREFIX = (usesArrowPrefixes ? "↑" : "▲");
@@ -876,7 +878,7 @@ static void DumpThreads(void)
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"selectedMode"];
-    return mode ? [mode integerValue] : 1;
+    return mode ? [mode integerValue] : HUDPresetPositionTopCenter;
 }
 
 - (BOOL)singleLineMode
@@ -1098,12 +1100,13 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
         [_speedLabel.bottomAnchor constraintEqualToAnchor:_contentView.bottomAnchor],
     ]];
     
-    NSInteger mode = [self selectedMode];
-    if (mode == 1)
+    NSInteger selectedMode = [self selectedMode];
+    BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
+    if (isCentered)
         [_constraints addObject:[_speedLabel.centerXAnchor constraintEqualToAnchor:_contentView.centerXAnchor]];
-    else if (mode == 0)
+    else if (selectedMode == HUDPresetPositionTopLeft)
         [_constraints addObject:[_speedLabel.leadingAnchor constraintEqualToAnchor:_contentView.leadingAnchor constant:10]];
-    else
+    else  // HUDPresetPositionTopLeft
         [_constraints addObject:[_speedLabel.trailingAnchor constraintEqualToAnchor:_contentView.trailingAnchor constant:-10]];
 
     [_constraints addObjectsFromArray:@[
@@ -1131,11 +1134,12 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     [self updateSpeedLabel];
     [self resetLoopTimer];
 
-    NSInteger mode = [self selectedMode];
+    NSInteger selectedMode = [self selectedMode];
+    BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
     
     CGFloat scaleFactor = 0.05;
     CGFloat topTrans = CGRectGetHeight(view.bounds) * (scaleFactor / 2);
-    CGFloat leadingTrans = (mode == 1 ? 0 : (mode == 0 ? CGRectGetWidth(view.bounds) * (scaleFactor / 2) : -CGRectGetWidth(view.bounds) * (scaleFactor / 2)));
+    CGFloat leadingTrans = (isCentered ? 0 : (selectedMode == HUDPresetPositionTopLeft ? CGRectGetWidth(view.bounds) * (scaleFactor / 2) : -CGRectGetWidth(view.bounds) * (scaleFactor / 2)));
 
     // [view setUserInteractionEnabled:NO];
     [view setTransform:CGAffineTransformIdentity];

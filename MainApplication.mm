@@ -1,6 +1,7 @@
 #import <notify.h>
 #import <UIKit/UIKit.h>
 #import "XXTAssistiveTouch-Swift.h"
+#import "HUDPresetPosition.h"
 
 OBJC_EXTERN BOOL IsHUDEnabled(void);
 OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
@@ -74,6 +75,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     UIButton *_topLeftButton;
     UIButton *_topRightButton;
     UIButton *_topCenterButton;
+    UIButton *_topCenterMostButton;
     UILabel *_authorLabel;
 }
 
@@ -100,7 +102,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     _topLeftButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_topLeftButton setTintColor:[UIColor whiteColor]];
     [_topLeftButton addTarget:self action:@selector(tapTopLeftButton:) forControlEvents:UIControlEventTouchUpInside];
-    [_topLeftButton setImage:[UIImage systemImageNamed:@"arrow.up.left.square.fill"] forState:UIControlStateNormal];
+    [_topLeftButton setImage:[UIImage systemImageNamed:@"arrow.up.left"] forState:UIControlStateNormal];
     [_topLeftButton setAdjustsImageWhenHighlighted:NO];
     [self.backgroundView addSubview:_topLeftButton];
     if (@available(iOS 15.0, *))
@@ -121,7 +123,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     _topRightButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_topRightButton setTintColor:[UIColor whiteColor]];
     [_topRightButton addTarget:self action:@selector(tapTopRightButton:) forControlEvents:UIControlEventTouchUpInside];
-    [_topRightButton setImage:[UIImage systemImageNamed:@"arrow.up.right.square.fill"] forState:UIControlStateNormal];
+    [_topRightButton setImage:[UIImage systemImageNamed:@"arrow.up.right"] forState:UIControlStateNormal];
     [_topRightButton setAdjustsImageWhenHighlighted:NO];
     [self.backgroundView addSubview:_topRightButton];
     if (@available(iOS 15.0, *))
@@ -141,7 +143,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     _topCenterButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_topCenterButton setTintColor:[UIColor whiteColor]];
     [_topCenterButton addTarget:self action:@selector(tapTopCenterButton:) forControlEvents:UIControlEventTouchUpInside];
-    [_topCenterButton setImage:[UIImage systemImageNamed:@"arrow.up.square.fill"] forState:UIControlStateNormal];
+    [_topCenterButton setImage:[UIImage systemImageNamed:@"arrow.up"] forState:UIControlStateNormal];
     [_topCenterButton setAdjustsImageWhenHighlighted:NO];
     [self.backgroundView addSubview:_topCenterButton];
     if (@available(iOS 15.0, *))
@@ -240,7 +242,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"selectedMode"];
-    return mode ? [mode integerValue] : 1;
+    return mode ? [mode integerValue] : HUDPresetPositionTopCenter;
 }
 
 - (void)setSelectedMode:(NSInteger)selectedMode
@@ -358,9 +360,9 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
 - (void)reloadModeButtonState
 {
-    [_topLeftButton setSelected:([self selectedMode] == 0)];
-    [_topCenterButton setSelected:([self selectedMode] == 1)];
-    [_topRightButton setSelected:([self selectedMode] == 2)];
+    [_topLeftButton setSelected:([self selectedMode] == HUDPresetPositionTopLeft)];
+    [_topCenterButton setSelected:([self selectedMode] == HUDPresetPositionTopCenter)];
+    [_topRightButton setSelected:([self selectedMode] == HUDPresetPositionTopRight)];
 }
 
 - (void)tapView:(UITapGestureRecognizer *)sender
@@ -371,21 +373,21 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 - (void)tapTopLeftButton:(UIButton *)sender
 {
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopLeftButton:%{public}@]", sender);
-    [self setSelectedMode:0];
+    [self setSelectedMode:HUDPresetPositionTopLeft];
     [self reloadModeButtonState];
 }
 
 - (void)tapTopRightButton:(UIButton *)sender
 {
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopRightButton:%{public}@]", sender);
-    [self setSelectedMode:2];
+    [self setSelectedMode:HUDPresetPositionTopRight];
     [self reloadModeButtonState];
 }
 
 - (void)tapTopCenterButton:(UIButton *)sender
 {
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopCenterButton:%{public}@]", sender);
-    [self setSelectedMode:1];
+    [self setSelectedMode:HUDPresetPositionTopCenter];
     [self reloadModeButtonState];
 }
 
