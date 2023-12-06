@@ -27,7 +27,7 @@ endif
 include $(THEOS_MAKE_PATH)/application.mk
 
 after-stage::
-	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/Payload$(ECHO_END)
+	$(ECHO_NOTHING)mkdir -p packages $(THEOS_STAGING_DIR)/Payload$(ECHO_END)
 	$(ECHO_NOTHING)cp -rp $(THEOS_STAGING_DIR)/Applications/XXTAssistiveTouch.app $(THEOS_STAGING_DIR)/Payload$(ECHO_END)
 	$(ECHO_NOTHING)cd $(THEOS_STAGING_DIR); zip -qr TrollSpeed_$(APPLICATION_VERSION).tipa Payload; cd -;$(ECHO_END)
 	$(ECHO_NOTHING)mv $(THEOS_STAGING_DIR)/TrollSpeed_$(APPLICATION_VERSION).tipa packages/TrollSpeed_$(APPLICATION_VERSION).tipa $(ECHO_END)

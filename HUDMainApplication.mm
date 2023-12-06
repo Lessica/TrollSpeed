@@ -1027,7 +1027,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     _contentView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:_contentView];
 
-    _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+    _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterialDark]];
     _blurView.layer.cornerRadius = 4;
     _blurView.layer.masksToBounds = YES;
     _blurView.translatesAutoresizingMaskIntoConstraints = NO;
