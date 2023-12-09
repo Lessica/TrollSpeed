@@ -1,5 +1,5 @@
+#include <CoreGraphics/CoreGraphics.h>
 #include <Foundation/Foundation.h>
-#include <MacTypes.h>
 #import <notify.h>
 #import <UIKit/UIKit.h>
 #import "TrollSpeed-Swift.h"
@@ -236,6 +236,10 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
         [_authorLabel.bottomAnchor constraintEqualToAnchor:_settingsButton.topAnchor constant:-20],
     ]];
 
+    UITapGestureRecognizer *authorTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAuthorLabel:)];
+    [_authorLabel setUserInteractionEnabled:YES];
+    [_authorLabel addGestureRecognizer:authorTapGesture];
+
     [self reloadMainButtonState];
 }
 
@@ -408,14 +412,47 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
 - (void)reloadMainButtonState
 {
     _isHUDActive = IsHUDEnabled();
+    
+    static NSAttributedString *hintAttributedString = nil;
+    static NSAttributedString *githubAttributedString = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSDictionary *defaultAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor], NSFontAttributeName: [UIFont systemFontOfSize:14]};
+        
+        NSString *hintText = NSLocalizedString(@"You can quit this app now.\nThe HUD will persist on your screen.", nil);
+        hintAttributedString = [[NSAttributedString alloc] initWithString:hintText attributes:defaultAttributes];
+        
+        NSTextAttachment *githubIcon = [NSTextAttachment textAttachmentWithImage:[UIImage imageNamed:@"github-mark-white"]];
+        [githubIcon setBounds:CGRectMake(0, 0, 14, 14)];
+        
+        NSAttributedString *githubIconText = [NSAttributedString attributedStringWithAttachment:githubIcon];
+        NSMutableAttributedString *githubIconTextFull = [[NSMutableAttributedString alloc] initWithAttributedString:githubIconText];
+        [githubIconTextFull appendAttributedString:[[NSAttributedString alloc] initWithString:@" " attributes:defaultAttributes]];
+        
+        NSString *githubText = NSLocalizedString(@"Made with ♥ by @Lessica and @jmpews", nil);
+        NSMutableAttributedString *githubAttributedText = [[NSMutableAttributedString alloc] initWithString:githubText attributes:defaultAttributes];
+        
+        // replace all "@" with github icon
+        NSRange atRange = [githubAttributedText.string rangeOfString:@"@"];
+        while (atRange.location != NSNotFound) {
+            [githubAttributedText replaceCharactersInRange:atRange withAttributedString:githubIconTextFull];
+            atRange = [githubAttributedText.string rangeOfString:@"@"];
+        }
+        
+        githubAttributedString = githubAttributedText;
+    });
+    
     [UIView transitionWithView:self.backgroundView duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         [_mainButton setTitle:(_isHUDActive ? NSLocalizedString(@"Exit HUD", nil) : NSLocalizedString(@"Open HUD", nil)) forState:UIControlStateNormal];
-        [_authorLabel setText:(_isHUDActive ? NSLocalizedString(@"You can quit this app now.\nThe HUD will persist on your screen.", nil) : NSLocalizedString(@"Made with ♥ by @i_82 and @jmpews", nil))];
+        [_authorLabel setAttributedText:(_isHUDActive ? hintAttributedString : githubAttributedString)];
     } completion:nil];
 }
 
 - (void)presentTopCenterMostHints
 {
+    if (!_isHUDActive) {
+        return;
+    }
     [_authorLabel setText:NSLocalizedString(@"Tap that button on the center again,\nto toggle ON/OFF “Dynamic Island” mode.", nil)];
 }
 
@@ -448,6 +485,16 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
 - (void)tapView:(UITapGestureRecognizer *)sender
 {
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapView:%{public}@]: %{public}@", sender, NSStringFromCGPoint([sender locationInView:self.backgroundView]));
+}
+
+- (void)tapAuthorLabel:(UITapGestureRecognizer *)sender
+{
+    if (_isHUDActive) {
+        return;
+    }
+    NSString *repoURLString = @"https://github.com/Lessica/TrollSpeed";
+    NSURL *repoURL = [NSURL URLWithString:repoURLString];
+    [[UIApplication sharedApplication] openURL:repoURL options:@{} completionHandler:nil];
 }
 
 - (void)tapTopLeftButton:(UIButton *)sender
