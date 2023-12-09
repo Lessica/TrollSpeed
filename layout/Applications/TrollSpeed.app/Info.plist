@@ -7,13 +7,13 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>XXTAssistiveTouch</string>
+	<string>TrollSpeed</string>
 	<key>CFBundleDisplayName</key>
 	<string>TrollSpeed</string>
 	<key>CFBundleVersion</key>
-	<string>1.8.5</string>
+	<string>1.8.6</string>
 	<key>CFBundleExecutable</key>
-	<string>XXTAssistiveTouch</string>
+	<string>TrollSpeed</string>
 	<key>NSPrincipalClass</key>
 	<string>HUDMainApplication</string>
 	<key>CFBundlePackageType</key>
@@ -23,6 +23,8 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>UIApplicationShowsViewsWhileLocked</key>
+	<false/>
+	<key>UIApplicationSystemWindowsSecureKey</key>
 	<true/>
 	<key>UIBackgroundStyle</key>
 	<string>UIBackgroundStyleDarkBlur</string>
@@ -41,6 +43,6 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2009 Apple Inc. All Rights Reserved.</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.8.5</string>
+	<string>1.8.6</string>
 </dict>
 </plist>

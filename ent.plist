@@ -108,8 +108,8 @@
 	<!-- <true/> -->
 	<!-- <key>com.apple.private.security.storage.AppDataContainers</key> -->
 	<!-- <true/> -->
-	<key>com.apple.private.persona-mgmt</key>
-	<true/>
+	<!-- <key>com.apple.private.persona-mgmt</key>
+	<true/> -->
 	<key>com.apple.private.sysdiagnose</key>
 	<true/>
 	<!-- <key>com.apple.private.tcc.allow</key> -->

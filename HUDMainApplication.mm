@@ -34,9 +34,9 @@ BOOL IsHUDEnabled(void)
     posix_spawnattr_t attr;
     posix_spawnattr_init(&attr);
 
-    posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
-    posix_spawnattr_set_persona_uid_np(&attr, 0);
-    posix_spawnattr_set_persona_gid_np(&attr, 0);
+    // posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
+    // posix_spawnattr_set_persona_uid_np(&attr, 0);
+    // posix_spawnattr_set_persona_gid_np(&attr, 0);
 
     pid_t task_pid;
     const char *args[] = { executablePath, "-check", NULL };
@@ -76,9 +76,9 @@ void SetHUDEnabled(BOOL isEnabled)
     posix_spawnattr_t attr;
     posix_spawnattr_init(&attr);
 
-    posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
-    posix_spawnattr_set_persona_uid_np(&attr, 0);
-    posix_spawnattr_set_persona_gid_np(&attr, 0);
+    // posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
+    // posix_spawnattr_set_persona_uid_np(&attr, 0);
+    // posix_spawnattr_set_persona_gid_np(&attr, 0);
 
     if (isEnabled)
     {

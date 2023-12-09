@@ -1,6 +1,6 @@
 #import <notify.h>
 #import <UIKit/UIKit.h>
-#import "XXTAssistiveTouch-Swift.h"
+#import "TrollSpeed-Swift.h"
 #import "HUDPresetPosition.h"
 
 OBJC_EXTERN BOOL IsHUDEnabled(void);

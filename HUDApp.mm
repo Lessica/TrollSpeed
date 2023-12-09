@@ -82,7 +82,7 @@ static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef
 
     if (@available(iOS 15.2, *))
     {
-        if (@available(iOS 16.2, *))
+        if (@available(iOS 16.0, *))
         {
 
         }

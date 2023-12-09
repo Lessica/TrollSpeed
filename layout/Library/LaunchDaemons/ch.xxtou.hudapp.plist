@@ -20,7 +20,8 @@
 	<string>Interactive</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/Applications/XXTAssistiveTouch.app/XXTAssistiveTouch</string>
+		<string>/Applications/TrollSpeed.app/TrollSpeed</string>
+		<string>-hud</string>
 	</array>
 	<key>RunAtLoad</key>
 	<false/>
