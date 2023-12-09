@@ -17,10 +17,10 @@
 
 extern "C" char **environ;
 
-#define POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE 1
-extern "C" int posix_spawnattr_set_persona_np(const posix_spawnattr_t* __restrict, uid_t, uint32_t);
-extern "C" int posix_spawnattr_set_persona_uid_np(const posix_spawnattr_t* __restrict, uid_t);
-extern "C" int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restrict, uid_t);
+// #define POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE 1
+// extern "C" int posix_spawnattr_set_persona_np(const posix_spawnattr_t* __restrict, uid_t, uint32_t);
+// extern "C" int posix_spawnattr_set_persona_uid_np(const posix_spawnattr_t* __restrict, uid_t);
+// extern "C" int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restrict, uid_t);
 
 
 OBJC_EXTERN BOOL IsHUDEnabled(void);
@@ -281,8 +281,8 @@ static NSAttributedString* formattedAttributedString(BOOL isFocused)
 
         if (DATAUNIT == 1)
         {
-            upDiff *= 8;
-            downDiff *= 8;
+            upDiff *= BYTE_SIZE;
+            downDiff *= BYTE_SIZE;
         }
 
         if (SHOW_DOWNLOAD_SPEED_FIRST)

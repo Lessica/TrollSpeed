@@ -1,3 +1,5 @@
+#include <Foundation/Foundation.h>
+#include <MacTypes.h>
 #import <notify.h>
 #import <UIKit/UIKit.h>
 #import "TrollSpeed-Swift.h"
@@ -5,6 +7,17 @@
 
 OBJC_EXTERN BOOL IsHUDEnabled(void);
 OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
+
+@interface UIApplication (Private)
+- (void)suspend;
+- (void)terminateWithSuccess;
+@end
+
+static BOOL _shouldToggleHUDAfterLaunch = NO;
+static NSString * const kToggleHUDAfterLaunchNotificationName = @"ch.xxtou.hudapp.notification.toggle-hud";
+static NSString * const kToggleHUDAfterLaunchNotificationActionKey = @"action";
+static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOn = @"toggle-on";
+static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"toggle-off";
 
 
 #pragma mark - MainApplication
@@ -66,6 +79,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
 @interface RootViewController : UIViewController <TSSettingsControllerDelegate>
 @property (nonatomic, strong) UIView *backgroundView;
+@property (nonatomic, assign) BOOL isHUDActive;
 @end
 
 @implementation RootViewController {
@@ -230,6 +244,55 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
     _supportsCenterMost = self.view.window.safeAreaLayoutGuide.layoutFrame.origin.y >= 51;
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHUDNotificationReceived:) name:kToggleHUDAfterLaunchNotificationName object:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self toggleHUDAfterLaunch];
+}
+
+- (void)toggleHUDNotificationReceived:(NSNotification *)notification {
+    NSString *toggleAction = notification.userInfo[kToggleHUDAfterLaunchNotificationActionKey];
+    if (!toggleAction) {
+        [self toggleHUDAfterLaunch];
+    } else if ([toggleAction isEqualToString:kToggleHUDAfterLaunchNotificationActionToggleOn]) {
+        [self toggleOnHUDAfterLaunch];
+    } else if ([toggleAction isEqualToString:kToggleHUDAfterLaunchNotificationActionToggleOff]) {
+        [self toggleOffHUDAfterLaunch];
+    }
+}
+
+- (void)toggleHUDAfterLaunch {
+    if (_shouldToggleHUDAfterLaunch) {
+        _shouldToggleHUDAfterLaunch = NO;
+        [self tapMainButton:_mainButton];
+        [[UIApplication sharedApplication] suspend];
+    }
+}
+
+- (void)toggleOnHUDAfterLaunch {
+    if (_shouldToggleHUDAfterLaunch) {
+        _shouldToggleHUDAfterLaunch = NO;
+        if (!_isHUDActive) {
+            [self tapMainButton:_mainButton];
+        }
+        [[UIApplication sharedApplication] suspend];
+    }
+}
+
+- (void)toggleOffHUDAfterLaunch {
+    if (_shouldToggleHUDAfterLaunch) {
+        _shouldToggleHUDAfterLaunch = NO;
+        if (_isHUDActive) {
+            [self tapMainButton:_mainButton];
+        }
+        [[UIApplication sharedApplication] suspend];
+    }
+}
+
 #define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
 
 - (void)loadUserDefaults:(BOOL)forceReload
@@ -344,9 +407,10 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
 - (void)reloadMainButtonState
 {
+    _isHUDActive = IsHUDEnabled();
     [UIView transitionWithView:self.backgroundView duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-        [_mainButton setTitle:(IsHUDEnabled() ? NSLocalizedString(@"Exit HUD", nil) : NSLocalizedString(@"Open HUD", nil)) forState:UIControlStateNormal];
-        [_authorLabel setText:(IsHUDEnabled() ? NSLocalizedString(@"You can quit this app now.\nThe HUD will persist on your screen.", nil) : NSLocalizedString(@"Made with ♥ by @i_82 and @jmpews", nil))];
+        [_mainButton setTitle:(_isHUDActive ? NSLocalizedString(@"Exit HUD", nil) : NSLocalizedString(@"Open HUD", nil)) forState:UIControlStateNormal];
+        [_authorLabel setText:(_isHUDActive ? NSLocalizedString(@"You can quit this app now.\nThe HUD will persist on your screen.", nil) : NSLocalizedString(@"Made with ♥ by @i_82 and @jmpews", nil))];
     } completion:nil];
 }
 
@@ -467,7 +531,7 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
     TSSettingsController *settingsViewController = [[TSSettingsController alloc] init];
     settingsViewController.delegate = self;
-    settingsViewController.alreadyLaunched = IsHUDEnabled();
+    settingsViewController.alreadyLaunched = _isHUDActive;
     
     SPLarkTransitioningDelegate *transitioningDelegate = [[SPLarkTransitioningDelegate alloc] init];
     settingsViewController.transitioningDelegate = transitioningDelegate;
@@ -494,6 +558,43 @@ OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
         os_log_debug(OS_LOG_DEFAULT, "- [MainApplicationDelegate init]");
     }
     return self;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+    if ([url.scheme isEqualToString:@"trollspeed"]) {
+        if ([url.host isEqualToString:@"toggle"]) {
+            [self setupAndNotifyToggleHUDAfterLaunchWithAction:nil];
+            return YES;
+        } else if ([url.host isEqualToString:@"on"]) {
+            [self setupAndNotifyToggleHUDAfterLaunchWithAction:kToggleHUDAfterLaunchNotificationActionToggleOn];
+            return YES;
+        } else if ([url.host isEqualToString:@"off"]) {
+            [self setupAndNotifyToggleHUDAfterLaunchWithAction:kToggleHUDAfterLaunchNotificationActionToggleOff];
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL succeeded))completionHandler
+{
+    if ([shortcutItem.type isEqualToString:@"ch.xxtou.shortcut.toggle-hud"])
+    {
+        [self setupAndNotifyToggleHUDAfterLaunchWithAction:nil];
+    }
+}
+
+- (void)setupAndNotifyToggleHUDAfterLaunchWithAction:(NSString *)action
+{
+    _shouldToggleHUDAfterLaunch = YES;
+    if (action) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kToggleHUDAfterLaunchNotificationName object:nil userInfo:@{
+            kToggleHUDAfterLaunchNotificationActionKey: action,
+        }];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kToggleHUDAfterLaunchNotificationName object:nil];
+    }
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary <UIApplicationLaunchOptionsKey, id> *)launchOptions {

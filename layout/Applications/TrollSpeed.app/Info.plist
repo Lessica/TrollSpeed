@@ -22,10 +22,32 @@
 	<string>icon.png</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>ch.xxtou.hudapp</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>trollspeed</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIApplicationShowsViewsWhileLocked</key>
 	<false/>
 	<key>UIApplicationSystemWindowsSecureKey</key>
 	<true/>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>wand.and.stars</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Toggle HUD</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>ch.xxtou.shortcut.toggle-hud</string>
+		</dict>
+	</array>
 	<key>UIBackgroundStyle</key>
 	<string>UIBackgroundStyleDarkBlur</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
