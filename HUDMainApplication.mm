@@ -11,6 +11,7 @@
 #import <sys/sysctl.h>
 #import <mach-o/dyld.h>
 #import <objc/runtime.h>
+#import <UIKit/UIKit.h>
 #import "HUDPresetPosition.h"
 
 
@@ -868,7 +869,11 @@ static void DumpThreads(void)
     attributedDownloadPrefix = nil;
 
     [self updateViewConstraints];
-    [self onFocus:_contentView];
+    if (!_isFocused) {
+        [self onFocus:_contentView];
+    } else {
+        [self keepFocus:_contentView];
+    }
     [self performSelector:@selector(onBlur:) withObject:_contentView afterDelay:IDLE_INTERVAL];
 }
 
@@ -1129,6 +1134,11 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     [super updateViewConstraints];
 }
 
+- (void)keepFocus:(UIView *)view
+{
+    [self onFocus:view duration:0];
+}
+
 - (void)onFocus:(UIView *)view
 {
     [self onFocus:view duration:0.2];
@@ -1152,7 +1162,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
 
     // [view setUserInteractionEnabled:NO];
     [view setTransform:CGAffineTransformIdentity];
-    [UIView animateWithDuration:duration animations:^{
+    [UIView animateWithDuration:duration delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:UIViewAnimationOptionCurveEaseIn | UIViewAnimationOptionBeginFromCurrentState animations:^{
         if (ABS(leadingTrans) > 1e-6 || ABS(topTrans) > 1e-6)
         {
             CGAffineTransform transform = CGAffineTransformMakeTranslation(leadingTrans, topTrans);
@@ -1179,7 +1189,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     [self updateSpeedLabel];
     [self resetLoopTimer];
 
-    [UIView animateWithDuration:duration animations:^{
+    [UIView animateWithDuration:duration delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
         view.transform = CGAffineTransformIdentity;
         view.alpha = 0.667;
     } completion:^(BOOL finished) {
@@ -1192,7 +1202,11 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
 #if DEBUG
     os_log_info(OS_LOG_DEFAULT, "TAPPED");
 #endif
-    [self onFocus:sender.view];
+    if (!_isFocused) {
+        [self onFocus:sender.view];
+    } else {
+        [self keepFocus:sender.view];
+    }
 }
 
 @end
