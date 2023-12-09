@@ -4,8 +4,8 @@
 <dict>
 	<key>com.apple.AXMediaUtilitiesService-access</key>
 	<true/>
-	<key>com.apple.Contacts.database-allow</key>
-	<true/>
+	<!-- <key>com.apple.Contacts.database-allow</key> -->
+	<!-- <true/> -->
 	<key>com.apple.DragUI.accessibility</key>
 	<true/>
 	<key>com.apple.QuartzCore.displayable-context</key>
@@ -108,8 +108,8 @@
 	<!-- <true/> -->
 	<!-- <key>com.apple.private.security.storage.AppDataContainers</key> -->
 	<!-- <true/> -->
-	<!-- <key>com.apple.private.persona-mgmt</key>
-	<true/> -->
+	<!-- <key>com.apple.private.persona-mgmt</key> -->
+	<!-- <true/> -->
 	<key>com.apple.private.sysdiagnose</key>
 	<true/>
 	<!-- <key>com.apple.private.tcc.allow</key> -->
@@ -168,16 +168,16 @@
 	<array>
 		<string>com.apple.assistant.logging</string>
 	</array>
-	<key>com.apple.security.system-groups</key>
-	<array>
-		<string>systemgroup.com.apple.powerlog</string>
-	</array>
-	<key>com.apple.siri.VoiceShortcuts.xpc</key>
-	<true/>
-	<key>com.apple.siri.activation.service</key>
-	<true/>
-	<key>com.apple.siri.external_request</key>
-	<true/>
+	<!-- <key>com.apple.security.system-groups</key> -->
+	<!-- <array> -->
+		<!-- <string>systemgroup.com.apple.powerlog</string> -->
+	<!-- </array> -->
+	<!-- <key>com.apple.siri.VoiceShortcuts.xpc</key> -->
+	<!-- <true/> -->
+	<!-- <key>com.apple.siri.activation.service</key> -->
+	<!-- <true/> -->
+	<!-- <key>com.apple.siri.external_request</key> -->
+	<!-- <true/> -->
 	<key>com.apple.springboard-ui.client</key>
 	<true/>
 	<key>com.apple.springboard.CFUserNotification</key>
