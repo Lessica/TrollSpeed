@@ -106,12 +106,6 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
     self.backgroundView.backgroundColor = [UIColor colorWithRed:26.0f/255.0f green:188.0f/255.0f blue:156.0f/255.0f alpha:1.0f];  // rgba(26, 188, 156, 1.0)
     [self.view addSubview:self.backgroundView];
 
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapView:)];
-    tapGesture.numberOfTapsRequired = 1;
-    tapGesture.numberOfTouchesRequired = 1;
-    [self.backgroundView addGestureRecognizer:tapGesture];
-    [self.backgroundView setUserInteractionEnabled:YES];
-
     BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
 
     _topLeftButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -480,11 +474,6 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
     [_topRightButton setSelected:([self selectedMode] == HUDPresetPositionTopRight)];
     UIImage *topCenterImage = (isCenteredMost ? [UIImage systemImageNamed:@"arrow.up.to.line"] : [UIImage systemImageNamed:@"arrow.up"]);
     [_topCenterButton setImage:topCenterImage forState:UIControlStateNormal];
-}
-
-- (void)tapView:(UITapGestureRecognizer *)sender
-{
-    os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapView:%{public}@]: %{public}@", sender, NSStringFromCGPoint([sender locationInView:self.backgroundView]));
 }
 
 - (void)tapAuthorLabel:(UITapGestureRecognizer *)sender

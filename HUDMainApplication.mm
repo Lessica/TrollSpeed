@@ -14,14 +14,17 @@
 #import <UIKit/UIKit.h>
 #import "HUDPresetPosition.h"
 
+#define SPAWN_AS_ROOT 0
+
 
 extern "C" char **environ;
 
-// #define POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE 1
-// extern "C" int posix_spawnattr_set_persona_np(const posix_spawnattr_t* __restrict, uid_t, uint32_t);
-// extern "C" int posix_spawnattr_set_persona_uid_np(const posix_spawnattr_t* __restrict, uid_t);
-// extern "C" int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restrict, uid_t);
-
+#if SPAWN_AS_ROOT
+#define POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE 1
+extern "C" int posix_spawnattr_set_persona_np(const posix_spawnattr_t* __restrict, uid_t, uint32_t);
+extern "C" int posix_spawnattr_set_persona_uid_np(const posix_spawnattr_t* __restrict, uid_t);
+extern "C" int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restrict, uid_t);
+#endif
 
 OBJC_EXTERN BOOL IsHUDEnabled(void);
 BOOL IsHUDEnabled(void)
@@ -35,9 +38,11 @@ BOOL IsHUDEnabled(void)
     posix_spawnattr_t attr;
     posix_spawnattr_init(&attr);
 
-    // posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
-    // posix_spawnattr_set_persona_uid_np(&attr, 0);
-    // posix_spawnattr_set_persona_gid_np(&attr, 0);
+#if SPAWN_AS_ROOT
+    posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
+    posix_spawnattr_set_persona_uid_np(&attr, 0);
+    posix_spawnattr_set_persona_gid_np(&attr, 0);
+#endif
 
     pid_t task_pid;
     const char *args[] = { executablePath, "-check", NULL };
@@ -77,9 +82,11 @@ void SetHUDEnabled(BOOL isEnabled)
     posix_spawnattr_t attr;
     posix_spawnattr_init(&attr);
 
-    // posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
-    // posix_spawnattr_set_persona_uid_np(&attr, 0);
-    // posix_spawnattr_set_persona_gid_np(&attr, 0);
+#if SPAWN_AS_ROOT
+    posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
+    posix_spawnattr_set_persona_uid_np(&attr, 0);
+    posix_spawnattr_set_persona_gid_np(&attr, 0);
+#endif
 
     if (isEnabled)
     {
