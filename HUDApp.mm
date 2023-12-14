@@ -8,6 +8,9 @@
 #import <sys/sysctl.h>
 #import <mach-o/dyld.h>
 #import <objc/runtime.h>
+#import <CoreFoundation/CoreFoundation.h>
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 
 #pragma mark -
@@ -80,16 +83,14 @@ static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef
 
     BOOL shouldUseAXEvent = NO;
 
-    if (@available(iOS 15.2, *))
-    {
-        if (@available(iOS 16.0, *))
-        {
-
-        }
-        else
-        {
-            shouldUseAXEvent = YES;
-        }
+    if (@available(iOS 17.0, *)) {
+        shouldUseAXEvent = YES;
+    } else if (@available(iOS 16.0, *)) {
+        shouldUseAXEvent = NO;
+    } else if (@available(iOS 15.2, *)) {
+        shouldUseAXEvent = YES;
+    } else {
+        shouldUseAXEvent = NO;
     }
 
     if (shouldUseAXEvent)

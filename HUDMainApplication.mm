@@ -9,6 +9,7 @@
 #import <sys/wait.h>
 #import <sys/types.h>
 #import <sys/sysctl.h>
+#import <mach/vm_param.h>
 #import <mach-o/dyld.h>
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
