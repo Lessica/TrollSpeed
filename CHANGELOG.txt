@@ -1,0 +1,2 @@
+- Add `UILaunchStoryboardName` entry to Info.plist
+- Fix touches on iOS 17

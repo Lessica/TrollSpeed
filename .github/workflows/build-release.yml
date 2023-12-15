@@ -1,0 +1,133 @@
+name: Build Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+env:
+  THEOS: ''
+  GIT_TAG: ''
+  XCODE_VERSION: '14.3.1'
+
+jobs:
+  build:
+    name: Build and upload release package for TrollStore
+    runs-on: macos-13
+
+    steps:
+      - name: Setup Xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+
+      - name: Install Homebrew Dependencies
+        run: |
+          brew install dpkg ldid make libplist openssl@3
+          echo "/usr/local/opt/make/libexec/gnubin" >> $GITHUB_PATH
+
+      - name: Checkout XXTouchNG/theos
+        uses: actions/checkout@v3
+        with:
+          repository: XXTouchNG/theos
+          ref: 78ee784d8d3238982c9abdc58cd39919263648b1
+          path: theos
+          submodules: recursive
+
+      - name: Add THEOS Environment Variables
+        run: |
+          rm -rf $GITHUB_WORKSPACE/theos/sdks
+          echo "THEOS=$GITHUB_WORKSPACE/theos" >> $GITHUB_ENV
+
+      - name: Restore Additional SDKs
+        id: cached-sdks-restore
+        uses: actions/cache/restore@v3
+        with:
+          path: ${{ env.THEOS }}/sdks
+          key: ${{ runner.os }}-sdks-${{ env.XCODE_VERSION }}
+
+      - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
+        name: Checkout theos/sdks
+        uses: actions/checkout@v3
+        with:
+          repository: theos/sdks
+          ref: master
+          path: ${{ env.THEOS }}/sdks
+
+      - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
+        name: Checkout XXTouchNG/tbd
+        uses: actions/checkout@v3
+        with:
+          repository: XXTouchNG/tbd
+          ref: 30a6883092221e13d814c02ac41af1e565a40617
+          path: tbd
+
+      - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
+        name: Build tbd
+        run: |
+          cd $GITHUB_WORKSPACE/tbd
+          make
+          cp bin/tbd /usr/local/bin/tbd
+
+      - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
+        name: Generate Additional SDKs
+        run: |
+          cd $THEOS/sdks
+          python3 create_patched_sdk.py --no-overwrite -x $(dirname $(dirname $(xcode-select -p)))
+
+      - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
+        name: Save Additional SDKs
+        id: cached-sdks-save
+        uses: actions/cache/save@v3
+        with:
+          path: ${{ env.THEOS }}/sdks
+          key: ${{ steps.cached-sdks-restore.outputs.cache-primary-key }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: Lessica/TrollSpeed
+          ref: main
+          path: TrollSpeed
+          submodules: recursive
+
+      - name: Setup Build Environment
+        run: |
+          echo "Available SDKs: $(find $THEOS/sdks -name "*.sdk" -maxdepth 1 -print)"
+          echo "FINALPACKAGE=1" >> $GITHUB_ENV
+          cd $GITHUB_WORKSPACE/TrollSpeed
+          git fetch --tags
+          echo "GIT_TAG=$(git describe --tags --always --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Build Package
+        run: |
+          cd $GITHUB_WORKSPACE/TrollSpeed
+          ./gen-control.sh ${{ env.GIT_TAG }}
+          FINALPACKAGE=1 make stage
+
+      - name: Collect Symbols
+        run: |
+          cd $GITHUB_WORKSPACE/TrollSpeed
+          find .theos/obj -name "*.dSYM" -print | zip -r packages/TrollSpeed_${{ env.GIT_TAG }}_symbols.zip -@
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: TrollSpeed_${{ env.GIT_TAG }}
+          path: |
+            TrollSpeed/packages/TrollSpeed_*.tipa
+
+      - name: Upload Symbols
+        uses: actions/upload-artifact@v3
+        with:
+          name: TrollSpeed_${{ env.GIT_TAG }}_symbols
+          path: |
+            TrollSpeed/packages/TrollSpeed_${{ env.GIT_TAG }}_symbols.zip
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          body_path: TrollSpeed/CHANGELOG.txt
+          files: |
+            TrollSpeed/packages/TrollSpeed_*.tipa
