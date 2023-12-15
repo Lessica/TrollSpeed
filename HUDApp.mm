@@ -87,7 +87,7 @@ static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef
         shouldUseAXEvent = YES;
     } else if (@available(iOS 16.0, *)) {
         shouldUseAXEvent = NO;
-    } else if (@available(iOS 15.2, *)) {
+    } else if (@available(iOS 15.0, *)) {
         shouldUseAXEvent = YES;
     } else {
         shouldUseAXEvent = NO;
