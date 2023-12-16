@@ -79,20 +79,8 @@ void GSEventRegisterEventCallBack(void (*)(GSEventRef));
 static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHIDEventRef event)
 {
     static UIApplication *app = [UIApplication sharedApplication];
-    [app _enqueueHIDEvent:event];
 
-    BOOL shouldUseAXEvent = NO;
-
-    if (@available(iOS 17.0, *)) {
-        shouldUseAXEvent = YES;
-    } else if (@available(iOS 16.0, *)) {
-        shouldUseAXEvent = NO;
-    } else if (@available(iOS 15.0, *)) {
-        shouldUseAXEvent = YES;
-    } else {
-        shouldUseAXEvent = NO;
-    }
-
+    BOOL shouldUseAXEvent = YES;  // Always use AX events now...
     if (shouldUseAXEvent)
     {
         static Class AXEventRepresentationCls = nil;
@@ -101,7 +89,7 @@ static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef
             [[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/AccessibilityUtilities.framework"] load];
             AXEventRepresentationCls = objc_getClass("AXEventRepresentation");
         });
-        
+
         AXEventRepresentation *rep = [AXEventRepresentationCls representationWithHIDEvent:event hidStreamIdentifier:@"UIApplicationEvents"];
 #if DEBUG
         os_log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", rep.handInfo);
@@ -109,40 +97,36 @@ static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef
 
         /* I don't like this. It's too hacky, but it works. */
         {
-            static UIWindow *keyWindow = nil;
-            static dispatch_once_t onceToken;
-            dispatch_once(&onceToken, ^{
-                if ([NSThread isMainThread])
+            dispatch_async(dispatch_get_main_queue(), ^ {
+                static UIWindow *keyWindow = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
                     keyWindow = [[app windows] firstObject];
-                else
-                {
-                    dispatch_sync(dispatch_get_main_queue(), ^{
-                        keyWindow = [[app windows] firstObject];
-                    });
-                }
-            });
+                });
 
-            UIView *keyView = [keyWindow hitTest:[rep location] withEvent:nil];
-            
-            UITouchPhase phase = UITouchPhaseEnded;
-            if ([rep isTouchDown])
-                phase = UITouchPhaseBegan;
-            else if ([rep isMove])
-                phase = UITouchPhaseMoved;
-            else if ([rep isCancel])
-                phase = UITouchPhaseCancelled;
-            else if ([rep isLift] || [rep isInRange] || [rep isInRangeLift])
-                phase = UITouchPhaseEnded;
-            
-            NSInteger pointerId = [[[[rep handInfo] paths] firstObject] pathIdentity];
-            if (pointerId > 0)
-                [TSEventFetcher receiveAXEventID:MIN(MAX(pointerId, 1), 98) atGlobalCoordinate:[rep location] withTouchPhase:phase inWindow:keyWindow onView:keyView];
+                UIView *keyView = [keyWindow hitTest:[rep location] withEvent:nil];
+
+                UITouchPhase phase = UITouchPhaseEnded;
+                if ([rep isTouchDown])
+                    phase = UITouchPhaseBegan;
+                else if ([rep isMove])
+                    phase = UITouchPhaseMoved;
+                else if ([rep isCancel])
+                    phase = UITouchPhaseCancelled;
+                else if ([rep isLift] || [rep isInRange] || [rep isInRangeLift])
+                    phase = UITouchPhaseEnded;
+
+                NSInteger pointerId = [[[[rep handInfo] paths] firstObject] pathIdentity];
+                if (pointerId > 0)
+                    [TSEventFetcher receiveAXEventID:MIN(MAX(pointerId, 1), 98) atGlobalCoordinate:[rep location] withTouchPhase:phase inWindow:keyWindow onView:keyView];
+            });
         }
     }
     else {
 #if DEBUG
         os_log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", event);
 #endif
+        [app _enqueueHIDEvent:event];
     }
 }
 
