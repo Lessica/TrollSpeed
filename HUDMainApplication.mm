@@ -809,6 +809,9 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     BOOL _isFocused;
     UIInterfaceOrientation _orientation;
     NSLayoutConstraint *_topConstraint;
+    NSLayoutConstraint *_centerXConstraint;
+    NSLayoutConstraint *_leadingConstraint;
+    NSLayoutConstraint *_trailingConstraint;
 }
 
 - (void)registerNotifications
@@ -1253,13 +1256,21 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
         [_speedLabel.topAnchor constraintEqualToAnchor:_contentView.topAnchor],
         [_speedLabel.bottomAnchor constraintEqualToAnchor:_contentView.bottomAnchor],
     ]];
-    
-    if (isCentered)
-        [_constraints addObject:[_speedLabel.centerXAnchor constraintEqualToAnchor:_contentView.centerXAnchor]];
-    else if (selectedMode == HUDPresetPositionTopLeft)
-        [_constraints addObject:[_speedLabel.leadingAnchor constraintEqualToAnchor:_contentView.leadingAnchor constant:10]];
-    else  // HUDPresetPositionTopLeft
-        [_constraints addObject:[_speedLabel.trailingAnchor constraintEqualToAnchor:_contentView.trailingAnchor constant:-10]];
+
+    _centerXConstraint = [_speedLabel.centerXAnchor constraintEqualToAnchor:_contentView.centerXAnchor];
+    if (isCentered) {
+        [_constraints addObject:_centerXConstraint];
+    }
+
+    _leadingConstraint = [_speedLabel.leadingAnchor constraintEqualToAnchor:_contentView.leadingAnchor constant:10];
+    if (selectedMode == HUDPresetPositionTopLeft) {
+        [_constraints addObject:_leadingConstraint];
+    }
+
+    _trailingConstraint = [_speedLabel.trailingAnchor constraintEqualToAnchor:_contentView.trailingAnchor constant:-10];
+    if (selectedMode == HUDPresetPositionTopRight) {
+        [_constraints addObject:_trailingConstraint];
+    }
 
     [_constraints addObjectsFromArray:@[
         [_blurView.topAnchor constraintEqualToAnchor:_speedLabel.topAnchor constant:-2],
@@ -1433,21 +1444,20 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
         return;
     }
 
-    static CGFloat beginOffsetY = 0.0;
     static CGFloat beginConstantY = 0.0;
     if (sender.state == UIGestureRecognizerStatePossible || sender.state == UIGestureRecognizerStateBegan)
     {
-        beginOffsetY = [sender locationInView:sender.view.superview].y;
         beginConstantY = _topConstraint.constant;
         [self onFocus:sender.view scaleFactor:0.2 duration:0.1 beginFromInitialState:NO blurWhenDone:NO];
     }
-    else if (sender.state == UIGestureRecognizerStateChanged)
-    {
-        CGFloat currentOffsetY = [sender locationInView:sender.view.superview].y - beginOffsetY;
-        [_topConstraint setConstant:beginConstantY + currentOffsetY];
-    }
     else
     {
+        if (sender.state == UIGestureRecognizerStateChanged || sender.state == UIGestureRecognizerStateEnded)
+        {
+            CGFloat currentOffsetY = [sender translationInView:sender.view.superview].y;
+            [_topConstraint setConstant:beginConstantY + currentOffsetY];
+        }
+        
         if (sender.state == UIGestureRecognizerStateEnded)
         {
             if (UIInterfaceOrientationIsLandscape(_orientation))
@@ -1456,8 +1466,11 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
                 [self setCurrentPositionY:_topConstraint.constant];
         }
         
-        [self onFocus:sender.view scaleFactor:0.1 duration:0.1 beginFromInitialState:NO blurWhenDone:NO];
-        [self reloadUserDefaults];
+        if (sender.state != UIGestureRecognizerStateChanged)
+        {
+            [self onFocus:sender.view scaleFactor:0.1 duration:0.1 beginFromInitialState:NO blurWhenDone:NO];
+            [self reloadUserDefaults];
+        }
     }
 
     if (!_impactFeedbackGenerator)

@@ -605,6 +605,10 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
     [self presentViewController:settingsViewController animated:YES completion:nil];
 }
 
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 @end
 
 
