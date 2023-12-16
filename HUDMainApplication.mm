@@ -868,7 +868,7 @@ static void DumpThreads(void)
 {
     [self loadUserDefaults:YES];
 
-    NSInteger selectedMode = [self selectedMode];
+    HUDPresetPosition selectedMode = [self selectedMode];
     BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
     
@@ -919,7 +919,7 @@ static void DumpThreads(void)
     return [[[NSDictionary dictionaryWithContentsOfFile:USER_DEFAULTS_PATH] objectForKey:@"passthroughMode"] boolValue];
 }
 
-- (NSInteger)selectedMode
+- (HUDPresetPosition)selectedMode
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"selectedMode"];
@@ -1170,7 +1170,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     [NSLayoutConstraint deactivateConstraints:_constraints];
     [_constraints removeAllObjects];
 
-    NSInteger selectedMode = [self selectedMode];
+    HUDPresetPosition selectedMode = [self selectedMode];
     BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
     BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
@@ -1294,7 +1294,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     [self updateSpeedLabel];
     [self resetLoopTimer];
 
-    NSInteger selectedMode = [self selectedMode];
+    HUDPresetPosition selectedMode = [self selectedMode];
     BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
     
     CGFloat topTrans = CGRectGetHeight(view.bounds) * (scaleFactor / 2);
@@ -1403,7 +1403,10 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     if (!_isFocused)
         return;
     
-    if ([self selectedMode] == HUDPresetPositionTopCenter || [self keepInPlace])
+    HUDPresetPosition selectedMode = [self selectedMode];
+    BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
+    
+    if (isCentered || [self keepInPlace])
     {
         if (sender.state == UIGestureRecognizerStateBegan)
             [self cancelPreviousPerformRequestsWithTarget:sender.view];

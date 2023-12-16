@@ -315,14 +315,14 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
     notify_post(NOTIFY_RELOAD_HUD);
 }
 
-- (NSInteger)selectedMode
+- (HUDPresetPosition)selectedMode
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"selectedMode"];
     return mode ? [mode integerValue] : HUDPresetPositionTopCenter;
 }
 
-- (void)setSelectedMode:(NSInteger)selectedMode
+- (void)setSelectedMode:(HUDPresetPosition)selectedMode
 {
     [self loadUserDefaults:NO];
     // Remove some keys that are not persistent
@@ -495,12 +495,12 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
 
 - (void)reloadModeButtonState
 {
-    NSInteger selectedMode = [self selectedMode];
+    HUDPresetPosition selectedMode = [self selectedMode];
     BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
-    [_topLeftButton setSelected:([self selectedMode] == HUDPresetPositionTopLeft)];
+    [_topLeftButton setSelected:(selectedMode == HUDPresetPositionTopLeft)];
     [_topCenterButton setSelected:isCentered];
-    [_topRightButton setSelected:([self selectedMode] == HUDPresetPositionTopRight)];
+    [_topRightButton setSelected:(selectedMode == HUDPresetPositionTopRight)];
     UIImage *topCenterImage = (isCenteredMost ? [UIImage systemImageNamed:@"arrow.up.to.line"] : [UIImage systemImageNamed:@"arrow.up"]);
     [_topCenterButton setImage:topCenterImage forState:UIControlStateNormal];
 }
@@ -532,7 +532,7 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
 - (void)tapTopCenterButton:(UIButton *)sender
 {
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopCenterButton:%{public}@]", sender);
-    NSInteger selectedMode = [self selectedMode];
+    HUDPresetPosition selectedMode = [self selectedMode];
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
     if (!sender.isSelected || !_supportsCenterMost) {
         [self setSelectedMode:HUDPresetPositionTopCenter];
