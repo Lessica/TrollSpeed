@@ -1,1 +1,4 @@
-- (Experimental) Adjust vertical position of the HUD by tapping and long-pressing (Not available for centered HUD)
+* (Experimental) Adjust vertical position of the HUD by tapping and dragging
+  - Not available for centered HUD
+  - Not supported by all versions of iOS
+  - Supports dragging in landscape mode
