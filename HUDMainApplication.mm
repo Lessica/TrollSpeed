@@ -1,3 +1,5 @@
+#import <CoreFoundation/CoreFoundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 #import <cstddef>
 #import <cstdlib>
 #import <dlfcn.h>
@@ -528,8 +530,8 @@ static void DumpThreads(void)
         
 #ifdef NOTIFY_DISMISSAL_HUD
         {
-            int token;
-            notify_register_dispatch(NOTIFY_DISMISSAL_HUD, &token, dispatch_get_main_queue(), ^(int token) {
+            int outToken;
+            notify_register_dispatch(NOTIFY_DISMISSAL_HUD, &outToken, dispatch_get_main_queue(), ^(int token) {
                 notify_cancel(token);
                 
                 // Fade out the HUD window
@@ -797,13 +799,12 @@ static void DumpThreads(void)
     UIImageView *_lockedView;
     NSTimer *_timer;
     UITapGestureRecognizer *_tapGestureRecognizer;
-    UILongPressGestureRecognizer *_longPressGestureRecognizer;
+    UIPanGestureRecognizer *_panGestureRecognizer;
     UIImpactFeedbackGenerator *_impactFeedbackGenerator;
     UINotificationFeedbackGenerator *_notificationFeedbackGenerator;
     BOOL _isFocused;
     UIInterfaceOrientation _orientation;
     NSLayoutConstraint *_topConstraint;
-    CGFloat _minimumTopConstraintConstant;
 }
 
 - (void)registerNotifications
@@ -981,6 +982,20 @@ static void DumpThreads(void)
     [self saveUserDefaults];
 }
 
+- (CGFloat)currentLandscapePositionY
+{
+    [self loadUserDefaults:NO];
+    NSNumber *positionY = [_userDefaults objectForKey:@"currentLandscapePositionY"];
+    return positionY ? [positionY doubleValue] : CGFLOAT_MAX;
+}
+
+- (void)setCurrentLandscapePositionY:(CGFloat)positionY
+{
+    [self loadUserDefaults:NO];
+    [_userDefaults setObject:[NSNumber numberWithDouble:positionY] forKey:@"currentLandscapePositionY"];
+    [self saveUserDefaults];
+}
+
 - (instancetype)init
 {
     self = [super init];
@@ -1091,7 +1106,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     _contentView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:_contentView];
 
-    _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterialDark]];
+    _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
     _blurView.layer.cornerRadius = 4.0;
     _blurView.layer.masksToBounds = YES;
     _blurView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -1120,10 +1135,10 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     _tapGestureRecognizer.numberOfTouchesRequired = 1;
     [_contentView addGestureRecognizer:_tapGestureRecognizer];
 
-    _longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognized:)];
-    _longPressGestureRecognizer.minimumPressDuration = 0.33;
-    _longPressGestureRecognizer.numberOfTouchesRequired = 1;
-    [_contentView addGestureRecognizer:_longPressGestureRecognizer];
+    _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognized:)];
+    _panGestureRecognizer.minimumNumberOfTouches = 1;
+    _panGestureRecognizer.maximumNumberOfTouches = 1;
+    [_contentView addGestureRecognizer:_panGestureRecognizer];
 
     [_contentView setUserInteractionEnabled:YES];
 
@@ -1158,50 +1173,69 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     NSInteger selectedMode = [self selectedMode];
     BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
-
     BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
+
     UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;
-    
     if (_orientation == UIInterfaceOrientationLandscapeLeft || _orientation == UIInterfaceOrientationLandscapeRight)
     {
+        CGFloat notchHeight = CGRectGetMinY(layoutGuide.layoutFrame);
+
         [_constraints addObjectsFromArray:@[
-            [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:(CGRectGetMinY(layoutGuide.layoutFrame) > 1) ? 20 : 4],
-            [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:(CGRectGetMinY(layoutGuide.layoutFrame) > 1) ? -20 : -4],
+            [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:(notchHeight > 1) ? notchHeight - 16 : 4],
+            [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:(notchHeight > 1) ? -20 : -4],
         ]];
 
-        [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:(isPad ? 30 : 10)]];
+        CGFloat minimumLandscapeConstant = (isPad ? 30 : 10);
+
+        /* Fixed Constraints */
+        [_constraints addObjectsFromArray:@[
+            [_contentView.topAnchor constraintGreaterThanOrEqualToAnchor:self.view.topAnchor constant:minimumLandscapeConstant],
+            [_contentView.bottomAnchor constraintLessThanOrEqualToAnchor:self.view.bottomAnchor constant:-minimumLandscapeConstant],
+        ]];
+
+        /* Flexible Constraint */
+        _topConstraint = [_contentView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:minimumLandscapeConstant];
+        if (!isCentered) {
+            CGFloat currentPositionY = [self currentLandscapePositionY];
+            if (currentPositionY < CGFLOAT_MAX) {
+                _topConstraint.constant = currentPositionY;
+            }
+        }
+        _topConstraint.priority = UILayoutPriorityDefaultLow;
+
+        [_constraints addObject:_topConstraint];
     }
     else
     {
         [_constraints addObjectsFromArray:@[
-            [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
-            [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_contentView.leadingAnchor constraintEqualToAnchor:layoutGuide.leadingAnchor],
+            [_contentView.trailingAnchor constraintEqualToAnchor:layoutGuide.trailingAnchor],
         ]];
         
         if (isCenteredMost && !isPad) {
             [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:0]];
         } else {
+            CGFloat minimumTopConstraintConstant;
             if (CGRectGetMinY(layoutGuide.layoutFrame) > 1)
-                _minimumTopConstraintConstant = -10;
+                minimumTopConstraintConstant = -10;
             else
-                _minimumTopConstraintConstant = (isPad ? 30 : 20);
+                minimumTopConstraintConstant = (isPad ? 30 : 20);
             
             /* Fixed Constraints */
             [_constraints addObjectsFromArray:@[
-                [_contentView.topAnchor constraintGreaterThanOrEqualToAnchor:layoutGuide.topAnchor constant:_minimumTopConstraintConstant],
+                [_contentView.topAnchor constraintGreaterThanOrEqualToAnchor:layoutGuide.topAnchor constant:minimumTopConstraintConstant],
                 [_contentView.bottomAnchor constraintLessThanOrEqualToAnchor:layoutGuide.bottomAnchor],
             ]];
             
             /* Flexible Constraint */
-            _topConstraint = [_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:_minimumTopConstraintConstant];
-            _topConstraint.constant = _minimumTopConstraintConstant;
+            _topConstraint = [_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:minimumTopConstraintConstant];
             if (!isCentered) {
                 CGFloat currentPositionY = [self currentPositionY];
                 if (currentPositionY < CGFLOAT_MAX) {
                     _topConstraint.constant = currentPositionY;
                 }
             }
-            _topConstraint.priority = UILayoutPriorityDefaultHigh;
+            _topConstraint.priority = UILayoutPriorityDefaultLow;
 
             [_constraints addObject:_topConstraint];
         }
@@ -1302,9 +1336,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     [UIView animateWithDuration:duration delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
         view.transform = CGAffineTransformIdentity;
         view.alpha = 0.667;
-    } completion:^(BOOL finished) {
-        // [view setUserInteractionEnabled:YES];
-    }];
+    } completion:nil];
 }
 
 - (void)removeAllAnimations
@@ -1366,12 +1398,12 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     [_speedLabel.layer addAnimation:animationReverse forKey:@"opacity"];
 }
 
-- (void)longPressGestureRecognized:(UILongPressGestureRecognizer *)sender
+- (void)panGestureRecognized:(UIPanGestureRecognizer *)sender
 {
     if (!_isFocused)
         return;
     
-    if ([self selectedMode] == 1 || [self keepInPlace])
+    if ([self selectedMode] == HUDPresetPositionTopCenter || [self keepInPlace])
     {
         if (sender.state == UIGestureRecognizerStateBegan)
             [self cancelPreviousPerformRequestsWithTarget:sender.view];
@@ -1394,7 +1426,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
 
     static CGFloat beginOffsetY = 0.0;
     static CGFloat beginConstantY = 0.0;
-    if (sender.state == UIGestureRecognizerStateBegan)
+    if (sender.state == UIGestureRecognizerStatePossible || sender.state == UIGestureRecognizerStateBegan)
     {
         beginOffsetY = [sender locationInView:sender.view.superview].y;
         beginConstantY = _topConstraint.constant;
@@ -1408,7 +1440,13 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     else
     {
         if (sender.state == UIGestureRecognizerStateEnded)
-            [self setCurrentPositionY:_topConstraint.constant];
+        {
+            if (_orientation == UIInterfaceOrientationLandscapeLeft || _orientation == UIInterfaceOrientationLandscapeRight)
+                [self setCurrentLandscapePositionY:_topConstraint.constant];
+            else
+                [self setCurrentPositionY:_topConstraint.constant];
+        }
+        
         [self onFocus:sender.view scaleFactor:0.1 duration:0.1 beginFromInitialState:NO blurWhenDone:NO];
         [self reloadUserDefaults];
     }

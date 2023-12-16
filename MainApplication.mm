@@ -328,6 +328,7 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
     // Remove some keys that are not persistent
     [_userDefaults removeObjectsForKeys:@[
         @"currentPositionY",
+        @"currentLandscapePositionY",
     ]];
     [_userDefaults setObject:@(selectedMode) forKey:@"selectedMode"];
     [self saveUserDefaults];
