@@ -789,6 +789,10 @@ static void DumpThreads(void)
 
 #pragma mark - HUDRootViewController
 
+// static const CACornerMask kCornerMaskNone = 0;
+static const CACornerMask kCornerMaskBottom = kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
+static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
+
 @implementation HUDRootViewController {
     NSMutableDictionary *_userDefaults;
     NSMutableArray <NSLayoutConstraint *> *_constraints;
@@ -877,7 +881,6 @@ static void DumpThreads(void)
     BOOL usesArrowPrefixes = [self usesArrowPrefixes];
     BOOL usesLargeFont = [self usesLargeFont] && !isCenteredMost;
 
-    _blurView.layer.maskedCorners = (isCenteredMost ? kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner : kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner);
     _blurView.layer.cornerRadius = (usesLargeFont ? 4.5 : 4.0);
     _speedLabel.textAlignment = (isCentered ? NSTextAlignmentCenter : NSTextAlignmentLeft);
     if (isCentered) {
@@ -1175,14 +1178,19 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
     BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
 
+    BOOL isLandscape = UIInterfaceOrientationIsLandscape(_orientation);
+    _blurView.layer.maskedCorners = (isCenteredMost && !isLandscape) ? kCornerMaskBottom : kCornerMaskAll;
+
     UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;
-    if (_orientation == UIInterfaceOrientationLandscapeLeft || _orientation == UIInterfaceOrientationLandscapeRight)
+    if (isLandscape)
     {
         CGFloat notchHeight = CGRectGetMinY(layoutGuide.layoutFrame);
+        CGFloat paddingNearNotch = (notchHeight > 1) ? notchHeight - 16 : 4;
+        CGFloat paddingFarFromNotch = (notchHeight > 1) ? -24 : -4;
 
         [_constraints addObjectsFromArray:@[
-            [_contentView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:(notchHeight > 1) ? notchHeight - 16 : 4],
-            [_contentView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:(notchHeight > 1) ? -20 : -4],
+            [_contentView.leadingAnchor constraintEqualToAnchor:layoutGuide.leadingAnchor constant:(_orientation == UIInterfaceOrientationLandscapeLeft ? -paddingFarFromNotch : paddingNearNotch)],
+            [_contentView.trailingAnchor constraintEqualToAnchor:layoutGuide.trailingAnchor constant:(_orientation == UIInterfaceOrientationLandscapeLeft ? -paddingNearNotch : paddingFarFromNotch)],
         ]];
 
         CGFloat minimumLandscapeConstant = (isPad ? 30 : 10);
@@ -1190,7 +1198,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
         /* Fixed Constraints */
         [_constraints addObjectsFromArray:@[
             [_contentView.topAnchor constraintGreaterThanOrEqualToAnchor:self.view.topAnchor constant:minimumLandscapeConstant],
-            [_contentView.bottomAnchor constraintLessThanOrEqualToAnchor:self.view.bottomAnchor constant:-minimumLandscapeConstant],
+            [_contentView.bottomAnchor constraintLessThanOrEqualToAnchor:self.view.bottomAnchor constant:-(minimumLandscapeConstant + 4)],
         ]];
 
         /* Flexible Constraint */
@@ -1224,7 +1232,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
             /* Fixed Constraints */
             [_constraints addObjectsFromArray:@[
                 [_contentView.topAnchor constraintGreaterThanOrEqualToAnchor:layoutGuide.topAnchor constant:minimumTopConstraintConstant],
-                [_contentView.bottomAnchor constraintLessThanOrEqualToAnchor:layoutGuide.bottomAnchor],
+                [_contentView.bottomAnchor constraintLessThanOrEqualToAnchor:layoutGuide.bottomAnchor constant:-4],
             ]];
             
             /* Flexible Constraint */
@@ -1313,9 +1321,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
         view.alpha = 1.0;
     } completion:^(BOOL finished) {
         if (blurWhenDone)
-        {
             [self performSelector:@selector(onBlur:) withObject:view afterDelay:IDLE_INTERVAL];
-        }
     }];
 }
 
@@ -1444,7 +1450,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     {
         if (sender.state == UIGestureRecognizerStateEnded)
         {
-            if (_orientation == UIInterfaceOrientationLandscapeLeft || _orientation == UIInterfaceOrientationLandscapeRight)
+            if (UIInterfaceOrientationIsLandscape(_orientation))
                 [self setCurrentLandscapePositionY:_topConstraint.constant];
             else
                 [self setCurrentPositionY:_topConstraint.constant];
