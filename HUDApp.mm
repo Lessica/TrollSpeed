@@ -1,11 +1,11 @@
 #import <cstddef>
-#include <sys/_types/_pid_t.h>
 #import <cstring>
 #import <cstdlib>
 #import <dlfcn.h>
 #import <spawn.h>
 #import <unistd.h>
 #import <os/log.h>
+#import <objc/objc.h>
 #import <sys/param.h>
 #import <sys/sysctl.h>
 #import <mach-o/dyld.h>
@@ -81,6 +81,17 @@ void GSEventRegisterEventCallBack(void (*)(GSEventRef));
 static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHIDEventRef event)
 {
     static UIApplication *app = [UIApplication sharedApplication];
+#if DEBUG
+    os_log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", event);
+#endif
+    
+    // iOS 15.1+ has a new API for handling HID events.
+    if (@available(iOS 15.1, *)) {}
+    else {
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            [app _enqueueHIDEvent:event];
+        });
+    }
 
     BOOL shouldUseAXEvent = YES;  // Always use AX events now...
     if (shouldUseAXEvent)
@@ -99,7 +110,7 @@ static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef
 
         /* I don't like this. It's too hacky, but it works. */
         {
-            dispatch_async(dispatch_get_main_queue(), ^ {
+            dispatch_async(dispatch_get_main_queue(), ^(void) {
                 static UIWindow *keyWindow = nil;
                 static dispatch_once_t onceToken;
                 dispatch_once(&onceToken, ^{
@@ -123,12 +134,6 @@ static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef
                     [TSEventFetcher receiveAXEventID:MIN(MAX(pointerId, 1), 98) atGlobalCoordinate:[rep location] withTouchPhase:phase inWindow:keyWindow onView:keyView];
             });
         }
-    }
-    else {
-#if DEBUG
-        os_log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", event);
-#endif
-        [app _enqueueHIDEvent:event];
     }
 }
 
