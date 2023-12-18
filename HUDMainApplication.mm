@@ -7,6 +7,7 @@
 #import <unistd.h>
 #import <notify.h>
 #import <net/if.h>
+#import <os/log.h>
 #import <ifaddrs.h>
 #import <sys/wait.h>
 #import <sys/types.h>

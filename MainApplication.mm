@@ -1,7 +1,7 @@
-#include <CoreGraphics/CoreGraphics.h>
-#include <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <Foundation/Foundation.h>
 #import <notify.h>
-#import <UIKit/UIKit.h>
+#import <os/log.h>
 #import "TrollSpeed-Swift.h"
 #import "HUDPresetPosition.h"
 
@@ -676,6 +676,16 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
     [self.window makeKeyAndVisible];
 
     return YES;
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+#if DEBUG
+    os_log_debug(OS_LOG_DEFAULT, "- [MainApplicationDelegate applicationDidBecomeActive:%{public}@]", application);
+#endif
+
+    dispatch_async(dispatch_get_main_queue(), ^(void) {
+        [_rootViewController reloadMainButtonState];
+    });
 }
 
 @end
