@@ -53,7 +53,7 @@
 		</dict>
 	</array>
 	<key>UIApplicationShowsViewsWhileLocked</key>
-	<false/>
+	<true/>
 	<key>UIApplicationSystemWindowsSecureKey</key>
 	<true/>
 	<key>UIBackgroundStyle</key>

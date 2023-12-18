@@ -4,8 +4,6 @@
 <dict>
 	<key>com.apple.AXMediaUtilitiesService-access</key>
 	<true/>
-	<!-- <key>com.apple.Contacts.database-allow</key> -->
-	<!-- <true/> -->
 	<key>com.apple.DragUI.accessibility</key>
 	<true/>
 	<key>com.apple.QuartzCore.displayable-context</key>
@@ -54,10 +52,6 @@
 	<true/>
 	<key>com.apple.private.LocalAuthentication.Storage</key>
 	<true/>
-	<!-- <key>com.apple.private.MobileGestalt.AllowedProtectedKeys</key> -->
-	<!-- <array> -->
-		<!-- <string>SerialNumber</string> -->
-	<!-- </array> -->
 	<key>com.apple.private.acccessibility.motionTrackingClient</key>
 	<true/>
 	<key>com.apple.private.appleaccount.app-hidden-from-icloud-settings</key>
@@ -76,8 +70,6 @@
 	<true/>
 	<key>com.apple.private.coreaudio.viewInterruptorName.allow</key>
 	<true/>
-	<!-- <key>com.apple.private.cs.debugger</key> -->
-	<!-- <true/> -->
 	<key>com.apple.private.hid.client.event-dispatch</key>
 	<true/>
 	<key>com.apple.private.hid.client.event-filter</key>
@@ -98,27 +90,14 @@
 	</array>
 	<key>com.apple.private.kernel.jetsam</key>
 	<true/>
-	<!-- <key>com.apple.private.security.no-container</key> -->
-	<!-- <true/> -->
-	<!-- <key>com.apple.private.security.container-required</key> -->
-	<!-- <false/> -->
+	<key>com.apple.private.memorystatus</key>
+	<true/>
+	<key>com.apple.private.persona-mgmt</key>
+	<true/>
 	<key>com.apple.private.security.no-sandbox</key>
 	<true/>
-	<!-- <key>com.apple.private.skip-library-validation</key> -->
-	<!-- <true/> -->
-	<!-- <key>com.apple.private.security.storage.AppDataContainers</key> -->
-	<!-- <true/> -->
-	<!-- <key>com.apple.private.persona-mgmt</key> -->
-	<!-- <true/> -->
 	<key>com.apple.private.sysdiagnose</key>
 	<true/>
-	<!-- <key>com.apple.private.tcc.allow</key> -->
-	<!-- <array> -->
-		<!-- <string>kTCCServiceCamera</string> -->
-		<!-- <string>kTCCServiceMotion</string> -->
-		<!-- <string>kTCCServiceAddressBook</string> -->
-		<!-- <string>kTCCServiceListenEvent</string> -->
-	<!-- </array> -->
 	<key>com.apple.private.ubiquity-additional-kvstore-identifiers</key>
 	<array>
 		<string>com.apple.AssistiveTouch</string>
@@ -147,13 +126,13 @@
 		<string>com.apple.fontservicesd</string>
 		<string>com.apple.PointerUI.pointeruid.service</string>
 	</array>
-	<key>com.apple.security.exception.mach-register.global-name</key>
-	<array>
-		<string>ch.xxtou.hudapp.gsEvents</string>
-	</array>
 	<key>com.apple.security.exception.mach-lookup.local-name</key>
 	<array>
 		<string>com.apple.AXMediaUtilitiesService</string>
+	</array>
+	<key>com.apple.security.exception.mach-register.global-name</key>
+	<array>
+		<string>ch.xxtou.hudapp.gsEvents</string>
 	</array>
 	<key>com.apple.security.exception.mach-register.local-name</key>
 	<array>
@@ -168,16 +147,6 @@
 	<array>
 		<string>com.apple.assistant.logging</string>
 	</array>
-	<!-- <key>com.apple.security.system-groups</key> -->
-	<!-- <array> -->
-		<!-- <string>systemgroup.com.apple.powerlog</string> -->
-	<!-- </array> -->
-	<!-- <key>com.apple.siri.VoiceShortcuts.xpc</key> -->
-	<!-- <true/> -->
-	<!-- <key>com.apple.siri.activation.service</key> -->
-	<!-- <true/> -->
-	<!-- <key>com.apple.siri.external_request</key> -->
-	<!-- <true/> -->
 	<key>com.apple.springboard-ui.client</key>
 	<true/>
 	<key>com.apple.springboard.CFUserNotification</key>
@@ -194,28 +163,14 @@
 	<true/>
 	<key>com.apple.system.diagnostics.iokit-properties</key>
 	<true/>
-	<!-- <key>dynamic-codesigning</key> -->
-	<!-- <true/> -->
 	<key>file-read-data</key>
 	<true/>
 	<key>get-task-allow</key>
 	<true/>
-	<!-- <key>keychain-access-groups</key> -->
-	<!-- <array> -->
-		<!-- <string>appleaccount</string> -->
-		<!-- <string>com.apple.coreservices.appleIDAuthentication</string> -->
-		<!-- <string>com.apple.coreservices.appleidauthentication.keychainaccessgroup</string> -->
-		<!-- <string>com.apple.coreservices.appleidauthentication</string> -->
-		<!-- <string>com.apple.sharing.appleidauthentication</string> -->
-	<!-- </array> -->
 	<key>platform-application</key>
 	<true/>
 	<key>run-unsigned-code</key>
 	<true/>
-	<!-- <key>seatbelt-profiles</key> -->
-	<!-- <array> -->
-		<!-- <string>assistivetouchd</string> -->
-	<!-- </array> -->
 	<key>task_for_pid-allow</key>
 	<true/>
 	<key>user-preference-read</key>

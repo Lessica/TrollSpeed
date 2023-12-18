@@ -17,8 +17,6 @@
 #import <UIKit/UIKit.h>
 #import "HUDPresetPosition.h"
 
-#define SPAWN_AS_ROOT 0
-
 
 extern "C" char **environ;
 

@@ -1,6 +1,7 @@
 ARCHS := arm64  # arm64e
 TARGET := iphone:clang:latest:14.0
 INSTALL_TARGET_PROCESSES := TrollSpeed
+ENT_PLIST := $(PWD)/ent.plist
 
 include $(THEOS)/makefiles/common.mk
 
@@ -17,6 +18,9 @@ TrollSpeed_CCFLAGS += -DNOTIFY_LAUNCHED_HUD=\"ch.xxtou.notification.hud.launched
 TrollSpeed_CCFLAGS += -DNOTIFY_DISMISSAL_HUD=\"ch.xxtou.notification.hud.dismissal\"
 TrollSpeed_CCFLAGS += -DNOTIFY_RELOAD_HUD=\"ch.xxtou.notification.hud.reload\"
 TrollSpeed_CCFLAGS += -DNOTIFY_RELOAD_APP=\"ch.xxtou.notification.app.reload\"
+ifeq ($(SPAWN_AS_ROOT),1)
+TrollSpeed_CCFLAGS += -DSPAWN_AS_ROOT
+endif
 MainApplication.mm_CCFLAGS += -std=c++14
 TrollSpeed_FRAMEWORKS += CoreGraphics QuartzCore UIKit
 TrollSpeed_PRIVATE_FRAMEWORKS += BackBoardServices GraphicsServices IOKit SpringBoardServices
@@ -27,6 +31,10 @@ TrollSpeed_CODESIGN_FLAGS += --entitlements ent.plist $(TARGET_CODESIGN_FLAGS)
 endif
 
 include $(THEOS_MAKE_PATH)/application.mk
+
+before-all::
+	$(ECHO_NOTHING)[ ! -z $(SPAWN_AS_ROOT) ] && defaults write $(ENT_PLIST) com.apple.private.persona-mgmt -bool true || defaults delete $(ENT_PLIST) com.apple.private.persona-mgmt || true$(ECHO_END)
+	$(ECHO_NOTHING)plutil -convert xml1 $(ENT_PLIST)$(ECHO_END)
 
 after-stage::
 	$(ECHO_NOTHING)mkdir -p packages $(THEOS_STAGING_DIR)/Payload$(ECHO_END)
