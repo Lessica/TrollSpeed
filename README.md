@@ -18,10 +18,8 @@ You need to enable “Developer Mode” on iOS 16 or above to use TrollSpeed or 
   - Wrap and archive generated `.app` bundle into a `.tipa`.
 
 ## Caveats
-  - <del>Spawn with root privileges is **required**. Otherwise, the HUD process will be killed by SpringBoard when unlocking device.</del>
-  - Now TrollSpeed can spawn its child process as the mobile user.
-  - <del>You have to “Exit HUD” manually from the app before uninstall it.</del>
-  - Now TrollSpeed will observe its app removal and terminate itself.
+  - Spawn with root privileges is **required**. Otherwise, the HUD process will be killed by SpringBoard when unlocking device.
+  - TrollSpeed will observe its app removal and terminate its HUD.
 
 ## Screenshot
 ![screenshot](https://user-images.githubusercontent.com/5410705/213263734-1ef1b553-88d4-41cc-856e-891ea08d185c.jpeg)
