@@ -95,6 +95,7 @@ jobs:
         run: |
           echo "Available SDKs: $(find $THEOS/sdks -name "*.sdk" -maxdepth 1 -print)"
           echo "FINALPACKAGE=1" >> $GITHUB_ENV
+          echo "SPAWN_AS_ROOT=1" >> $GITHUB_ENV
           cd $GITHUB_WORKSPACE/TrollSpeed
           git fetch --tags
           echo "GIT_TAG=$(git describe --tags --always --abbrev=0)" >> $GITHUB_ENV
@@ -103,7 +104,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/TrollSpeed
           ./gen-control.sh ${{ env.GIT_TAG }}
-          FINALPACKAGE=1 make stage
+          SPAWN_AS_ROOT=1 FINALPACKAGE=1 make stage
 
       - name: Collect Symbols
         run: |
