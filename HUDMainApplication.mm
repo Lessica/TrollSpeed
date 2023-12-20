@@ -129,6 +129,40 @@ void SetHUDEnabled(BOOL isEnabled)
     }
 }
 
+#if DEBUG && SPAWN_AS_ROOT
+OBJC_EXTERN void SimulateMemoryPressure(void);
+void SimulateMemoryPressure(void)
+{
+    static NSString *nsExecutablePath = nil;
+    static const char *executablePath = NULL;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSBundle *mainBundle = [NSBundle mainBundle];
+        nsExecutablePath = [mainBundle pathForResource:@"memory_pressure" ofType:nil];
+        if (nsExecutablePath) {
+            executablePath = [nsExecutablePath UTF8String];
+        }
+    });
+
+    if (!executablePath) {
+        return;
+    }
+
+    posix_spawnattr_t attr;
+    posix_spawnattr_init(&attr);
+
+    posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
+    posix_spawnattr_set_persona_uid_np(&attr, 0);
+    posix_spawnattr_set_persona_gid_np(&attr, 0);
+
+    pid_t task_pid;
+    const char *args[] = { executablePath, "-l", "critical", NULL };
+    posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
+    posix_spawnattr_destroy(&attr);
+
+    os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -l critical pid = %{public}d", executablePath, task_pid);
+}
+#endif
 
 #pragma mark -
 
@@ -405,7 +439,6 @@ static NSAttributedString* formattedAttributedString(BOOL isFocused)
 
 #pragma mark - Darwin Notification
 
-#define NOTIFY_UI_LOCKCOMPLETE "com.apple.springboard.lockcomplete"
 #define NOTIFY_UI_LOCKSTATE    "com.apple.springboard.lockstate"
 #define NOTIFY_LS_APP_CHANGED  "com.apple.LaunchServices.ApplicationsChanged"
 
@@ -450,12 +483,7 @@ static void SpringBoardLockStatusChanged
 {
     HUDRootViewController *rootViewController = (__bridge HUDRootViewController *)observer;
     NSString *lockState = (__bridge NSString *)name;
-    if ([lockState isEqualToString:@NOTIFY_UI_LOCKCOMPLETE])
-    {
-        [rootViewController stopLoopTimer];
-        [rootViewController.view setHidden:YES];
-    }
-    else if ([lockState isEqualToString:@NOTIFY_UI_LOCKSTATE])
+    if ([lockState isEqualToString:@NOTIFY_UI_LOCKSTATE])
     {
         mach_port_t sbsPort = SBSSpringBoardServerPort();
         
@@ -778,10 +806,10 @@ static void DumpThreads(void)
 - (BOOL)_ignoresHitTest { return [HUDRootViewController passthroughMode]; }
 // - (BOOL)keepContextInBackground { return YES; }
 // - (BOOL)_usesWindowServerHitTesting { return NO; }
-// - (BOOL)_isSecure { return YES; }
+- (BOOL)_isSecure { return YES; }
 // - (BOOL)_wantsSceneAssociation { return NO; }
 // - (BOOL)_alwaysGetsContexts { return YES; }
-// - (BOOL)_shouldCreateContextAsSecure { return YES; }
+- (BOOL)_shouldCreateContextAsSecure { return YES; }
 
 @end
 
@@ -828,16 +856,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         LaunchServicesApplicationStateChanged,
         CFSTR(NOTIFY_LS_APP_CHANGED),
         NULL,
-        CFNotificationSuspensionBehaviorDeliverImmediately
-    );
-    
-    CFNotificationCenterAddObserver(
-        darwinCenter,
-        (__bridge const void *)self,
-        SpringBoardLockStatusChanged,
-        CFSTR(NOTIFY_UI_LOCKCOMPLETE),
-        NULL,
-        CFNotificationSuspensionBehaviorDeliverImmediately
+        CFNotificationSuspensionBehaviorCoalesce
     );
     
     CFNotificationCenterAddObserver(
@@ -846,7 +865,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         SpringBoardLockStatusChanged,
         CFSTR(NOTIFY_UI_LOCKSTATE),
         NULL,
-        CFNotificationSuspensionBehaviorDeliverImmediately
+        CFNotificationSuspensionBehaviorCoalesce
     );
 }
 

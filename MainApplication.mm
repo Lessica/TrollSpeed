@@ -8,6 +8,10 @@
 OBJC_EXTERN BOOL IsHUDEnabled(void);
 OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
+#if DEBUG && SPAWN_AS_ROOT
+OBJC_EXTERN void SimulateMemoryPressure(void);
+#endif
+
 @interface UIApplication (Private)
 - (void)suspend;
 - (void)terminateWithSuccess;
@@ -301,7 +305,37 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
     }
 }
 
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event {
+    if (motion == UIEventSubtypeMotionShake) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Developer Area", nil) message:NSLocalizedString(@"Choose an action below.", nil) preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", nil) style:UIAlertActionStyleCancel handler:nil]];
+        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Reset Settings", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self resetUserDefaults];
+        }]];
+#if DEBUG && SPAWN_AS_ROOT
+        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Memory Pressure", nil) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            SimulateMemoryPressure();
+        }]];
+#endif
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+}
+
 #define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
+
+- (void)resetUserDefaults
+{
+    // Reset user defaults
+    BOOL removed = [[NSFileManager defaultManager] removeItemAtPath:USER_DEFAULTS_PATH error:nil];
+    if (removed)
+    {
+        // Terminate HUD
+        SetHUDEnabled(NO);
+
+        // Terminate App
+        [[UIApplication sharedApplication] terminateWithSuccess];
+    }
+}
 
 - (void)loadUserDefaults:(BOOL)forceReload
 {

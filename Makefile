@@ -23,7 +23,7 @@ TrollSpeed_CCFLAGS += -DSPAWN_AS_ROOT
 endif
 MainApplication.mm_CCFLAGS += -std=c++14
 TrollSpeed_FRAMEWORKS += CoreGraphics QuartzCore UIKit
-TrollSpeed_PRIVATE_FRAMEWORKS += BackBoardServices GraphicsServices IOKit SpringBoardServices
+TrollSpeed_PRIVATE_FRAMEWORKS += BackBoardServices CoreServices GraphicsServices IOKit SpringBoardServices
 ifeq ($(TARGET_CODESIGN),ldid)
 TrollSpeed_CODESIGN_FLAGS += -Sent.plist
 else
@@ -32,12 +32,22 @@ endif
 
 include $(THEOS_MAKE_PATH)/application.mk
 
+ifeq ($(SPAWN_AS_ROOT),1)
+ifneq ($(FINALPACKAGE),1)
+SUBPROJECTS += memory_pressure
+include $(THEOS_MAKE_PATH)/aggregate.mk
+endif
+endif
+
 before-all::
 	$(ECHO_NOTHING)[ ! -z $(SPAWN_AS_ROOT) ] && defaults write $(ENT_PLIST) com.apple.private.persona-mgmt -bool true || defaults delete $(ENT_PLIST) com.apple.private.persona-mgmt || true$(ECHO_END)
 	$(ECHO_NOTHING)plutil -convert xml1 $(ENT_PLIST)$(ECHO_END)
 
-after-stage::
+before-package::
+	$(ECHO_NOTHING)cp -p $(THEOS_STAGING_DIR)/usr/local/bin/memory_pressure $(THEOS_STAGING_DIR)/Applications/TrollSpeed.app || true$(ECHO_END)
+
+after-package::
 	$(ECHO_NOTHING)mkdir -p packages $(THEOS_STAGING_DIR)/Payload$(ECHO_END)
 	$(ECHO_NOTHING)cp -rp $(THEOS_STAGING_DIR)/Applications/TrollSpeed.app $(THEOS_STAGING_DIR)/Payload$(ECHO_END)
 	$(ECHO_NOTHING)cd $(THEOS_STAGING_DIR); zip -qr TrollSpeed_${GIT_TAG_SHORT}.tipa Payload; cd -;$(ECHO_END)
-	$(ECHO_NOTHING)mv $(THEOS_STAGING_DIR)/TrollSpeed_${GIT_TAG_SHORT}.tipa packages/TrollSpeed_${GIT_TAG_SHORT}.tipa $(ECHO_END)
+	$(ECHO_NOTHING)mv $(THEOS_STAGING_DIR)/TrollSpeed_${GIT_TAG_SHORT}.tipa packages/TrollSpeed_${GIT_TAG_SHORT}.tipa$(ECHO_END)
