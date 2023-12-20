@@ -1,4 +1,3 @@
-* (Experimental) Adjust vertical position of the HUD by tapping and dragging
-  - Not available for centered HUD
-  - Not supported by all versions of iOS
-  - Supports dragging in landscape mode
+* Bugfix: restore the root privilege to avoid being killed by the watchdog process on iOS 17 and above.
+* Bugfix: reload main button state while app become active.
+* Bugfix: perhaps fix the issue that the touch event is not correctly handled before iOS 15.1.
