@@ -23,7 +23,7 @@ jobs:
 
       - name: Install Homebrew Dependencies
         run: |
-          brew install dpkg ldid make libplist openssl@3
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install dpkg ldid make libplist openssl@3
           echo "/usr/local/opt/make/libexec/gnubin" >> $GITHUB_PATH
 
       - name: Checkout XXTouchNG/theos
