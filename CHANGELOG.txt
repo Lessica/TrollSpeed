@@ -13,5 +13,5 @@
 * Experiences on iPad are not fully tested.
 
 ## Notes
-* Please give me feedback if you find any issues & bugs, or have any suggestions.
+* Please give me feedback if you find any issues &amp; bugs, or have any suggestions.
 * Give me a star if you like this project. Thanks!
