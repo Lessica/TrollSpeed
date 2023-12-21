@@ -88,12 +88,23 @@ static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef
     // iOS 15.1+ has a new API for handling HID events.
     if (@available(iOS 15.1, *)) {}
     else {
-        dispatch_async(dispatch_get_main_queue(), ^(void) {
-            [app _enqueueHIDEvent:event];
-        });
+        [app _enqueueHIDEvent:event];
     }
 
     BOOL shouldUseAXEvent = YES;  // Always use AX events now...
+
+    BOOL isExactly15 = NO;
+    static NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+    if (version.majorVersion == 15 && version.minorVersion == 0 && version.patchVersion == 0) {
+        isExactly15 = YES;
+    }
+
+    if (@available(iOS 15.0, *)) {
+        shouldUseAXEvent = !isExactly15;
+    } else {
+        shouldUseAXEvent = NO;
+    }
+
     if (shouldUseAXEvent)
     {
         static Class AXEventRepresentationCls = nil;

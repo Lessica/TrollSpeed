@@ -1,3 +1,17 @@
-* Bugfix: restore the root privilege to avoid being killed by the watchdog process on iOS 17 and above.
-* Bugfix: reload main button state while app become active.
-* Bugfix: perhaps fix the issue that the touch event is not correctly handled before iOS 15.1.
+* Bugfix: completely fixed the issue that the HUD disappears when the RAM usage is high.
+* Bugfix: fixed the issue that the touch event is not correctly handled, and we've tested it on following devices and iOS versions:
+    - iPhone Xr (iOS 15.0)
+    - iPhone Xs (iOS 15.1)
+    - iPhone 11 (iOS 15.4.1)
+    - iPhone 12 mini (iOS 15.4.1)
+    - iPhone Xs Max (iOS 16.6.1)
+    - iPhone Xr (iOS 17.0)
+    - iPhone 14 Pro Max (iOS 17.0)
+
+## Known Issues
+* Experiences on iPhone without a notch or Dynamic Island (e.g. iPhone 8) are not fully tested.
+* Experiences on iPad are not fully tested.
+
+## Notes
+* Please give me feedback if you find any issues & bugs, or have any suggestions.
+* Give me a star if you like this project. Thanks!
