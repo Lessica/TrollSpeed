@@ -9,13 +9,15 @@
 #import <net/if.h>
 #import <os/log.h>
 #import <ifaddrs.h>
+#import <rootless.h>
 #import <sys/wait.h>
 #import <sys/types.h>
 #import <sys/sysctl.h>
-#import <mach/vm_param.h>
+#import <sys/unistd.h>
 #import <mach-o/dyld.h>
-#import <objc/runtime.h>
 #import <UIKit/UIKit.h>
+#import <objc/runtime.h>
+#import <mach/vm_param.h>
 #import "HUDPresetPosition.h"
 
 
@@ -68,19 +70,11 @@ BOOL IsHUDEnabled(void)
     return WEXITSTATUS(status) != 0;
 }
 
+#define LAUNCH_DAEMON_PATH ROOT_PATH("/Library/LaunchDaemons/ch.xxtou.hudapp.plist")
+
 OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 void SetHUDEnabled(BOOL isEnabled)
 {
-#ifdef NOTIFY_DISMISSAL_HUD
-    notify_post(NOTIFY_DISMISSAL_HUD);
-#endif
-
-    static char *executablePath = NULL;
-    uint32_t executablePathSize = 0;
-    _NSGetExecutablePath(NULL, &executablePathSize);
-    executablePath = (char *)calloc(1, executablePathSize);
-    _NSGetExecutablePath(executablePath, &executablePathSize);
-
     posix_spawnattr_t attr;
     posix_spawnattr_init(&attr);
 
@@ -88,6 +82,49 @@ void SetHUDEnabled(BOOL isEnabled)
     posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
     posix_spawnattr_set_persona_uid_np(&attr, 0);
     posix_spawnattr_set_persona_gid_np(&attr, 0);
+#endif
+
+    if (access(LAUNCH_DAEMON_PATH, F_OK) == 0)
+    {
+        if (!isEnabled)
+            [NSThread sleepForTimeInterval:0.25];
+
+        pid_t task_pid;
+        static const char *executablePath = ROOT_PATH("/usr/bin/launchctl");
+        const char *args[] = { executablePath, isEnabled ? "load" : "unload", LAUNCH_DAEMON_PATH, NULL };
+        posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
+        posix_spawnattr_destroy(&attr);
+
+#if DEBUG
+        os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -exit pid = %{public}d", executablePath, task_pid);
+#endif
+
+        int status;
+        do {
+            if (waitpid(task_pid, &status, 0) != -1)
+            {
+#if DEBUG
+                os_log_debug(OS_LOG_DEFAULT, "child status %d", WEXITSTATUS(status));
+#endif
+            }
+        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+
+#ifdef NOTIFY_DISMISSAL_HUD
+        if (!isEnabled) {
+            notify_post(NOTIFY_DISMISSAL_HUD);
+        }
+#endif
+        return;
+    }
+
+    static char *executablePath = NULL;
+    uint32_t executablePathSize = 0;
+    _NSGetExecutablePath(NULL, &executablePathSize);
+    executablePath = (char *)calloc(1, executablePathSize);
+    _NSGetExecutablePath(executablePath, &executablePathSize);
+
+#ifdef NOTIFY_DISMISSAL_HUD
+    notify_post(NOTIFY_DISMISSAL_HUD);
 #endif
 
     if (isEnabled)
@@ -116,7 +153,7 @@ void SetHUDEnabled(BOOL isEnabled)
 #if DEBUG
         os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -exit pid = %{public}d", executablePath, task_pid);
 #endif
-        
+
         int status;
         do {
             if (waitpid(task_pid, &status, 0) != -1)
@@ -869,22 +906,22 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     );
 }
 
-#define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
+#define USER_DEFAULTS_PATH "/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
 
 - (void)loadUserDefaults:(BOOL)forceReload
 {
     if (forceReload || !_userDefaults)
-        _userDefaults = [[NSDictionary dictionaryWithContentsOfFile:USER_DEFAULTS_PATH] mutableCopy] ?: [NSMutableDictionary dictionary];
+        _userDefaults = [[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS(USER_DEFAULTS_PATH))] mutableCopy] ?: [NSMutableDictionary dictionary];
 }
 
 - (void)saveUserDefaults
 {
-    BOOL wroteSucceed = [_userDefaults writeToFile:USER_DEFAULTS_PATH atomically:YES];
+    BOOL wroteSucceed = [_userDefaults writeToFile:(ROOT_PATH_NS(USER_DEFAULTS_PATH)) atomically:YES];
     if (wroteSucceed) {
         [[NSFileManager defaultManager] setAttributes:@{
             NSFileOwnerAccountID: @501,
             NSFileGroupOwnerAccountID: @501,
-        } ofItemAtPath:USER_DEFAULTS_PATH error:nil];
+        } ofItemAtPath:(ROOT_PATH_NS(USER_DEFAULTS_PATH)) error:nil];
         notify_post(NOTIFY_RELOAD_APP);
     }
 }
@@ -940,7 +977,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
 + (BOOL)passthroughMode
 {
-    return [[[NSDictionary dictionaryWithContentsOfFile:USER_DEFAULTS_PATH] objectForKey:@"passthroughMode"] boolValue];
+    return [[[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS(USER_DEFAULTS_PATH))] objectForKey:@"passthroughMode"] boolValue];
 }
 
 - (HUDPresetPosition)selectedMode

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ -f /Library/LaunchDaemons/ch.xxtou.hudapp.plist ]; then
+    launchctl unload /Library/LaunchDaemons/ch.xxtou.hudapp.plist || true
+fi
+
+if [ -f /var/jb/Library/LaunchDaemons/ch.xxtou.hudapp.plist ]; then
+    launchctl unload /var/jb/Library/LaunchDaemons/ch.xxtou.hudapp.plist || true
+fi
+
+exit 0

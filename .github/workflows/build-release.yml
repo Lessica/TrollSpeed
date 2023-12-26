@@ -105,6 +105,7 @@ jobs:
           cd $GITHUB_WORKSPACE/TrollSpeed
           ./gen-control.sh ${{ env.GIT_TAG }}
           SPAWN_AS_ROOT=1 FINALPACKAGE=1 make package
+          SPAWN_AS_ROOT=1 THEOS_PACKAGE_SCHEME=rootless FINALPACKAGE=1 make package
 
       - name: Collect Symbols
         run: |
@@ -117,6 +118,7 @@ jobs:
           name: TrollSpeed_${{ env.GIT_TAG }}
           path: |
             TrollSpeed/packages/TrollSpeed_*.tipa
+            TrollSpeed/packages/ch.xxtou.hudapp_*.deb
 
       - name: Upload Symbols
         uses: actions/upload-artifact@v3
@@ -132,3 +134,4 @@ jobs:
           body_path: TrollSpeed/CHANGELOG.txt
           files: |
             TrollSpeed/packages/TrollSpeed_*.tipa
+            TrollSpeed/packages/ch.xxtou.hudapp_*.deb

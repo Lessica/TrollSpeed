@@ -5,6 +5,7 @@
 #import <spawn.h>
 #import <unistd.h>
 #import <os/log.h>
+#import <rootless.h>
 #import <objc/objc.h>
 #import <sys/param.h>
 #import <sys/sysctl.h>
@@ -151,18 +152,7 @@ static __used void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef
 
 #pragma mark -
 
-static NSString *_cachesDirectoryPath = nil;
-static NSString *_hudPIDFilePath = nil;
-static NSString *GetPIDFilePath(void)
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _cachesDirectoryPath = 
-        [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
-        _hudPIDFilePath = [_cachesDirectoryPath stringByAppendingPathComponent:@"hud.pid"];
-    });
-    return _hudPIDFilePath;
-}
+#define PID_PATH "/var/mobile/Library/Caches/ch.xxtou.hudapp.pid"
 
 #ifdef __cplusplus
 extern "C" {
@@ -215,7 +205,7 @@ int main(int argc, char *argv[])
             os_log_debug(OS_LOG_DEFAULT, "HUD pid %d, pgid %d", pid, pgid);
 #endif
             NSString *pidString = [NSString stringWithFormat:@"%d", pid];
-            [pidString writeToFile:GetPIDFilePath()
+            [pidString writeToFile:ROOT_PATH_NS(PID_PATH)
                         atomically:YES
                           encoding:NSUTF8StringEncoding
                              error:nil];
@@ -247,7 +237,7 @@ int main(int argc, char *argv[])
         }
         else if (strcmp(argv[1], "-exit") == 0)
         {
-            NSString *pidString = [NSString stringWithContentsOfFile:GetPIDFilePath()
+            NSString *pidString = [NSString stringWithContentsOfFile:ROOT_PATH_NS(PID_PATH)
                                                             encoding:NSUTF8StringEncoding
                                                                error:nil];
             
@@ -255,14 +245,14 @@ int main(int argc, char *argv[])
             {
                 pid_t pid = (pid_t)[pidString intValue];
                 kill(pid, SIGKILL);
-                unlink(GetPIDFilePath().UTF8String);
+                unlink([ROOT_PATH_NS(PID_PATH) UTF8String]);
             }
 
             return EXIT_SUCCESS;
         }
         else if (strcmp(argv[1], "-check") == 0)
         {
-            NSString *pidString = [NSString stringWithContentsOfFile:GetPIDFilePath()
+            NSString *pidString = [NSString stringWithContentsOfFile:ROOT_PATH_NS(PID_PATH)
                                                             encoding:NSUTF8StringEncoding
                                                                error:nil];
             
