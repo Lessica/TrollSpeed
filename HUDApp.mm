@@ -3,6 +3,7 @@
 #import <cstdlib>
 #import <dlfcn.h>
 #import <spawn.h>
+#import <notify.h>
 #import <unistd.h>
 #import <os/log.h>
 #import <rootless.h>
@@ -185,6 +186,8 @@ void BypassJetsamByProcess(pid_t me, BOOL critical) {
 
 #pragma mark -
 
+OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
+
 int main(int argc, char *argv[])
 {
     @autoreleasepool
@@ -231,7 +234,21 @@ int main(int argc, char *argv[])
             }
             
             [UIApplication.sharedApplication __completeAndRunAsPlugin];
-            
+
+            static int _springboardBootToken;
+            notify_register_dispatch("SBSpringBoardDidLaunchNotification", &_springboardBootToken, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0l), ^(int token) {
+                notify_cancel(token);
+
+                // Re-enable HUD after SpringBoard is launched.
+                SetHUDEnabled(YES);
+
+                // Exit the current instance of HUD.
+#ifdef NOTIFY_DISMISSAL_HUD
+                notify_post(NOTIFY_DISMISSAL_HUD);
+#endif
+                kill(pid, SIGKILL);
+            });
+
             CFRunLoopRun();
             return EXIT_SUCCESS;
         }
