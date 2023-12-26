@@ -104,8 +104,9 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/TrollSpeed
           ./gen-control.sh ${{ env.GIT_TAG }}
-          SPAWN_AS_ROOT=1 FINALPACKAGE=1 make package
           SPAWN_AS_ROOT=1 THEOS_PACKAGE_SCHEME=rootless FINALPACKAGE=1 make package
+          SPAWN_AS_ROOT=1 FINALPACKAGE=1 make clean
+          SPAWN_AS_ROOT=1 FINALPACKAGE=1 make package
 
       - name: Collect Symbols
         run: |
