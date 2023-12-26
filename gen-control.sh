@@ -16,15 +16,15 @@ mkdir -p layout/DEBIAN
 
 # Write the control file
 cat > layout/DEBIAN/control << __EOF__
-Package: ch.xxtou.hud
+Package: ch.xxtou.hudapp
 Name: HUD App
 Version: $VERSION
 Section: Tweaks
-Depends: firmware (>= 13.0), mobilesubstrate (>= 0.9.7000), com.rpetrich.rocketbootstrap (>= 1.0.9)
+Depends: firmware (>= 14.0), mobilesubstrate (>= 0.9.7000)
 Architecture: iphoneos-arm
-Author: XXTouch Team.
-Maintainer: XXTouch Team.
-Description: Next generation XXTouch for iOS 13 and above.
+Author: Lessica <82flex@gmail.com>
+Maintainer: Lessica <82flex@gmail.com>
+Description: Troll speed, but jailbroken.
 __EOF__
 
 # Set permissions
