@@ -21,6 +21,9 @@
 #import "HUDPresetPosition.h"
 
 
+#define FADE_OUT_DURATION 0.25
+#define TERMINATE_DURATION 0.5
+
 extern "C" char **environ;
 
 #if SPAWN_AS_ROOT
@@ -75,6 +78,10 @@ BOOL IsHUDEnabled(void)
 OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 void SetHUDEnabled(BOOL isEnabled)
 {
+#ifdef NOTIFY_DISMISSAL_HUD
+    notify_post(NOTIFY_DISMISSAL_HUD);
+#endif
+
     posix_spawnattr_t attr;
     posix_spawnattr_init(&attr);
 
@@ -86,8 +93,9 @@ void SetHUDEnabled(BOOL isEnabled)
 
     if (access(LAUNCH_DAEMON_PATH, F_OK) == 0)
     {
-        if (!isEnabled)
-            [NSThread sleepForTimeInterval:0.25];
+        if (!isEnabled) {
+            [NSThread sleepForTimeInterval:FADE_OUT_DURATION];
+        }
 
         pid_t task_pid;
         static const char *executablePath = ROOT_PATH("/usr/bin/launchctl");
@@ -109,11 +117,6 @@ void SetHUDEnabled(BOOL isEnabled)
             }
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
 
-#ifdef NOTIFY_DISMISSAL_HUD
-        if (!isEnabled) {
-            notify_post(NOTIFY_DISMISSAL_HUD);
-        }
-#endif
         return;
     }
 
@@ -122,10 +125,6 @@ void SetHUDEnabled(BOOL isEnabled)
     _NSGetExecutablePath(NULL, &executablePathSize);
     executablePath = (char *)calloc(1, executablePathSize);
     _NSGetExecutablePath(executablePath, &executablePathSize);
-
-#ifdef NOTIFY_DISMISSAL_HUD
-    notify_post(NOTIFY_DISMISSAL_HUD);
-#endif
 
     if (isEnabled)
     {
@@ -143,7 +142,7 @@ void SetHUDEnabled(BOOL isEnabled)
     }
     else
     {
-        [NSThread sleepForTimeInterval:0.25];
+        [NSThread sleepForTimeInterval:FADE_OUT_DURATION];
 
         pid_t task_pid;
         const char *args[] = { executablePath, "-exit", NULL };
@@ -599,7 +598,7 @@ static void DumpThreads(void)
                 notify_cancel(token);
                 
                 // Fade out the HUD window
-                [UIView animateWithDuration:0.25f animations:^{
+                [UIView animateWithDuration:FADE_OUT_DURATION animations:^{
                     [[self.windows firstObject] setAlpha:0.0];
                 } completion:^(BOOL finished) {
                     // Terminate the HUD app

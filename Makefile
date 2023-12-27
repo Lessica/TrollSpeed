@@ -25,11 +25,7 @@ endif
 MainApplication.mm_CCFLAGS += -std=c++14
 TrollSpeed_FRAMEWORKS += CoreGraphics QuartzCore UIKit
 TrollSpeed_PRIVATE_FRAMEWORKS += BackBoardServices CoreServices GraphicsServices IOKit SpringBoardServices
-ifeq ($(TARGET_CODESIGN),ldid)
 TrollSpeed_CODESIGN_FLAGS += -Sent.plist
-else
-TrollSpeed_CODESIGN_FLAGS += --entitlements ent.plist $(TARGET_CODESIGN_FLAGS)
-endif
 
 include $(THEOS_MAKE_PATH)/application.mk
 

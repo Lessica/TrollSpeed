@@ -6,6 +6,9 @@
 #import "TrollSpeed-Swift.h"
 #import "HUDPresetPosition.h"
 
+#define HUD_TRANSITION_DURATION 0.25
+
+
 OBJC_EXTERN BOOL IsHUDEnabled(void);
 OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
 
@@ -500,7 +503,7 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
         githubAttributedString = githubAttributedText;
     });
     
-    [UIView transitionWithView:self.backgroundView duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+    [UIView transitionWithView:self.backgroundView duration:HUD_TRANSITION_DURATION options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         [_mainButton setTitle:(_isHUDActive ? NSLocalizedString(@"Exit HUD", nil) : NSLocalizedString(@"Open HUD", nil)) forState:UIControlStateNormal];
         [_authorLabel setAttributedText:(_isHUDActive ? hintAttributedString : githubAttributedString)];
     } completion:nil];
