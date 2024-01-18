@@ -470,6 +470,20 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
     [self saveUserDefaults];
 }
 
+- (BOOL)hideAtSnapshot
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"hideAtSnapshot"];
+    return mode ? [mode boolValue] : NO;
+}
+
+- (void)setHideAtSnapshot:(BOOL)hideAtSnapshot
+{
+    [self loadUserDefaults:NO];
+    [_userDefaults setObject:@(hideAtSnapshot) forKey:@"hideAtSnapshot"];
+    [self saveUserDefaults];
+}
+
 - (void)reloadMainButtonState
 {
     _isHUDActive = IsHUDEnabled();

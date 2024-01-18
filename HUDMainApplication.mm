@@ -18,6 +18,7 @@
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 #import <mach/vm_param.h>
+#import "TrollSpeed-Swift.h"
 #import "HUDPresetPosition.h"
 
 
@@ -861,6 +862,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     NSMutableArray <NSLayoutConstraint *> *_constraints;
     FBSOrientationObserver *_orientationObserver;
     UIVisualEffectView *_blurView;
+    ScreenshotInvisibleContainer *_containerView;
     UIView *_contentView;
     UILabel *_speedLabel;
     UIImageView *_lockedView;
@@ -932,11 +934,12 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     HUDPresetPosition selectedMode = [self selectedMode];
     BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
-    
+
     BOOL singleLineMode = [self singleLineMode];
     BOOL usesBitrate = [self usesBitrate];
     BOOL usesArrowPrefixes = [self usesArrowPrefixes];
     BOOL usesLargeFont = [self usesLargeFont] && !isCenteredMost;
+    BOOL hideAtSnapshot = [self hideAtSnapshot];
 
     _blurView.layer.cornerRadius = (usesLargeFont ? 4.5 : 4.0);
     _speedLabel.textAlignment = (isCentered ? NSTextAlignmentCenter : NSTextAlignmentLeft);
@@ -945,21 +948,27 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     } else {
         _lockedView.image = [UIImage systemImageNamed:@"lock.fill"];
     }
-    
+
     DATAUNIT = usesBitrate;
     SHOW_UPLOAD_SPEED = !singleLineMode;
     SHOW_DOWNLOAD_SPEED_FIRST = isCentered;
     SHOW_SECOND_SPEED_IN_NEW_LINE = !isCentered;
     FONT_SIZE = (usesLargeFont ? 9.0 : 8.0);
-    
+
     UPLOAD_PREFIX = (usesArrowPrefixes ? "↑" : "▲");
     DOWNLOAD_PREFIX = (usesArrowPrefixes ? "↓" : "▼");
-    
+
     prevInputBytes = 0;
     prevOutputBytes = 0;
-    
+
     attributedUploadPrefix = nil;
     attributedDownloadPrefix = nil;
+
+    if (hideAtSnapshot) {
+        [_containerView setupContainerAsHideContentInScreenshots];
+    } else {
+        [_containerView setupContainerAsDisplayContentInScreenshots];
+    }
 
     [self removeAllAnimations];
     [self resetGestureRecognizers];
@@ -1025,6 +1034,13 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"keepInPlace"];
+    return mode ? [mode boolValue] : NO;
+}
+
+- (BOOL)hideAtSnapshot
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"hideAtSnapshot"];
     return mode ? [mode boolValue] : NO;
 }
 
@@ -1170,7 +1186,9 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     _blurView.layer.cornerRadius = 4.0;
     _blurView.layer.masksToBounds = YES;
     _blurView.translatesAutoresizingMaskIntoConstraints = NO;
-    [_contentView addSubview:_blurView];
+    _containerView = [[ScreenshotInvisibleContainer alloc] initWithContent:_blurView];
+    _containerView.hiddenContainer.translatesAutoresizingMaskIntoConstraints = NO;
+    [_contentView addSubview:_containerView.hiddenContainer];
 
     _speedLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     _speedLabel.numberOfLines = 0;

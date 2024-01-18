@@ -24,13 +24,13 @@ import UIKit
 @available(iOS 10.0, *)
 extension UIViewController {
     
-    open var isPresentedAsLark: Bool {
+    public var isPresentedAsLark: Bool {
         return transitioningDelegate is SPLarkTransitioningDelegate
             && modalPresentationStyle == .custom
             && presentingViewController != nil
     }
     
-    open func presentAsLark(_ controller: UIViewController, height: CGFloat? = nil, completion: (() -> Void)? = nil) {
+    public func presentAsLark(_ controller: UIViewController, height: CGFloat? = nil, completion: (() -> Void)? = nil) {
         if self.isPresentedAsLark { return }
         let transitionDelegate = SPLarkTransitioningDelegate()
         transitionDelegate.customHeight = height ?? 0
@@ -40,12 +40,16 @@ extension UIViewController {
         self.present(controller, animated: true, completion: completion)
     }
     
-    open func presentLark(settings controller: SPLarkSettingsController) {
+    public func presentLark(settings controller: SPLarkSettingsController) {
         if self.isPresentedAsLark { return }
         let transitionDelegate = SPLarkTransitioningDelegate()
         var safeArea = UIEdgeInsets.zero
         if #available(iOS 11.0, *) {
-            safeArea = UIApplication.shared.keyWindow?.safeAreaInsets ?? UIEdgeInsets.zero
+            if #available(iOS 13.0, *) {
+                safeArea = UIApplication.shared.windows.first?.safeAreaInsets ?? UIEdgeInsets.zero
+            } else {
+                safeArea = UIApplication.shared.keyWindow?.safeAreaInsets ?? UIEdgeInsets.zero
+            }
         }
         transitionDelegate.customHeight = 250 + safeArea.bottom
         controller.transitioningDelegate = transitionDelegate

@@ -25,7 +25,7 @@
 	<string>Interactive</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/var/jb/Applications/TrollSpeed.app/TrollSpeed</string>
+		<string>/Applications/TrollSpeed.app/TrollSpeed</string>
 		<string>-hud</string>
 	</array>
 	<key>RunAtLoad</key>
