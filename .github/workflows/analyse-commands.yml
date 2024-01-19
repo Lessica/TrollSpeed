@@ -1,18 +1,19 @@
-name: Build Release
+name: Analyse Commands
 
 on:
   push:
-    tags:
-      - "v*.*.*"
+    branches:
+      - main
 
 env:
   THEOS: ''
   GIT_TAG: ''
+  GIT_COMMIT: ''
   XCODE_VERSION: '14.3.1'
 
 jobs:
   build:
-    name: Build and upload release package for TrollStore
+    name: Build and generate compilation database
     runs-on: macos-13
 
     steps:
@@ -100,39 +101,10 @@ jobs:
           git fetch --tags
           echo "GIT_TAG=$(git describe --tags --always --abbrev=0)" >> $GITHUB_ENV
 
-      - name: Build package
+      - name: Build compilation database
         run: |
           cd $GITHUB_WORKSPACE/TrollSpeed
           ./gen-control.sh ${{ env.GIT_TAG }}
-          SPAWN_AS_ROOT=1 THEOS_PACKAGE_SCHEME=rootless FINALPACKAGE=1 make package
-          SPAWN_AS_ROOT=1 FINALPACKAGE=1 make clean
-          SPAWN_AS_ROOT=1 FINALPACKAGE=1 make package
-
-      - name: Collect symbols
-        run: |
-          cd $GITHUB_WORKSPACE/TrollSpeed
-          find .theos/obj -name "*.dSYM" -print | zip -r packages/TrollSpeed_${{ env.GIT_TAG }}_symbols.zip -@
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: TrollSpeed_${{ env.GIT_TAG }}
-          path: |
-            TrollSpeed/packages/TrollSpeed_*.tipa
-            TrollSpeed/packages/ch.xxtou.hudapp_*.deb
-
-      - name: Upload symbols
-        uses: actions/upload-artifact@v3
-        with:
-          name: TrollSpeed_${{ env.GIT_TAG }}_symbols
-          path: |
-            TrollSpeed/packages/TrollSpeed_${{ env.GIT_TAG }}_symbols.zip
-
-      - name: Upload release
-        uses: softprops/action-gh-release@v1
-        with:
-          token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
-          body_path: TrollSpeed/CHANGELOG.txt
-          files: |
-            TrollSpeed/packages/TrollSpeed_*.tipa
-            TrollSpeed/packages/ch.xxtou.hudapp_*.deb
+          SPAWN_AS_ROOT=1 THEOS_PACKAGE_SCHEME=rootless make commands
+          SPAWN_AS_ROOT=1 make clean
+          SPAWN_AS_ROOT=1 make commands

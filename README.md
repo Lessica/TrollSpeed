@@ -1,5 +1,10 @@
 # TrollSpeed
 
+[![Analyse Commands](https://github.com/Lessica/TrollSpeed/actions/workflows/analyse-commands.yml/badge.svg)](https://github.com/Lessica/TrollSpeed/actions/workflows/analyse-commands.yml)
+[![Build Release](https://github.com/Lessica/TrollSpeed/actions/workflows/build-release.yml/badge.svg)](https://github.com/Lessica/TrollSpeed/actions/workflows/build-release.yml)
+![Latest Release](https://img.shields.io/github/v/release/Lessica/TrollSpeed)
+![MIT License](https://img.shields.io/github/license/Lessica/TrollSpeed)
+
 Shows upload &amp; download speed below the status bar.
 
 Tested and expected to work on all iOS versions supported by opa334’s TrollStore.
@@ -34,3 +39,14 @@ You need to enable “Developer Mode” on iOS 16 or above to use TrollSpeed or 
 ## Screenshot
 
 ![screenshot](https://user-images.githubusercontent.com/5410705/213263734-1ef1b553-88d4-41cc-856e-891ea08d185c.jpeg)
+
+## Special Thanks
+
+- [TrollStore](https://github.com/opa334/TrollStore) by [@opa334dev](https://twitter.com/opa334dev)
+- [UIDaemon](https://github.com/limneos/UIDaemon) by [@limneos](https://twitter.com/limneos)
+- [NetworkSpeed13](https://github.com/lwlsw/NetworkSpeed13) by [@johnzarodev](https://twitter.com/johnzarodev)
+- [SnapshotSafeView](https://github.com/Stampoo/SnapshotSafeView) by [Ilya knyazkov](https://github.com/Stampoo)
+
+## License
+
+TrollSpeed is [Free Software](https://www.gnu.org/philosophy/free-sw.html) licensed under the [GNU General Public License](LICENSE).
