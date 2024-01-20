@@ -10,10 +10,15 @@ GIT_TAG_SHORT := $(shell git describe --tags --always --abbrev=0)
 APPLICATION_NAME := TrollSpeed
 
 TrollSpeed_USE_MODULES := 0
-TrollSpeed_FILES += $(wildcard *.mm *.m)
-TrollSpeed_FILES += $(wildcard *.swift)
+TrollSpeed_FILES += $(wildcard sources/*.mm sources/*.m)
+TrollSpeed_FILES += $(wildcard sources/KIF/*.mm sources/KIF/*.m)
+TrollSpeed_FILES += $(wildcard sources/*.swift)
+TrollSpeed_FILES += $(wildcard sources/SPLarkController/*.swift)
+TrollSpeed_FILES += $(wildcard sources/SnapshotSafeView/*.swift)
 TrollSpeed_CFLAGS += -fobjc-arc
-TrollSpeed_CFLAGS += -Iinclude
+TrollSpeed_CFLAGS += -Isources
+TrollSpeed_CFLAGS += -Isources/KIF
+TrollSpeed_CFLAGS += -Iheaders
 TrollSpeed_CFLAGS += -include hud-prefix.pch
 TrollSpeed_CCFLAGS += -DNOTIFY_LAUNCHED_HUD=\"ch.xxtou.notification.hud.launched\"
 TrollSpeed_CCFLAGS += -DNOTIFY_DISMISSAL_HUD=\"ch.xxtou.notification.hud.dismissal\"

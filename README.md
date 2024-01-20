@@ -42,6 +42,8 @@ You need to enable “Developer Mode” on iOS 16 or above to use TrollSpeed or 
 
 ## Special Thanks
 
+- [KIF](https://github.com/kif-framework/KIF)
+- [SPLarkController](https://github.com/ivanvorobei/SPLarkController) by [@ivanvorobei_](https://twitter.com/ivanvorobei_)
 - [TrollStore](https://github.com/opa334/TrollStore) by [@opa334dev](https://twitter.com/opa334dev)
 - [UIDaemon](https://github.com/limneos/UIDaemon) by [@limneos](https://twitter.com/limneos)
 - [NetworkSpeed13](https://github.com/lwlsw/NetworkSpeed13) by [@johnzarodev](https://twitter.com/johnzarodev)
