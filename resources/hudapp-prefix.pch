@@ -1,0 +1,35 @@
+#if __has_include(<AvailabilityVersions.h>)
+    #import <AvailabilityVersions.h>
+#endif
+
+#ifdef __OBJC__
+    #if __has_include(<TargetConditionals.h>)
+        #import <TargetConditionals.h>
+    #endif
+
+    #import <Foundation/Foundation.h>
+    #import <UIKit/UIKit.h>
+    #import <os/log.h>
+    #import "rootless.h"
+    #import "NSUserDefaults+Private.h"
+#endif
+
+#define FADE_OUT_DURATION 0.25
+
+#if SANDBOX
+#define USER_DEFAULTS_PATH ([[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"ch.xxtou.hudapp.plist"])
+#else
+#define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
+#endif
+
+// HUD -> APP: Notify APP that the HUD's view is appeared.
+#define NOTIFY_LAUNCHED_HUD "ch.xxtou.notification.hud.launched"
+
+// APP -> HUD: Notify HUD to dismiss itself.
+#define NOTIFY_DISMISSAL_HUD "ch.xxtou.notification.hud.dismissal"
+
+// APP -> HUD: Notify HUD that the user defaults has been changed by APP.
+#define NOTIFY_RELOAD_HUD "ch.xxtou.notification.hud.reload"
+
+// HUD -> APP: Notify APP that the user defaults has been changed by HUD.
+#define NOTIFY_RELOAD_APP "ch.xxtou.notification.app.reload"

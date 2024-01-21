@@ -1,0 +1,25 @@
+name: Xcode - Build and Analyze
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build and analyse using xcodebuild command
+    runs-on: macos-13
+
+    steps:
+      - name: Setup Xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: 15.1
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          xcodebuild clean build analyze -scheme TrollSpeed -project TrollSpeed.xcodeproj CODE_SIGNING_ALLOWED=NO | xcpretty && exit ${PIPESTATUS[0]}

@@ -1,5 +1,6 @@
 # TrollSpeed
 
+[![Xcode - Build and Analyze](https://github.com/Lessica/TrollSpeed/actions/workflows/build-analyse.yml/badge.svg)](https://github.com/Lessica/TrollSpeed/actions/workflows/build-analyse.yml)
 [![Analyse Commands](https://github.com/Lessica/TrollSpeed/actions/workflows/analyse-commands.yml/badge.svg)](https://github.com/Lessica/TrollSpeed/actions/workflows/analyse-commands.yml)
 [![Build Release](https://github.com/Lessica/TrollSpeed/actions/workflows/build-release.yml/badge.svg)](https://github.com/Lessica/TrollSpeed/actions/workflows/build-release.yml)
 ![Latest Release](https://img.shields.io/github/v/release/Lessica/TrollSpeed)
@@ -25,6 +26,7 @@ You need to enable “Developer Mode” on iOS 16 or above to use TrollSpeed or 
 - Use [theos](https://github.com/theos/theos) to compile.
   - `SPAWN_AS_ROOT=1 FINALPACKAGE=1 make package`
 - You'll get a `.tipa` file in `./packages` folder.
+- Don't like **theos**? Use `./build.sh` to build with Xcode.
 
 ## Caveats
 
