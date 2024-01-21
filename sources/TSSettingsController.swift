@@ -118,4 +118,6 @@ private enum TSSettingsIndex: Int, CaseIterable {
         delegate?.settingDidSelect(key: settingKey(index: index))
         completion()
     }
+
+    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask { [.portrait] }
 }
