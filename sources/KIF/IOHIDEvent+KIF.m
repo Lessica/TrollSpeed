@@ -1,3 +1,10 @@
+//
+//  IOHIDEvent+KIF.m
+//  KIF
+//
+//  Created by Thomas Bonnin on 7/6/15.
+//
+
 #import "IOHIDEvent+KIF.h"
 #import <UIKit/UIKit.h>
 #import <mach/mach_time.h>
