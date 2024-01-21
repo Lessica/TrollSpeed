@@ -907,22 +907,20 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     );
 }
 
-#define USER_DEFAULTS_PATH "/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
-
 - (void)loadUserDefaults:(BOOL)forceReload
 {
     if (forceReload || !_userDefaults)
-        _userDefaults = [[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS(USER_DEFAULTS_PATH))] mutableCopy] ?: [NSMutableDictionary dictionary];
+        _userDefaults = [[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH))] mutableCopy] ?: [NSMutableDictionary dictionary];
 }
 
 - (void)saveUserDefaults
 {
-    BOOL wroteSucceed = [_userDefaults writeToFile:(ROOT_PATH_NS(USER_DEFAULTS_PATH)) atomically:YES];
+    BOOL wroteSucceed = [_userDefaults writeToFile:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH)) atomically:YES];
     if (wroteSucceed) {
         [[NSFileManager defaultManager] setAttributes:@{
             NSFileOwnerAccountID: @501,
             NSFileGroupOwnerAccountID: @501,
-        } ofItemAtPath:(ROOT_PATH_NS(USER_DEFAULTS_PATH)) error:nil];
+        } ofItemAtPath:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH)) error:nil];
         notify_post(NOTIFY_RELOAD_APP);
     }
 }
@@ -985,7 +983,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
 + (BOOL)passthroughMode
 {
-    return [[[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS(USER_DEFAULTS_PATH))] objectForKey:@"passthroughMode"] boolValue];
+    return [[[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH))] objectForKey:@"passthroughMode"] boolValue];
 }
 
 - (HUDPresetPosition)selectedMode

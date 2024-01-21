@@ -325,12 +325,10 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
     }
 }
 
-#define USER_DEFAULTS_PATH "/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
-
 - (void)resetUserDefaults
 {
     // Reset user defaults
-    BOOL removed = [[NSFileManager defaultManager] removeItemAtPath:(ROOT_PATH_NS(USER_DEFAULTS_PATH)) error:nil];
+    BOOL removed = [[NSFileManager defaultManager] removeItemAtPath:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH)) error:nil];
     if (removed)
     {
         // Terminate HUD
@@ -344,12 +342,12 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
 - (void)loadUserDefaults:(BOOL)forceReload
 {
     if (forceReload || !_userDefaults)
-        _userDefaults = [[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS(USER_DEFAULTS_PATH))] mutableCopy] ?: [NSMutableDictionary dictionary];
+        _userDefaults = [[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH))] mutableCopy] ?: [NSMutableDictionary dictionary];
 }
 
 - (void)saveUserDefaults
 {
-    [_userDefaults writeToFile:(ROOT_PATH_NS(USER_DEFAULTS_PATH)) atomically:YES];
+    [_userDefaults writeToFile:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH)) atomically:YES];
     notify_post(NOTIFY_RELOAD_HUD);
 }
 

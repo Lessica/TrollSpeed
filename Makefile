@@ -1,7 +1,7 @@
 ARCHS := arm64  # arm64e
 TARGET := iphone:clang:latest:14.0
 INSTALL_TARGET_PROCESSES := TrollSpeed
-ENT_PLIST := $(PWD)/ent.plist
+ENT_PLIST := $(PWD)/resources/entitlements.plist
 LAUNCHD_PLIST := $(PWD)/layout/Library/LaunchDaemons/ch.xxtou.hudapp.plist
 
 include $(THEOS)/makefiles/common.mk
@@ -19,7 +19,7 @@ TrollSpeed_CFLAGS += -fobjc-arc
 TrollSpeed_CFLAGS += -Isources
 TrollSpeed_CFLAGS += -Isources/KIF
 TrollSpeed_CFLAGS += -Iheaders
-TrollSpeed_CFLAGS += -include hud-prefix.pch
+TrollSpeed_CFLAGS += -include resources/hudapp-prefix.pch
 TrollSpeed_CCFLAGS += -DNOTIFY_LAUNCHED_HUD=\"ch.xxtou.notification.hud.launched\"
 TrollSpeed_CCFLAGS += -DNOTIFY_DISMISSAL_HUD=\"ch.xxtou.notification.hud.dismissal\"
 TrollSpeed_CCFLAGS += -DNOTIFY_RELOAD_HUD=\"ch.xxtou.notification.hud.reload\"
@@ -28,9 +28,9 @@ ifeq ($(SPAWN_AS_ROOT),1)
 TrollSpeed_CCFLAGS += -DSPAWN_AS_ROOT
 endif
 MainApplication.mm_CCFLAGS += -std=c++14
-TrollSpeed_FRAMEWORKS += CoreGraphics QuartzCore UIKit
-TrollSpeed_PRIVATE_FRAMEWORKS += BackBoardServices CoreServices GraphicsServices IOKit SpringBoardServices
-TrollSpeed_CODESIGN_FLAGS += -Sent.plist
+TrollSpeed_FRAMEWORKS += CoreGraphics QuartzCore IOKit UIKit
+TrollSpeed_PRIVATE_FRAMEWORKS += BackBoardServices CoreServices GraphicsServices SpringBoardServices
+TrollSpeed_CODESIGN_FLAGS += -Sresources/entitlements.plist
 
 include $(THEOS_MAKE_PATH)/application.mk
 
