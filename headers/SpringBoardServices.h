@@ -3,7 +3,7 @@
 FOUNDATION_EXPORT mach_port_t SBSSpringBoardServerPort();
 
 FOUNDATION_EXPORT void SBFrontmostApplicationDisplayIdentifier(mach_port_t port, char *result);
-NSString *SBSCopyFrontmostApplicationDisplayIdentifier();
+FOUNDATION_EXPORT NSString *SBSCopyFrontmostApplicationDisplayIdentifier();
 FOUNDATION_EXPORT void SBGetScreenLockStatus(mach_port_t port, BOOL *lockStatus, BOOL *passcodeEnabled);
 FOUNDATION_EXPORT void SBSUndimScreen();
 
