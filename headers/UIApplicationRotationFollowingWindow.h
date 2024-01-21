@@ -1,4 +1,4 @@
-#import <UIKit/UIWindow.h>
+#import <UIKit/UIKit.h>
 
 @interface UIApplicationRotationFollowingWindow : UIWindow
 

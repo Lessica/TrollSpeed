@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "IOKit+SPI.h"
 
 @interface UITouch (Private)
 

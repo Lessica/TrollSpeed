@@ -1,4 +1,4 @@
-#import <UIKit/UIViewController.h>
+#import <UIKit/UIKit.h>
 
 @interface UIApplicationRotationFollowingController : UIViewController {
 	bool _sizesWindowToScene;
