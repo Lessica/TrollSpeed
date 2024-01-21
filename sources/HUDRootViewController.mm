@@ -1,13 +1,26 @@
-#if NO_TROLL
-#error "This target only compiles for real devices."
-#endif
+#import <notify.h>
+#import <net/if.h>
+#import <ifaddrs.h>
+#import <objc/runtime.h>
+#import <mach/vm_param.h>
+
+#import "HUDPresetPosition.h"
+#import "HUDRootViewController.h"
+#import "TrollSpeed-Swift.h"
+
+#if !NO_TROLL
+#import "FBSOrientationUpdate.h"
+#import "FBSOrientationObserver.h"
+#import "UIApplication+Private.h"
+#import "LSApplicationProxy.h"
+#import "LSApplicationWorkspace.h"
+#import "SpringBoardServices.h"
 
 #define NOTIFY_UI_LOCKSTATE    "com.apple.springboard.lockstate"
 #define NOTIFY_LS_APP_CHANGED  "com.apple.LaunchServices.ApplicationsChanged"
+#endif  // !NO_TROLL
 
-#import "LSApplicationProxy.h"
-#import "LSApplicationWorkspace.h"
-
+#if !NO_TROLL
 static void LaunchServicesApplicationStateChanged
 (CFNotificationCenterRef center,
  void *observer,
@@ -34,9 +47,9 @@ static void LaunchServicesApplicationStateChanged
         [app terminateWithSuccess];
     }
 }
+#endif  // !NO_TROLL
 
-#import "SpringBoardServices.h"
-
+#if !NO_TROLL
 static void SpringBoardLockStatusChanged
 (CFNotificationCenterRef center,
  void *observer,
@@ -69,6 +82,7 @@ static void SpringBoardLockStatusChanged
         }
     }
 }
+#endif  // !NO_TROLL
 
 // Thanks to: https://github.com/lwlsw/NetworkSpeed13
 
@@ -97,39 +111,39 @@ typedef struct {
     uint64_t outputBytes;
 } UpDownBytes;
 
-static NSString* formattedSpeed(uint64_t bytes, BOOL isFocused)
+static NSString *formattedSpeed(uint64_t bytes, BOOL isFocused)
 {
     if (isFocused)
     {
         if (0 == DATAUNIT)
         {
-            if (bytes < KILOBYTES) return @"0 KB";
-            else if (bytes < MEGABYTES) return [NSString stringWithFormat:@"%.0f KB", (double)bytes / KILOBYTES];
-            else if (bytes < GIGABYTES) return [NSString stringWithFormat:@"%.2f MB", (double)bytes / MEGABYTES];
-            else return [NSString stringWithFormat:@"%.2f GB", (double)bytes / GIGABYTES];
+            if (bytes < KILOBYTES) return NSLocalizedString(@"0 KB", @"formattedSpeed");
+            else if (bytes < MEGABYTES) return [NSString stringWithFormat:NSLocalizedString(@"%.0f KB", @"formattedSpeed"), (double)bytes / KILOBYTES];
+            else if (bytes < GIGABYTES) return [NSString stringWithFormat:NSLocalizedString(@"%.2f MB", @"formattedSpeed"), (double)bytes / MEGABYTES];
+            else return [NSString stringWithFormat:NSLocalizedString(@"%.2f GB", @"formattedSpeed"), (double)bytes / GIGABYTES];
         }
         else
         {
-            if (bytes < KILOBITS) return @"0 Kb";
-            else if (bytes < MEGABITS) return [NSString stringWithFormat:@"%.0f Kb", (double)bytes / KILOBITS];
-            else if (bytes < GIGABITS) return [NSString stringWithFormat:@"%.2f Mb", (double)bytes / MEGABITS];
-            else return [NSString stringWithFormat:@"%.2f Gb", (double)bytes / GIGABITS];
+            if (bytes < KILOBITS) return NSLocalizedString(@"0 Kb", @"formattedSpeed");
+            else if (bytes < MEGABITS) return [NSString stringWithFormat:NSLocalizedString(@"%.0f Kb", @"formattedSpeed"), (double)bytes / KILOBITS];
+            else if (bytes < GIGABITS) return [NSString stringWithFormat:NSLocalizedString(@"%.2f Mb", @"formattedSpeed"), (double)bytes / MEGABITS];
+            else return [NSString stringWithFormat:NSLocalizedString(@"%.2f Gb", @"formattedSpeed"), (double)bytes / GIGABITS];
         }
     }
     else {
         if (0 == DATAUNIT)
         {
-            if (bytes < KILOBYTES) return @"0 KB/s";
-            else if (bytes < MEGABYTES) return [NSString stringWithFormat:@"%.0f KB/s", (double)bytes / KILOBYTES];
-            else if (bytes < GIGABYTES) return [NSString stringWithFormat:@"%.2f MB/s", (double)bytes / MEGABYTES];
-            else return [NSString stringWithFormat:@"%.2f GB/s", (double)bytes / GIGABYTES];
+            if (bytes < KILOBYTES) return NSLocalizedString(@"0 KB/s", @"formattedSpeed");
+            else if (bytes < MEGABYTES) return [NSString stringWithFormat:NSLocalizedString(@"%.0f KB/s", @"formattedSpeed"), (double)bytes / KILOBYTES];
+            else if (bytes < GIGABYTES) return [NSString stringWithFormat:NSLocalizedString(@"%.2f MB/s", @"formattedSpeed"), (double)bytes / MEGABYTES];
+            else return [NSString stringWithFormat:NSLocalizedString(@"%.2f GB/s", @"formattedSpeed"), (double)bytes / GIGABYTES];
         }
         else
         {
-            if (bytes < KILOBITS) return @"0 Kb/s";
-            else if (bytes < MEGABITS) return [NSString stringWithFormat:@"%.0f Kb/s", (double)bytes / KILOBITS];
-            else if (bytes < GIGABITS) return [NSString stringWithFormat:@"%.2f Mb/s", (double)bytes / MEGABITS];
-            else return [NSString stringWithFormat:@"%.2f Gb/s", (double)bytes / GIGABITS];
+            if (bytes < KILOBITS) return NSLocalizedString(@"0 Kb/s", @"formattedSpeed");
+            else if (bytes < MEGABITS) return [NSString stringWithFormat:NSLocalizedString(@"%.0f Kb/s", @"formattedSpeed"), (double)bytes / KILOBITS];
+            else if (bytes < GIGABITS) return [NSString stringWithFormat:NSLocalizedString(@"%.2f Mb/s", @"formattedSpeed"), (double)bytes / MEGABITS];
+            else return [NSString stringWithFormat:NSLocalizedString(@"%.2f Gb/s", @"formattedSpeed"), (double)bytes / GIGABITS];
         }
     }
 }
@@ -283,7 +297,6 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 @implementation HUDRootViewController {
     NSMutableDictionary *_userDefaults;
     NSMutableArray <NSLayoutConstraint *> *_constraints;
-    FBSOrientationObserver *_orientationObserver;
     UIVisualEffectView *_blurView;
     ScreenshotInvisibleContainer *_containerView;
     UIView *_contentView;
@@ -295,11 +308,15 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     UIImpactFeedbackGenerator *_impactFeedbackGenerator;
     UINotificationFeedbackGenerator *_notificationFeedbackGenerator;
     BOOL _isFocused;
-    UIInterfaceOrientation _orientation;
+    UIInterfaceOrientation _remoteOrientation;
+    UIInterfaceOrientation _localOrientation;
     NSLayoutConstraint *_topConstraint;
     NSLayoutConstraint *_centerXConstraint;
     NSLayoutConstraint *_leadingConstraint;
     NSLayoutConstraint *_trailingConstraint;
+#if !NO_TROLL
+    FBSOrientationObserver *_remoteOrientationObserver;
+#endif
 }
 
 - (void)registerNotifications
@@ -309,6 +326,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         [self reloadUserDefaults];
     });
 
+#if !NO_TROLL
     CFNotificationCenterRef darwinCenter = CFNotificationCenterGetDarwinNotifyCenter();
     
     CFNotificationCenterAddObserver(
@@ -328,6 +346,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         NULL,
         CFNotificationSuspensionBehaviorCoalesce
     );
+#endif  // !NO_TROLL
 }
 
 - (void)loadUserDefaults:(BOOL)forceReload
@@ -413,63 +432,63 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"selectedMode"];
-    return mode ? [mode integerValue] : HUDPresetPositionTopCenter;
+    return mode != nil ? (HUDPresetPosition)[mode integerValue] : HUDPresetPositionTopCenter;
 }
 
 - (BOOL)singleLineMode
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"singleLineMode"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (BOOL)usesBitrate
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"usesBitrate"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (BOOL)usesArrowPrefixes
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"usesArrowPrefixes"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (BOOL)usesLargeFont
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"usesLargeFont"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (BOOL)usesRotation
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"usesRotation"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (BOOL)keepInPlace
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"keepInPlace"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (BOOL)hideAtSnapshot
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"hideAtSnapshot"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (CGFloat)currentPositionY
 {
     [self loadUserDefaults:NO];
     NSNumber *positionY = [_userDefaults objectForKey:@"currentPositionY"];
-    return positionY ? [positionY doubleValue] : CGFLOAT_MAX;
+    return positionY != nil ? [positionY doubleValue] : CGFLOAT_MAX;
 }
 
 - (void)setCurrentPositionY:(CGFloat)positionY
@@ -483,7 +502,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 {
     [self loadUserDefaults:NO];
     NSNumber *positionY = [_userDefaults objectForKey:@"currentLandscapePositionY"];
-    return positionY ? [positionY doubleValue] : CGFLOAT_MAX;
+    return positionY != nil ? [positionY doubleValue] : CGFLOAT_MAX;
 }
 
 - (void)setCurrentLandscapePositionY:(CGFloat)positionY
@@ -498,22 +517,26 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     self = [super init];
     if (self) {
         _constraints = [NSMutableArray array];
-        _orientationObserver = [[objc_getClass("FBSOrientationObserver") alloc] init];
+        [self registerNotifications];
+#if !NO_TROLL
+        _remoteOrientationObserver = [[objc_getClass("FBSOrientationObserver") alloc] init];
         __weak HUDRootViewController *weakSelf = self;
-        [_orientationObserver setHandler:^(FBSOrientationUpdate *orientationUpdate) {
+        [_remoteOrientationObserver setHandler:^(FBSOrientationUpdate *orientationUpdate) {
             HUDRootViewController *strongSelf = weakSelf;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [strongSelf updateOrientation:(UIInterfaceOrientation)orientationUpdate.orientation animateWithDuration:orientationUpdate.duration];
             });
         }];
-        [self registerNotifications];
+#endif  // !NO_TROLL
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [_orientationObserver invalidate];
+#if !NO_TROLL
+    [_remoteOrientationObserver invalidate];
+#endif
 }
 
 - (void)updateSpeedLabel
@@ -527,6 +550,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     [_speedLabel sizeToFit];
 }
 
+#if !NO_TROLL
 static inline CGFloat orientationAngle(UIInterfaceOrientation orientation)
 {
     switch (orientation) {
@@ -540,7 +564,9 @@ static inline CGFloat orientationAngle(UIInterfaceOrientation orientation)
             return 0;
     }
 }
+#endif  // !NO_TROLL
 
+#if !NO_TROLL
 static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRect bounds)
 {
     switch (orientation) {
@@ -551,32 +577,43 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
             return bounds;
     }
 }
+#endif  // !NO_TROLL
 
+#if !NO_TROLL
 - (void)updateOrientation:(UIInterfaceOrientation)orientation animateWithDuration:(NSTimeInterval)duration
 {
     BOOL usesRotation = [self usesRotation];
     
     if (!usesRotation)
     {
+        [self onBlur:_contentView duration:0];
+
         if (orientation == UIInterfaceOrientationPortrait)
         {
+            __weak typeof(self) weakSelf = self;
             [UIView animateWithDuration:duration animations:^{
-                self->_contentView.alpha = self->_isFocused ? 1.0 : 0.667;
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                strongSelf->_contentView.alpha = strongSelf->_isFocused ? 1.0 : 0.667;
             }];
         }
         else
         {
+            __weak typeof(self) weakSelf = self;
             [UIView animateWithDuration:duration animations:^{
-                self->_contentView.alpha = 0.0;
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                strongSelf->_contentView.alpha = 0.0;
             }];
         }
         
         return;
     }
 
-    if (orientation == _orientation)
+    if (orientation == _remoteOrientation) {
         return;
-    _orientation = orientation;
+    }
+
+    _remoteOrientation = orientation;
+    [self cancelPreviousPerformRequestsWithTarget:_contentView];
 
     CGRect bounds = orientationBounds(orientation, [UIScreen mainScreen].bounds);
     [self.view setNeedsUpdateConstraints];
@@ -585,13 +622,15 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     
     [self resetGestureRecognizers];
     [self onBlur:_contentView duration:duration];
-    
+
+    __weak typeof(self) weakSelf = self;
     [UIView animateWithDuration:duration animations:^{
-        [self.view setTransform:CGAffineTransformMakeRotation(orientationAngle(orientation))];
+        [weakSelf.view setTransform:CGAffineTransformMakeRotation(orientationAngle(orientation))];
     } completion:^(BOOL finished) {
-        [self.view setHidden:NO];
+        [weakSelf.view setHidden:NO];
     }];
 }
+#endif  // !NO_TROLL
 
 - (void)viewDidLoad
 {
@@ -644,6 +683,12 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     [self reloadUserDefaults];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    notify_post(NOTIFY_LAUNCHED_HUD);
+}
+
 - (void)resetLoopTimer
 {
     [_timer invalidate];
@@ -674,19 +719,37 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
     BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
 
-    BOOL isLandscape = UIInterfaceOrientationIsLandscape(_orientation);
+#if NO_TROLL
+    _localOrientation = [self.view.window.windowScene interfaceOrientation];
+    UIInterfaceOrientation orientation = _localOrientation;
+#else
+    UIInterfaceOrientation orientation = _remoteOrientation;
+#endif
+
+    BOOL isLandscape;
+    if (orientation == UIInterfaceOrientationUnknown) {
+        isLandscape = CGRectGetWidth(self.view.bounds) > CGRectGetHeight(self.view.bounds);
+    } else {
+        isLandscape = UIInterfaceOrientationIsLandscape(orientation);
+    }
     _blurView.layer.maskedCorners = (isCenteredMost && !isLandscape) ? kCornerMaskBottom : kCornerMaskAll;
 
     UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;
     if (isLandscape)
     {
+#if NO_TROLL
+        CGFloat notchHeight = CGRectGetMinX(layoutGuide.layoutFrame);
+        CGFloat paddingNearNotch = (notchHeight > 40) ? -16 : 4;
+        CGFloat paddingFarFromNotch = (notchHeight > 40) ? notchHeight - 24 : -4;
+#else
         CGFloat notchHeight = CGRectGetMinY(layoutGuide.layoutFrame);
-        CGFloat paddingNearNotch = (notchHeight > 1) ? notchHeight - 16 : 4;
-        CGFloat paddingFarFromNotch = (notchHeight > 1) ? -24 : -4;
+        CGFloat paddingNearNotch = (notchHeight > 40) ? notchHeight - 16 : 4;
+        CGFloat paddingFarFromNotch = (notchHeight > 40) ? -24 : -4;
+#endif
 
         [_constraints addObjectsFromArray:@[
-            [_contentView.leadingAnchor constraintEqualToAnchor:layoutGuide.leadingAnchor constant:(_orientation == UIInterfaceOrientationLandscapeLeft ? -paddingFarFromNotch : paddingNearNotch)],
-            [_contentView.trailingAnchor constraintEqualToAnchor:layoutGuide.trailingAnchor constant:(_orientation == UIInterfaceOrientationLandscapeLeft ? -paddingNearNotch : paddingFarFromNotch)],
+            [_contentView.leadingAnchor constraintEqualToAnchor:layoutGuide.leadingAnchor constant:(orientation == UIInterfaceOrientationLandscapeLeft ? -paddingFarFromNotch : paddingNearNotch)],
+            [_contentView.trailingAnchor constraintEqualToAnchor:layoutGuide.trailingAnchor constant:(orientation == UIInterfaceOrientationLandscapeLeft ? -paddingNearNotch : paddingFarFromNotch)],
         ]];
 
         CGFloat minimumLandscapeConstant = (isPad ? 30 : 10);
@@ -720,7 +783,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
             [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:0]];
         } else {
             CGFloat minimumTopConstraintConstant;
-            if (CGRectGetMinY(layoutGuide.layoutFrame) > 1)
+            if (CGRectGetMinY(layoutGuide.layoutFrame) > 40)
                 minimumTopConstraintConstant = -10;
             else
                 minimumTopConstraintConstant = (isPad ? 30 : 20);
@@ -953,7 +1016,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
         
         if (sender.state == UIGestureRecognizerStateEnded)
         {
-            if (UIInterfaceOrientationIsLandscape(_orientation))
+            if (UIInterfaceOrientationIsLandscape(_localOrientation))
                 [self setCurrentLandscapePositionY:_topConstraint.constant];
             else
                 [self setCurrentPositionY:_topConstraint.constant];
@@ -976,6 +1039,65 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
         [_impactFeedbackGenerator prepare];
         [_impactFeedbackGenerator impactOccurred];
     }
+}
+
+#if NO_TROLL
+- (void)viewWillTransitionToSize:(CGSize)size
+       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+
+    BOOL usesRotation = [self usesRotation];
+    __weak typeof(self) weakSelf = self;
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context)
+     {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        UIInterfaceOrientation orientation = [strongSelf.view.window.windowScene interfaceOrientation];
+
+        if (!usesRotation)
+        {
+            [strongSelf onBlur:strongSelf->_contentView duration:0];
+
+            if (orientation == UIInterfaceOrientationPortrait) {
+                strongSelf->_contentView.alpha = strongSelf->_isFocused ? 1.0 : 0.667;
+            } else {
+                strongSelf->_contentView.alpha = 0.0;
+            }
+        }
+        else
+        {
+            if (orientation == strongSelf->_localOrientation) {
+                return;
+            }
+
+            strongSelf->_localOrientation = orientation;
+            [strongSelf cancelPreviousPerformRequestsWithTarget:strongSelf->_contentView];
+
+            [strongSelf.view setNeedsUpdateConstraints];
+            [strongSelf.view setHidden:YES];
+
+            [strongSelf resetGestureRecognizers];
+            [strongSelf onBlur:strongSelf->_contentView duration:context.transitionDuration];
+        }
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context)
+     {
+        if (usesRotation)
+        {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf.view setHidden:NO];
+        }
+    }];
+}
+#endif  // NO_TROLL
+
+- (UIModalPresentationStyle)modalPresentationStyle
+{
+    return UIModalPresentationOverFullScreen;
+}
+
+- (UIModalTransitionStyle)modalTransitionStyle
+{
+    return UIModalTransitionStyleCrossDissolve;
 }
 
 @end
