@@ -22,17 +22,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 - (void)terminateWithSuccess;
 @end
 
-static BOOL _shouldToggleHUDAfterLaunch = NO;
-static NSString * const kToggleHUDAfterLaunchNotificationName = @"ch.xxtou.hudapp.notification.toggle-hud";
-static NSString * const kToggleHUDAfterLaunchNotificationActionKey = @"action";
-static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOn = @"toggle-on";
-static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"toggle-off";
-
-
-#pragma mark - MainApplication
-
-@interface MainApplication : UIApplication
-@end
+#import "MainApplication.h"
 
 @implementation MainApplication
 
@@ -639,81 +629,3 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
 
 @end
 
-
-#pragma mark - MainApplicationDelegate
-
-@interface MainApplicationDelegate : UIResponder <UIApplicationDelegate>
-@property (nonatomic, strong) UIWindow *window;
-@end
-
-@implementation MainApplicationDelegate {
-    RootViewController *_rootViewController;
-}
-
-- (instancetype)init {
-    if (self = [super init]) {
-        os_log_debug(OS_LOG_DEFAULT, "- [MainApplicationDelegate init]");
-    }
-    return self;
-}
-
-- (BOOL)application:(UIApplication *)application openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
-{
-    if ([url.scheme isEqualToString:@"trollspeed"]) {
-        if ([url.host isEqualToString:@"toggle"]) {
-            [self setupAndNotifyToggleHUDAfterLaunchWithAction:nil];
-            return YES;
-        } else if ([url.host isEqualToString:@"on"]) {
-            [self setupAndNotifyToggleHUDAfterLaunchWithAction:kToggleHUDAfterLaunchNotificationActionToggleOn];
-            return YES;
-        } else if ([url.host isEqualToString:@"off"]) {
-            [self setupAndNotifyToggleHUDAfterLaunchWithAction:kToggleHUDAfterLaunchNotificationActionToggleOff];
-            return YES;
-        }
-    }
-    return NO;
-}
-
-- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL succeeded))completionHandler
-{
-    if ([shortcutItem.type isEqualToString:@"ch.xxtou.shortcut.toggle-hud"])
-    {
-        [self setupAndNotifyToggleHUDAfterLaunchWithAction:nil];
-    }
-}
-
-- (void)setupAndNotifyToggleHUDAfterLaunchWithAction:(NSString *)action
-{
-    _shouldToggleHUDAfterLaunch = YES;
-    if (action) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kToggleHUDAfterLaunchNotificationName object:nil userInfo:@{
-            kToggleHUDAfterLaunchNotificationActionKey: action,
-        }];
-    } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kToggleHUDAfterLaunchNotificationName object:nil];
-    }
-}
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary <UIApplicationLaunchOptionsKey, id> *)launchOptions {
-    os_log_debug(OS_LOG_DEFAULT, "- [MainApplicationDelegate application:%{public}@ didFinishLaunchingWithOptions:%{public}@]", application, launchOptions);
-    
-    _rootViewController = [[RootViewController alloc] init];
-
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [self.window setRootViewController:_rootViewController];
-    [self.window makeKeyAndVisible];
-
-    return YES;
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-#if DEBUG
-    os_log_debug(OS_LOG_DEFAULT, "- [MainApplicationDelegate applicationDidBecomeActive:%{public}@]", application);
-#endif
-
-    dispatch_async(dispatch_get_main_queue(), ^(void) {
-        [_rootViewController reloadMainButtonState];
-    });
-}
-
-@end
