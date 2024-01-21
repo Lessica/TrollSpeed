@@ -1,62 +1,23 @@
-#import <CoreGraphics/CoreGraphics.h>
-#import <Foundation/Foundation.h>
 #import <notify.h>
-#import <os/log.h>
-#import <rootless.h>
-#import "TrollSpeed-Swift.h"
-#import "HUDPresetPosition.h"
+
+#import "HUDHelper.h"
 #import "MainButton.h"
+#import "MainApplication.h"
+#import "HUDPresetPosition.h"
+#import "RootViewController.h"
+#import "UIApplication+Private.h"
+
+#if NO_TROLL
+#import "HUDRootViewController.h"
+#endif
 
 #define HUD_TRANSITION_DURATION 0.25
 
-
-OBJC_EXTERN BOOL IsHUDEnabled(void);
-OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
-
-#if DEBUG && SPAWN_AS_ROOT
-OBJC_EXTERN void SimulateMemoryPressure(void);
-#endif
-
-@interface UIApplication (Private)
-- (void)suspend;
-- (void)terminateWithSuccess;
-@end
-
-#import "MainApplication.h"
-
-@implementation MainApplication
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self)
-    {
-#if DEBUG
-        /* Force HIDTransformer to print logs */
-        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogTouch" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogGesture" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogEventDispatch" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogGestureEnvironment" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogGestureExclusion" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogSystemGestureUpdate" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogGesturePerformance" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"LogHIDTransformer" inDomain:@"com.apple.UIKit"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-#endif
-    }
-    return self;
-}
-
-@end
-
-
-#pragma mark - RootViewController
-
-
-@interface RootViewController : UIViewController <TSSettingsControllerDelegate>
-@property (nonatomic, strong) UIView *backgroundView;
-@property (nonatomic, assign) BOOL isHUDActive;
-@end
+static BOOL _gShouldToggleHUDAfterLaunch = NO;
+static const CGFloat _gTopButtonConstraintsConstantCompact = 40.f;
+static const CGFloat _gTopButtonConstraintsConstantRegular = 28.f;
+static const CGFloat _gAuthorLabelBottomConstraintConstantCompact = -20.f;
+static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
 @implementation RootViewController {
     NSMutableDictionary *_userDefaults;
@@ -68,6 +29,48 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
     UIButton *_topCenterMostButton;
     UILabel *_authorLabel;
     BOOL _supportsCenterMost;
+    NSLayoutConstraint *_topLeftConstraint;
+    NSLayoutConstraint *_topRightConstraint;
+    NSLayoutConstraint *_topCenterConstraint;
+    NSLayoutConstraint *_authorLabelBottomConstraint;
+    BOOL _isRemoteHUDActive;
+#if NO_TROLL
+    HUDRootViewController *_localHUDRootViewController;
+#endif
+}
+
++ (void)setShouldToggleHUDAfterLaunch:(BOOL)flag
+{
+    _gShouldToggleHUDAfterLaunch = flag;
+}
+
++ (BOOL)shouldToggleHUDAfterLaunch
+{
+    return _gShouldToggleHUDAfterLaunch;
+}
+
+- (BOOL)isHUDEnabled
+{
+#if NO_TROLL
+    return _localHUDRootViewController != nil;
+#else
+    return IsHUDEnabled();
+#endif
+}
+
+- (void)setHUDEnabled:(BOOL)enabled
+{
+#if NO_TROLL
+    if (enabled && _localHUDRootViewController == nil) {
+        _localHUDRootViewController = [[HUDRootViewController alloc] init];
+        [self presentViewController:_localHUDRootViewController animated:YES completion:nil];
+    } else {
+        [_localHUDRootViewController dismissViewControllerAnimated:YES completion:nil];
+        _localHUDRootViewController = nil;
+    }
+#else
+    SetHUDEnabled(enabled);
+#endif  // NO_TROLL
 }
 
 - (void)registerNotifications
@@ -85,14 +88,12 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
     CGRect bounds = UIScreen.mainScreen.bounds;
 
     self.view = [[UIView alloc] initWithFrame:bounds];
-    self.view.backgroundColor = [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:.580f/1.0f];  // rgba(0, 0, 0, 0.580)
+    self.view.backgroundColor = [UIColor colorWithRed:0.0f / 255.0f green:0.0f / 255.0f blue:0.0f / 255.0f alpha:.580f / 1.0f];  // rgba(0, 0, 0, 0.580)
 
     self.backgroundView = [[UIView alloc] initWithFrame:bounds];
     self.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.backgroundView.backgroundColor = [UIColor colorWithRed:26.0f/255.0f green:188.0f/255.0f blue:156.0f/255.0f alpha:1.0f];  // rgba(26, 188, 156, 1.0)
+    self.backgroundView.backgroundColor = [UIColor colorWithRed:26.0f / 255.0f green:188.0f / 255.0f blue:156.0f / 255.0f alpha:1.0f];  // rgba(26, 188, 156, 1.0)
     [self.view addSubview:self.backgroundView];
-
-    BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
 
     _topLeftButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_topLeftButton setTintColor:[UIColor whiteColor]];
@@ -108,9 +109,10 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
     }
     UILayoutGuide *safeArea = self.backgroundView.safeAreaLayoutGuide;
     [_topLeftButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+    _topLeftConstraint = [_topLeftButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:_gTopButtonConstraintsConstantRegular];
     [NSLayoutConstraint activateConstraints:@[
-        [_topLeftButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:(isPad ? 40.0f : 28.f)],
-        [_topLeftButton.leadingAnchor constraintEqualToAnchor:self.backgroundView.leadingAnchor constant:20.0f],
+        _topLeftConstraint,
+        [_topLeftButton.leadingAnchor constraintEqualToAnchor:safeArea.leadingAnchor constant:20.0f],
         [_topLeftButton.widthAnchor constraintEqualToConstant:40.0f],
         [_topLeftButton.heightAnchor constraintEqualToConstant:40.0f],
     ]];
@@ -128,9 +130,10 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
         [_topRightButton setConfiguration:config];
     }
     [_topRightButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+    _topRightConstraint = [_topRightButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:_gTopButtonConstraintsConstantRegular];
     [NSLayoutConstraint activateConstraints:@[
-        [_topRightButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:(isPad ? 40.0f : 28.f)],
-        [_topRightButton.trailingAnchor constraintEqualToAnchor:self.backgroundView.trailingAnchor constant:-20.0f],
+        _topRightConstraint,
+        [_topRightButton.trailingAnchor constraintEqualToAnchor:safeArea.trailingAnchor constant:-20.0f],
         [_topRightButton.widthAnchor constraintEqualToConstant:40.0f],
         [_topRightButton.heightAnchor constraintEqualToConstant:40.0f],
     ]];
@@ -148,9 +151,10 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
         [_topCenterButton setConfiguration:config];
     }
     [_topCenterButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+    _topCenterConstraint = [_topCenterButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:_gTopButtonConstraintsConstantRegular];
     [NSLayoutConstraint activateConstraints:@[
-        [_topCenterButton.topAnchor constraintEqualToAnchor:safeArea.topAnchor constant:(isPad ? 40.0f : 28.f)],
-        [_topCenterButton.centerXAnchor constraintEqualToAnchor:self.backgroundView.centerXAnchor],
+        _topCenterConstraint,
+        [_topCenterButton.centerXAnchor constraintEqualToAnchor:safeArea.centerXAnchor],
         [_topCenterButton.widthAnchor constraintEqualToConstant:40.0f],
         [_topCenterButton.heightAnchor constraintEqualToConstant:40.0f],
     ]];
@@ -179,7 +183,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 
     [_mainButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
-        [_mainButton.centerXAnchor constraintEqualToAnchor:self.backgroundView.centerXAnchor],
+        [_mainButton.centerXAnchor constraintEqualToAnchor:safeArea.centerXAnchor],
         [_mainButton.centerYAnchor constraintEqualToAnchor:self.backgroundView.centerYAnchor],
     ]];
 
@@ -197,7 +201,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
     [_settingsButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
         [_settingsButton.bottomAnchor constraintEqualToAnchor:safeArea.bottomAnchor constant:-20.0f],
-        [_settingsButton.centerXAnchor constraintEqualToAnchor:self.backgroundView.centerXAnchor],
+        [_settingsButton.centerXAnchor constraintEqualToAnchor:safeArea.centerXAnchor],
         [_settingsButton.widthAnchor constraintEqualToConstant:40.0f],
         [_settingsButton.heightAnchor constraintEqualToConstant:40.0f],
     ]];
@@ -210,16 +214,18 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
     [_authorLabel sizeToFit];
     [self.backgroundView addSubview:_authorLabel];
 
+    _authorLabelBottomConstraint = [_authorLabel.bottomAnchor constraintEqualToAnchor:safeArea.bottomAnchor constant:_gAuthorLabelBottomConstraintConstantRegular];
     [_authorLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
     [NSLayoutConstraint activateConstraints:@[
-        [_authorLabel.centerXAnchor constraintEqualToAnchor:self.backgroundView.centerXAnchor],
-        [_authorLabel.bottomAnchor constraintEqualToAnchor:_settingsButton.topAnchor constant:-20],
+        _authorLabelBottomConstraint,
+        [_authorLabel.centerXAnchor constraintEqualToAnchor:safeArea.centerXAnchor],
     ]];
 
     UITapGestureRecognizer *authorTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAuthorLabel:)];
     [_authorLabel setUserInteractionEnabled:YES];
     [_authorLabel addGestureRecognizer:authorTapGesture];
 
+    [self verticalSizeClassUpdated];
     [self reloadMainButtonState];
 }
 
@@ -250,17 +256,17 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 }
 
 - (void)toggleHUDAfterLaunch {
-    if (_shouldToggleHUDAfterLaunch) {
-        _shouldToggleHUDAfterLaunch = NO;
+    if ([RootViewController shouldToggleHUDAfterLaunch]) {
+        [RootViewController setShouldToggleHUDAfterLaunch:NO];
         [self tapMainButton:_mainButton];
         [[UIApplication sharedApplication] suspend];
     }
 }
 
 - (void)toggleOnHUDAfterLaunch {
-    if (_shouldToggleHUDAfterLaunch) {
-        _shouldToggleHUDAfterLaunch = NO;
-        if (!_isHUDActive) {
+    if ([RootViewController shouldToggleHUDAfterLaunch]) {
+        [RootViewController setShouldToggleHUDAfterLaunch:NO];
+        if (!_isRemoteHUDActive) {
             [self tapMainButton:_mainButton];
         }
         [[UIApplication sharedApplication] suspend];
@@ -268,9 +274,9 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 }
 
 - (void)toggleOffHUDAfterLaunch {
-    if (_shouldToggleHUDAfterLaunch) {
-        _shouldToggleHUDAfterLaunch = NO;
-        if (_isHUDActive) {
+    if ([RootViewController shouldToggleHUDAfterLaunch]) {
+        [RootViewController setShouldToggleHUDAfterLaunch:NO];
+        if (_isRemoteHUDActive) {
             [self tapMainButton:_mainButton];
         }
         [[UIApplication sharedApplication] suspend];
@@ -300,7 +306,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
     if (removed)
     {
         // Terminate HUD
-        SetHUDEnabled(NO);
+        [self setHUDEnabled:NO];
 
         // Terminate App
         [[UIApplication sharedApplication] terminateWithSuccess];
@@ -323,7 +329,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"selectedMode"];
-    return mode ? [mode integerValue] : HUDPresetPositionTopCenter;
+    return mode != nil ? (HUDPresetPosition)[mode integerValue] : HUDPresetPositionTopCenter;
 }
 
 - (void)setSelectedMode:(HUDPresetPosition)selectedMode
@@ -342,7 +348,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"passthroughMode"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setPassthroughMode:(BOOL)passthroughMode
@@ -356,7 +362,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"singleLineMode"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setSingleLineMode:(BOOL)singleLineMode
@@ -370,7 +376,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"usesBitrate"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setUsesBitrate:(BOOL)usesBitrate
@@ -384,7 +390,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"usesArrowPrefixes"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setUsesArrowPrefixes:(BOOL)usesArrowPrefixes
@@ -398,7 +404,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"usesLargeFont"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setUsesLargeFont:(BOOL)usesLargeFont
@@ -412,7 +418,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"usesRotation"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setUsesRotation:(BOOL)usesRotation
@@ -426,7 +432,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"keepInPlace"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setKeepInPlace:(BOOL)keepInPlace
@@ -440,7 +446,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"hideAtSnapshot"];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setHideAtSnapshot:(BOOL)hideAtSnapshot
@@ -452,8 +458,8 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 
 - (void)reloadMainButtonState
 {
-    _isHUDActive = IsHUDEnabled();
-    
+    _isRemoteHUDActive = [self isHUDEnabled];
+
     static NSAttributedString *hintAttributedString = nil;
     static NSAttributedString *githubAttributedString = nil;
     static dispatch_once_t onceToken;
@@ -483,15 +489,17 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
         githubAttributedString = githubAttributedText;
     });
     
+    __weak typeof(self) weakSelf = self;
     [UIView transitionWithView:self.backgroundView duration:HUD_TRANSITION_DURATION options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-        [_mainButton setTitle:(_isHUDActive ? NSLocalizedString(@"Exit HUD", nil) : NSLocalizedString(@"Open HUD", nil)) forState:UIControlStateNormal];
-        [_authorLabel setAttributedText:(_isHUDActive ? hintAttributedString : githubAttributedString)];
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf->_mainButton setTitle:(strongSelf->_isRemoteHUDActive ? NSLocalizedString(@"Exit HUD", nil) : NSLocalizedString(@"Open HUD", nil)) forState:UIControlStateNormal];
+        [strongSelf->_authorLabel setAttributedText:(strongSelf->_isRemoteHUDActive ? hintAttributedString : githubAttributedString)];
     } completion:nil];
 }
 
 - (void)presentTopCenterMostHints
 {
-    if (!_isHUDActive) {
+    if (!_isRemoteHUDActive) {
         return;
     }
     [_authorLabel setText:NSLocalizedString(@"Tap that button on the center again,\nto toggle ON/OFF “Dynamic Island” mode.", nil)];
@@ -501,7 +509,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:key];
-    return mode ? [mode boolValue] : NO;
+    return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)settingDidSelectWithKey:(NSString * _Nonnull)key
@@ -525,7 +533,7 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 
 - (void)tapAuthorLabel:(UITapGestureRecognizer *)sender
 {
-    if (_isHUDActive) {
+    if (_isRemoteHUDActive) {
         return;
     }
     NSString *repoURLString = @"https://github.com/Lessica/TrollSpeed";
@@ -535,21 +543,27 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 
 - (void)tapTopLeftButton:(UIButton *)sender
 {
+#if DEBUG
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopLeftButton:%{public}@]", sender);
+#endif
     [self setSelectedMode:HUDPresetPositionTopLeft];
     [self reloadModeButtonState];
 }
 
 - (void)tapTopRightButton:(UIButton *)sender
 {
+#if DEBUG
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopRightButton:%{public}@]", sender);
+#endif
     [self setSelectedMode:HUDPresetPositionTopRight];
     [self reloadModeButtonState];
 }
 
 - (void)tapTopCenterButton:(UIButton *)sender
 {
+#if DEBUG
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopCenterButton:%{public}@]", sender);
+#endif
     HUDPresetPosition selectedMode = [self selectedMode];
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
     if (!sender.isSelected || !_supportsCenterMost) {
@@ -569,28 +583,36 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 
 - (void)tapMainButton:(UIButton *)sender
 {
+#if DEBUG
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapMainButton:%{public}@]", sender);
+#endif
 
-    BOOL isNowEnabled = IsHUDEnabled();
-    SetHUDEnabled(!isNowEnabled);
+    BOOL isNowEnabled = [self isHUDEnabled];
+    [self setHUDEnabled:!isNowEnabled];
     isNowEnabled = !isNowEnabled;
 
     if (isNowEnabled)
     {
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
-        int token;
-        notify_register_dispatch(NOTIFY_LAUNCHED_HUD, &token, dispatch_get_main_queue(), ^(int token) {
+        int anyToken;
+        notify_register_dispatch(NOTIFY_LAUNCHED_HUD, &anyToken, dispatch_get_main_queue(), ^(int token) {
             notify_cancel(token);
             dispatch_semaphore_signal(semaphore);
         });
 
         [self.backgroundView setUserInteractionEnabled:NO];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
-            int timedOut = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)));
+#if DEBUG
+            intptr_t timedOut =
+#endif
+            dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)));
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (timedOut)
+#if DEBUG
+                if (timedOut) {
                     os_log_error(OS_LOG_DEFAULT, "Timed out waiting for HUD to launch");
+                }
+#endif
                 
                 [self reloadMainButtonState];
                 [self.backgroundView setUserInteractionEnabled:YES];
@@ -610,12 +632,14 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
 - (void)tapSettingsButton:(UIButton *)sender
 {
     if (![_mainButton isEnabled]) return;
+#if DEBUG
     os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapSettingsButton:%{public}@]", sender);
+#endif
 
     TSSettingsController *settingsViewController = [[TSSettingsController alloc] init];
     settingsViewController.delegate = self;
-    settingsViewController.alreadyLaunched = _isHUDActive;
-    
+    settingsViewController.alreadyLaunched = _isRemoteHUDActive;
+
     SPLarkTransitioningDelegate *transitioningDelegate = [[SPLarkTransitioningDelegate alloc] init];
     settingsViewController.transitioningDelegate = transitioningDelegate;
     settingsViewController.modalPresentationStyle = UIModalPresentationCustom;
@@ -623,9 +647,34 @@ OBJC_EXTERN void SimulateMemoryPressure(void);
     [self presentViewController:settingsViewController animated:YES completion:nil];
 }
 
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+- (void)verticalSizeClassUpdated
+{
+    UIUserInterfaceSizeClass verticalClass = self.traitCollection.verticalSizeClass;
+    if (verticalClass == UIUserInterfaceSizeClassCompact) {
+        [_settingsButton setHidden:YES];
+        [_authorLabelBottomConstraint setConstant:_gAuthorLabelBottomConstraintConstantCompact];
+        [_topLeftConstraint setConstant:_gTopButtonConstraintsConstantCompact];
+        [_topRightConstraint setConstant:_gTopButtonConstraintsConstantCompact];
+        [_topCenterConstraint setConstant:_gTopButtonConstraintsConstantCompact];
+    } else {
+        [_settingsButton setHidden:NO];
+        [_authorLabelBottomConstraint setConstant:_gAuthorLabelBottomConstraintConstantRegular];
+        [_topLeftConstraint setConstant:_gTopButtonConstraintsConstantRegular];
+        [_topRightConstraint setConstant:_gTopButtonConstraintsConstantRegular];
+        [_topCenterConstraint setConstant:_gTopButtonConstraintsConstantRegular];
+    }
 }
 
-@end
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+    [self verticalSizeClassUpdated];
+}
 
+#if !NO_TROLL
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+#endif  // !NO_TROLL
+
+@end
