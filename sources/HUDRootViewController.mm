@@ -8,6 +8,8 @@
 #import "HUDRootViewController.h"
 #import "TrollSpeed-Swift.h"
 
+#pragma mark -
+
 #if !NO_TROLL
 #import "FBSOrientationUpdate.h"
 #import "FBSOrientationObserver.h"
@@ -18,9 +20,7 @@
 
 #define NOTIFY_UI_LOCKSTATE    "com.apple.springboard.lockstate"
 #define NOTIFY_LS_APP_CHANGED  "com.apple.LaunchServices.ApplicationsChanged"
-#endif  // !NO_TROLL
 
-#if !NO_TROLL
 static void LaunchServicesApplicationStateChanged
 (CFNotificationCenterRef center,
  void *observer,
@@ -47,9 +47,7 @@ static void LaunchServicesApplicationStateChanged
         [app terminateWithSuccess];
     }
 }
-#endif  // !NO_TROLL
 
-#if !NO_TROLL
 static void SpringBoardLockStatusChanged
 (CFNotificationCenterRef center,
  void *observer,
@@ -82,7 +80,9 @@ static void SpringBoardLockStatusChanged
         }
     }
 }
-#endif  // !NO_TROLL
+#endif
+
+#pragma mark - NetworkSpeed13
 
 // Thanks to: https://github.com/lwlsw/NetworkSpeed13
 
@@ -290,6 +290,12 @@ static NSAttributedString* formattedAttributedString(BOOL isFocused)
     }
 }
 
+#pragma mark - HUDRootViewController
+
+@interface HUDRootViewController (Troll)
+- (void)updateOrientation:(UIInterfaceOrientation)orientation animateWithDuration:(NSTimeInterval)duration;
+@end
+
 // static const CACornerMask kCornerMaskNone = 0;
 static const CACornerMask kCornerMaskBottom = kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
 static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
@@ -346,7 +352,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         NULL,
         CFNotificationSuspensionBehaviorCoalesce
     );
-#endif  // !NO_TROLL
+#endif
 }
 
 - (void)loadUserDefaults:(BOOL)forceReload
@@ -527,7 +533,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
                 [strongSelf updateOrientation:(UIInterfaceOrientation)orientationUpdate.orientation animateWithDuration:orientationUpdate.duration];
             });
         }];
-#endif  // !NO_TROLL
+#endif
     }
     return self;
 }
@@ -549,88 +555,6 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         [_speedLabel setAttributedText:attributedText];
     [_speedLabel sizeToFit];
 }
-
-#if !NO_TROLL
-static inline CGFloat orientationAngle(UIInterfaceOrientation orientation)
-{
-    switch (orientation) {
-        case UIInterfaceOrientationPortraitUpsideDown:
-            return M_PI;
-        case UIInterfaceOrientationLandscapeLeft:
-            return -M_PI_2;
-        case UIInterfaceOrientationLandscapeRight:
-            return M_PI_2;
-        default:
-            return 0;
-    }
-}
-#endif  // !NO_TROLL
-
-#if !NO_TROLL
-static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRect bounds)
-{
-    switch (orientation) {
-        case UIInterfaceOrientationLandscapeLeft:
-        case UIInterfaceOrientationLandscapeRight:
-            return CGRectMake(0, 0, bounds.size.height, bounds.size.width);
-        default:
-            return bounds;
-    }
-}
-#endif  // !NO_TROLL
-
-#if !NO_TROLL
-- (void)updateOrientation:(UIInterfaceOrientation)orientation animateWithDuration:(NSTimeInterval)duration
-{
-    BOOL usesRotation = [self usesRotation];
-    
-    if (!usesRotation)
-    {
-        [self onBlur:_contentView duration:0];
-
-        if (orientation == UIInterfaceOrientationPortrait)
-        {
-            __weak typeof(self) weakSelf = self;
-            [UIView animateWithDuration:duration animations:^{
-                __strong typeof(weakSelf) strongSelf = weakSelf;
-                strongSelf->_contentView.alpha = strongSelf->_isFocused ? 1.0 : 0.667;
-            }];
-        }
-        else
-        {
-            __weak typeof(self) weakSelf = self;
-            [UIView animateWithDuration:duration animations:^{
-                __strong typeof(weakSelf) strongSelf = weakSelf;
-                strongSelf->_contentView.alpha = 0.0;
-            }];
-        }
-        
-        return;
-    }
-
-    if (orientation == _remoteOrientation) {
-        return;
-    }
-
-    _remoteOrientation = orientation;
-    [self cancelPreviousPerformRequestsWithTarget:_contentView];
-
-    CGRect bounds = orientationBounds(orientation, [UIScreen mainScreen].bounds);
-    [self.view setNeedsUpdateConstraints];
-    [self.view setHidden:YES];
-    [self.view setBounds:bounds];
-    
-    [self resetGestureRecognizers];
-    [self onBlur:_contentView duration:duration];
-
-    __weak typeof(self) weakSelf = self;
-    [UIView animateWithDuration:duration animations:^{
-        [weakSelf.view setTransform:CGAffineTransformMakeRotation(orientationAngle(orientation))];
-    } completion:^(BOOL finished) {
-        [weakSelf.view setHidden:NO];
-    }];
-}
-#endif  // !NO_TROLL
 
 - (void)viewDidLoad
 {
@@ -719,11 +643,11 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
     BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
 
-#if NO_TROLL
+#if !NO_TROLL
+    UIInterfaceOrientation orientation = _remoteOrientation;
+#else
     _localOrientation = [self.view.window.windowScene interfaceOrientation];
     UIInterfaceOrientation orientation = _localOrientation;
-#else
-    UIInterfaceOrientation orientation = _remoteOrientation;
 #endif
 
     BOOL isLandscape;
@@ -737,14 +661,14 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;
     if (isLandscape)
     {
-#if NO_TROLL
-        CGFloat notchHeight = CGRectGetMinX(layoutGuide.layoutFrame);
-        CGFloat paddingNearNotch = (notchHeight > 40) ? -16 : 4;
-        CGFloat paddingFarFromNotch = (notchHeight > 40) ? notchHeight - 24 : -4;
-#else
+#if !NO_TROLL
         CGFloat notchHeight = CGRectGetMinY(layoutGuide.layoutFrame);
         CGFloat paddingNearNotch = (notchHeight > 40) ? notchHeight - 16 : 4;
         CGFloat paddingFarFromNotch = (notchHeight > 40) ? -24 : -4;
+#else
+        CGFloat notchHeight = CGRectGetMinX(layoutGuide.layoutFrame);
+        CGFloat paddingNearNotch = (notchHeight > 40) ? -16 : 4;
+        CGFloat paddingFarFromNotch = (notchHeight > 40) ? notchHeight - 24 : -4;
 #endif
 
         [_constraints addObjectsFromArray:@[
@@ -1041,9 +965,96 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     }
 }
 
-#if NO_TROLL
+@end
+
+#if !NO_TROLL
+@implementation HUDRootViewController (Troll)
+
+static inline CGFloat orientationAngle(UIInterfaceOrientation orientation)
+{
+    switch (orientation) {
+        case UIInterfaceOrientationPortraitUpsideDown:
+            return M_PI;
+        case UIInterfaceOrientationLandscapeLeft:
+            return -M_PI_2;
+        case UIInterfaceOrientationLandscapeRight:
+            return M_PI_2;
+        default:
+            return 0;
+    }
+}
+
+static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRect bounds)
+{
+    switch (orientation) {
+        case UIInterfaceOrientationLandscapeLeft:
+        case UIInterfaceOrientationLandscapeRight:
+            return CGRectMake(0, 0, bounds.size.height, bounds.size.width);
+        default:
+            return bounds;
+    }
+}
+
+- (void)updateOrientation:(UIInterfaceOrientation)orientation animateWithDuration:(NSTimeInterval)duration
+{
+    BOOL usesRotation = [self usesRotation];
+
+    if (!usesRotation)
+    {
+        [self onBlur:_contentView duration:0];
+
+        if (orientation == UIInterfaceOrientationPortrait)
+        {
+            __weak typeof(self) weakSelf = self;
+            [UIView animateWithDuration:duration animations:^{
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                strongSelf->_contentView.alpha = strongSelf->_isFocused ? 1.0 : 0.667;
+            }];
+        }
+        else
+        {
+            __weak typeof(self) weakSelf = self;
+            [UIView animateWithDuration:duration animations:^{
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                strongSelf->_contentView.alpha = 0.0;
+            }];
+        }
+
+        return;
+    }
+
+    if (orientation == _remoteOrientation) {
+        return;
+    }
+
+    _remoteOrientation = orientation;
+    [self cancelPreviousPerformRequestsWithTarget:_contentView];
+
+    CGRect bounds = orientationBounds(orientation, [UIScreen mainScreen].bounds);
+    [self.view setNeedsUpdateConstraints];
+    [self.view setHidden:YES];
+    [self.view setBounds:bounds];
+
+    [self resetGestureRecognizers];
+    [self onBlur:_contentView duration:duration];
+
+    __weak typeof(self) weakSelf = self;
+    [UIView animateWithDuration:duration animations:^{
+        [weakSelf.view setTransform:CGAffineTransformMakeRotation(orientationAngle(orientation))];
+    } completion:^(BOOL finished) {
+        [weakSelf.view setHidden:NO];
+    }];
+}
+
+@end
+#else
+@implementation HUDRootViewController (NoTroll)
+
+- (UIModalPresentationStyle)modalPresentationStyle { return UIModalPresentationOverFullScreen; }
+- (UIModalTransitionStyle)modalTransitionStyle { return UIModalTransitionStyleCrossDissolve; }
+
 - (void)viewWillTransitionToSize:(CGSize)size
-       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+       withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator
 {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 
@@ -1088,16 +1099,6 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
         }
     }];
 }
-#endif  // NO_TROLL
-
-- (UIModalPresentationStyle)modalPresentationStyle
-{
-    return UIModalPresentationOverFullScreen;
-}
-
-- (UIModalTransitionStyle)modalTransitionStyle
-{
-    return UIModalTransitionStyleCrossDissolve;
-}
 
 @end
+#endif

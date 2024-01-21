@@ -1,7 +1,3 @@
-#if NO_TROLL
-#error "This target only compiles for real devices."
-#endif
-
 #import <spawn.h>
 #import <notify.h>
 #import <mach-o/dyld.h>

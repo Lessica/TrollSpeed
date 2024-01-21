@@ -11,9 +11,7 @@
 #import "UIApplication+Private.h"
 
 #define PID_PATH "/var/mobile/Library/Caches/ch.xxtou.hudapp.pid"
-#endif  // !NO_TROLL
 
-#if !NO_TROLL
 static __used
 void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHIDEventRef event)
 {
@@ -84,7 +82,7 @@ void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHI
         }
     }
 }
-#endif  // !NO_TROLL
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -94,13 +92,11 @@ int main(int argc, char *argv[])
         os_log_debug(OS_LOG_DEFAULT, "launched argc %{public}d, argv[1] %{public}s", argc, argc > 1 ? argv[1] : "NULL");
 #endif
 
-#if NO_TROLL
-        return UIApplicationMain(argc, argv, @"MainApplication", @"MainApplicationDelegate");
-#else
+#if !NO_TROLL
         if (argc <= 1) {
             return UIApplicationMain(argc, argv, @"MainApplication", @"MainApplicationDelegate");
         }
-        
+
         if (strcmp(argv[1], "-hud") == 0)
         {
             pid_t pid = getpid();
@@ -114,7 +110,7 @@ int main(int argc, char *argv[])
                         atomically:YES
                           encoding:NSUTF8StringEncoding
                              error:nil];
-            
+
             [UIScreen initialize];
             CFRunLoopGetCurrent();
 
@@ -134,7 +130,7 @@ int main(int argc, char *argv[])
                 GSEventInitialize(0);
                 GSEventPushRunLoopMode(kCFRunLoopDefaultMode);
             }
-            
+
             [UIApplication.sharedApplication __completeAndRunAsPlugin];
 
             static int _springboardBootToken;
@@ -160,7 +156,7 @@ int main(int argc, char *argv[])
             NSString *pidString = [NSString stringWithContentsOfFile:ROOT_PATH_NS(PID_PATH)
                                                             encoding:NSUTF8StringEncoding
                                                                error:nil];
-            
+
             if (pidString)
             {
                 pid_t pid = (pid_t)[pidString intValue];
@@ -175,7 +171,7 @@ int main(int argc, char *argv[])
             NSString *pidString = [NSString stringWithContentsOfFile:ROOT_PATH_NS(PID_PATH)
                                                             encoding:NSUTF8StringEncoding
                                                                error:nil];
-            
+
             if (pidString)
             {
                 pid_t pid = (pid_t)[pidString intValue];
@@ -184,6 +180,8 @@ int main(int argc, char *argv[])
             }
             else return EXIT_SUCCESS;  // No PID file, so HUD is not running
         }
-#endif  // NO_TROLL
+#else
+        return UIApplicationMain(argc, argv, @"MainApplication", @"MainApplicationDelegate");
+#endif
     }
 }

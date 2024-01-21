@@ -1,7 +1,3 @@
-#if NO_TROLL
-#error "This target only compiles for real devices."
-#endif
-
 #import "HUDMainWindow.h"
 #import "HUDRootViewController.h"
 

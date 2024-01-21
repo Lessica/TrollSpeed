@@ -1,7 +1,3 @@
-#if NO_TROLL
-#error "This target only compiles for real devices."
-#endif
-
 #import <notify.h>
 #import <pthread.h>
 #import <mach/mach.h>

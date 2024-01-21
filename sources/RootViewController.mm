@@ -6,10 +6,7 @@
 #import "HUDPresetPosition.h"
 #import "RootViewController.h"
 #import "UIApplication+Private.h"
-
-#if NO_TROLL
 #import "HUDRootViewController.h"
-#endif
 
 #define HUD_TRANSITION_DURATION 0.25
 
@@ -34,9 +31,7 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     NSLayoutConstraint *_topCenterConstraint;
     NSLayoutConstraint *_authorLabelBottomConstraint;
     BOOL _isRemoteHUDActive;
-#if NO_TROLL
-    HUDRootViewController *_localHUDRootViewController;
-#endif
+    HUDRootViewController *_localHUDRootViewController;  // Only for debugging
 }
 
 + (void)setShouldToggleHUDAfterLaunch:(BOOL)flag
@@ -51,16 +46,18 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
 - (BOOL)isHUDEnabled
 {
-#if NO_TROLL
-    return _localHUDRootViewController != nil;
-#else
+#if !NO_TROLL
     return IsHUDEnabled();
+#else
+    return _localHUDRootViewController != nil;
 #endif
 }
 
 - (void)setHUDEnabled:(BOOL)enabled
 {
-#if NO_TROLL
+#if !NO_TROLL
+    SetHUDEnabled(enabled);
+#else
     if (enabled && _localHUDRootViewController == nil) {
         _localHUDRootViewController = [[HUDRootViewController alloc] init];
         [self presentViewController:_localHUDRootViewController animated:YES completion:nil];
@@ -68,9 +65,7 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
         [_localHUDRootViewController dismissViewControllerAnimated:YES completion:nil];
         _localHUDRootViewController = nil;
     }
-#else
-    SetHUDEnabled(enabled);
-#endif  // NO_TROLL
+#endif
 }
 
 - (void)registerNotifications
@@ -670,11 +665,9 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     [self verticalSizeClassUpdated];
 }
 
-#if !NO_TROLL
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskPortrait;
 }
-#endif  // !NO_TROLL
 
 @end
