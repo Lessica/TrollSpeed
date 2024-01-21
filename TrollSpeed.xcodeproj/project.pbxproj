@@ -185,7 +185,7 @@
 				CC711D022B5BF550007235A6 /* Products */,
 				CC711D652B5BF6B7007235A6 /* headers */,
 				CC711D942B5BFE9F007235A6 /* libraries */,
-				CC711D032B5BF550007235A6 /* resources */,
+				CC711D032B5BF550007235A6 /* supports */,
 				CC711D1D2B5BF5C6007235A6 /* sources */,
 			);
 			sourceTree = "<group>";
@@ -199,7 +199,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		CC711D032B5BF550007235A6 /* resources */ = {
+		CC711D032B5BF550007235A6 /* supports */ = {
 			isa = PBXGroup;
 			children = (
 				CC711D102B5BF551007235A6 /* Assets.xcassets */,
@@ -211,7 +211,7 @@
 				CC711D872B5BFCC4007235A6 /* Localizable.strings */,
 				CC711D8E2B5BFD50007235A6 /* InfoPlist.strings */,
 			);
-			path = resources;
+			path = supports;
 			sourceTree = "<group>";
 		};
 		CC711D1D2B5BF5C6007235A6 /* sources */ = {
@@ -522,13 +522,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GXZ23M5TP2;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "resources/hudapp-prefix.pch";
+				GCC_PREFIX_HEADER = "supports/hudapp-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",
 					"NO_TROLL=1",
 				);
-				INFOPLIST_FILE = "resources/Sandbox-Info.plist";
+				INFOPLIST_FILE = "supports/Sandbox-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = TrollSpeed;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -562,13 +562,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GXZ23M5TP2;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "resources/hudapp-prefix.pch";
+				GCC_PREFIX_HEADER = "supports/hudapp-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",
 					"NO_TROLL=1",
 				);
-				INFOPLIST_FILE = "resources/Sandbox-Info.plist";
+				INFOPLIST_FILE = "supports/Sandbox-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = TrollSpeed;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -725,12 +725,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGNING_ALLOWED = NO;
-				CODE_SIGN_ENTITLEMENTS = resources/entitlements.plist;
+				CODE_SIGN_ENTITLEMENTS = supports/entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "-";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "resources/hudapp-prefix.pch";
+				GCC_PREFIX_HEADER = "supports/hudapp-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",
@@ -766,12 +766,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGNING_ALLOWED = NO;
-				CODE_SIGN_ENTITLEMENTS = resources/entitlements.plist;
+				CODE_SIGN_ENTITLEMENTS = supports/entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "-";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "resources/hudapp-prefix.pch";
+				GCC_PREFIX_HEADER = "supports/hudapp-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",

@@ -1,7 +1,7 @@
 ARCHS := arm64  # arm64e
 TARGET := iphone:clang:latest:14.0
 INSTALL_TARGET_PROCESSES := TrollSpeed
-ENT_PLIST := $(PWD)/resources/entitlements.plist
+ENT_PLIST := $(PWD)/supports/entitlements.plist
 LAUNCHD_PLIST := $(PWD)/layout/Library/LaunchDaemons/ch.xxtou.hudapp.plist
 
 include $(THEOS)/makefiles/common.mk
@@ -20,7 +20,7 @@ TrollSpeed_CFLAGS += -fobjc-arc
 TrollSpeed_CFLAGS += -Iheaders
 TrollSpeed_CFLAGS += -Isources
 TrollSpeed_CFLAGS += -Isources/KIF
-TrollSpeed_CFLAGS += -include resources/hudapp-prefix.pch
+TrollSpeed_CFLAGS += -include supports/hudapp-prefix.pch
 ifeq ($(SPAWN_AS_ROOT),1)
 TrollSpeed_CCFLAGS += -DSPAWN_AS_ROOT
 endif
@@ -30,7 +30,7 @@ TrollSpeed_LDFLAGS += -Flibraries
 
 TrollSpeed_FRAMEWORKS += CoreGraphics CoreServices QuartzCore IOKit UIKit
 TrollSpeed_PRIVATE_FRAMEWORKS += BackBoardServices GraphicsServices SpringBoardServices
-TrollSpeed_CODESIGN_FLAGS += -Sresources/entitlements.plist
+TrollSpeed_CODESIGN_FLAGS += -Ssupports/entitlements.plist
 
 include $(THEOS_MAKE_PATH)/application.mk
 
