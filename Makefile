@@ -15,21 +15,21 @@ TrollSpeed_FILES += $(wildcard sources/KIF/*.mm sources/KIF/*.m)
 TrollSpeed_FILES += $(wildcard sources/*.swift)
 TrollSpeed_FILES += $(wildcard sources/SPLarkController/*.swift)
 TrollSpeed_FILES += $(wildcard sources/SnapshotSafeView/*.swift)
+
 TrollSpeed_CFLAGS += -fobjc-arc
+TrollSpeed_CFLAGS += -Iheaders
 TrollSpeed_CFLAGS += -Isources
 TrollSpeed_CFLAGS += -Isources/KIF
-TrollSpeed_CFLAGS += -Iheaders
 TrollSpeed_CFLAGS += -include resources/hudapp-prefix.pch
-TrollSpeed_CCFLAGS += -DNOTIFY_LAUNCHED_HUD=\"ch.xxtou.notification.hud.launched\"
-TrollSpeed_CCFLAGS += -DNOTIFY_DISMISSAL_HUD=\"ch.xxtou.notification.hud.dismissal\"
-TrollSpeed_CCFLAGS += -DNOTIFY_RELOAD_HUD=\"ch.xxtou.notification.hud.reload\"
-TrollSpeed_CCFLAGS += -DNOTIFY_RELOAD_APP=\"ch.xxtou.notification.app.reload\"
 ifeq ($(SPAWN_AS_ROOT),1)
 TrollSpeed_CCFLAGS += -DSPAWN_AS_ROOT
 endif
 MainApplication.mm_CCFLAGS += -std=c++14
-TrollSpeed_FRAMEWORKS += CoreGraphics QuartzCore IOKit UIKit
-TrollSpeed_PRIVATE_FRAMEWORKS += BackBoardServices CoreServices GraphicsServices SpringBoardServices
+
+TrollSpeed_LDFLAGS += -Flibraries
+
+TrollSpeed_FRAMEWORKS += CoreGraphics CoreServices QuartzCore IOKit UIKit
+TrollSpeed_PRIVATE_FRAMEWORKS += BackBoardServices GraphicsServices SpringBoardServices
 TrollSpeed_CODESIGN_FLAGS += -Sresources/entitlements.plist
 
 include $(THEOS_MAKE_PATH)/application.mk
