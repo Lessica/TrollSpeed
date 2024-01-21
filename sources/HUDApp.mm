@@ -16,9 +16,7 @@ static __used
 void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHIDEventRef event)
 {
     static UIApplication *app = [UIApplication sharedApplication];
-#if DEBUG
-    os_log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", event);
-#endif
+    log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", event);
     
     // iOS 15.1+ has a new API for handling HID events.
     if (@available(iOS 15.1, *)) {}
@@ -50,9 +48,7 @@ void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHI
         });
 
         AXEventRepresentation *rep = [AXEventRepresentationCls representationWithHIDEvent:event hidStreamIdentifier:@"UIApplicationEvents"];
-#if DEBUG
-        os_log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", rep.handInfo);
-#endif
+        log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", rep.handInfo);
 
         /* I don't like this. It's too hacky, but it works. */
         {
@@ -88,9 +84,7 @@ int main(int argc, char *argv[])
 {
     @autoreleasepool
     {
-#if DEBUG
-        os_log_debug(OS_LOG_DEFAULT, "launched argc %{public}d, argv[1] %{public}s", argc, argc > 1 ? argv[1] : "NULL");
-#endif
+        log_debug(OS_LOG_DEFAULT, "launched argc %{public}d, argv[1] %{public}s", argc, argc > 1 ? argv[1] : "NULL");
 
 #if !NO_TROLL
         if (argc <= 1) {
@@ -102,9 +96,8 @@ int main(int argc, char *argv[])
             pid_t pid = getpid();
             pid_t pgid = getgid();
             (void)pgid;
-#if DEBUG
-            os_log_debug(OS_LOG_DEFAULT, "HUD pid %d, pgid %d", pid, pgid);
-#endif
+            log_debug(OS_LOG_DEFAULT, "HUD pid %d, pgid %d", pid, pgid);
+
             NSString *pidString = [NSString stringWithFormat:@"%d", pid];
             [pidString writeToFile:ROOT_PATH_NS(PID_PATH)
                         atomically:YES
@@ -137,9 +130,7 @@ int main(int argc, char *argv[])
             notify_register_dispatch("SBSpringBoardDidLaunchNotification", &_springboardBootToken, dispatch_get_main_queue(), ^(int token) {
                 notify_cancel(token);
 
-#ifdef NOTIFY_DISMISSAL_HUD
                 notify_post(NOTIFY_DISMISSAL_HUD);
-#endif
 
                 // Re-enable HUD after SpringBoard is launched.
                 SetHUDEnabled(YES);

@@ -285,7 +285,7 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Reset Settings", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self resetUserDefaults];
         }]];
-#if DEBUG && SPAWN_AS_ROOT
+#if DEBUG && !NO_TROLL
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Memory Pressure", nil) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             SimulateMemoryPressure();
         }]];
@@ -538,27 +538,21 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
 - (void)tapTopLeftButton:(UIButton *)sender
 {
-#if DEBUG
-    os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopLeftButton:%{public}@]", sender);
-#endif
+    log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopLeftButton:%{public}@]", sender);
     [self setSelectedMode:HUDPresetPositionTopLeft];
     [self reloadModeButtonState];
 }
 
 - (void)tapTopRightButton:(UIButton *)sender
 {
-#if DEBUG
-    os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopRightButton:%{public}@]", sender);
-#endif
+    log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopRightButton:%{public}@]", sender);
     [self setSelectedMode:HUDPresetPositionTopRight];
     [self reloadModeButtonState];
 }
 
 - (void)tapTopCenterButton:(UIButton *)sender
 {
-#if DEBUG
-    os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopCenterButton:%{public}@]", sender);
-#endif
+    log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopCenterButton:%{public}@]", sender);
     HUDPresetPosition selectedMode = [self selectedMode];
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
     if (!sender.isSelected || !_supportsCenterMost) {
@@ -578,9 +572,7 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
 - (void)tapMainButton:(UIButton *)sender
 {
-#if DEBUG
-    os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapMainButton:%{public}@]", sender);
-#endif
+    log_debug(OS_LOG_DEFAULT, "- [RootViewController tapMainButton:%{public}@]", sender);
 
     BOOL isNowEnabled = [self isHUDEnabled];
     [self setHUDEnabled:!isNowEnabled];
@@ -598,17 +590,11 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
         [self.backgroundView setUserInteractionEnabled:NO];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
-#if DEBUG
-            intptr_t timedOut =
-#endif
-            dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)));
+            intptr_t timedOut = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)));
             dispatch_async(dispatch_get_main_queue(), ^{
-#if DEBUG
                 if (timedOut) {
-                    os_log_error(OS_LOG_DEFAULT, "Timed out waiting for HUD to launch");
+                    log_error(OS_LOG_DEFAULT, "Timed out waiting for HUD to launch");
                 }
-#endif
-                
                 [self reloadMainButtonState];
                 [self.backgroundView setUserInteractionEnabled:YES];
             });
@@ -627,9 +613,7 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 - (void)tapSettingsButton:(UIButton *)sender
 {
     if (![_mainButton isEnabled]) return;
-#if DEBUG
-    os_log_debug(OS_LOG_DEFAULT, "- [RootViewController tapSettingsButton:%{public}@]", sender);
-#endif
+    log_debug(OS_LOG_DEFAULT, "- [RootViewController tapSettingsButton:%{public}@]", sender);
 
     TSSettingsController *settingsViewController = [[TSSettingsController alloc] init];
     settingsViewController.delegate = self;

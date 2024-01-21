@@ -14,12 +14,22 @@
     #import "NSUserDefaults+Private.h"
 #endif
 
+#if DEBUG
+    #define log_debug os_log_debug
+    #define log_info os_log_info
+    #define log_error os_log_error
+#else
+    #define log_debug(...)
+    #define log_info(...)
+    #define log_error(...)
+#endif
+
 #define FADE_OUT_DURATION 0.25
 
-#if SANDBOX
-#define USER_DEFAULTS_PATH ([[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"ch.xxtou.hudapp.plist"])
+#if !NO_TROLL
+    #define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
 #else
-#define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
+    #define USER_DEFAULTS_PATH ([[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"ch.xxtou.hudapp.plist"])
 #endif
 
 // HUD -> APP: Notify APP that the HUD's view is appeared.

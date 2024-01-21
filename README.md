@@ -24,7 +24,7 @@ You need to enable “Developer Mode” on iOS 16 or above to use TrollSpeed or 
 ## How to build?
 
 - Use [theos](https://github.com/theos/theos) to compile.
-  - `SPAWN_AS_ROOT=1 FINALPACKAGE=1 make package`
+  - `FINALPACKAGE=1 make package`
 - You'll get a `.tipa` file in `./packages` folder.
 - Don't like **theos**? Use `./build.sh` to build with Xcode.
 

@@ -21,9 +21,6 @@ TrollSpeed_CFLAGS += -Iheaders
 TrollSpeed_CFLAGS += -Isources
 TrollSpeed_CFLAGS += -Isources/KIF
 TrollSpeed_CFLAGS += -include supports/hudapp-prefix.pch
-ifeq ($(SPAWN_AS_ROOT),1)
-TrollSpeed_CCFLAGS += -DSPAWN_AS_ROOT
-endif
 MainApplication.mm_CCFLAGS += -std=c++14
 
 TrollSpeed_LDFLAGS += -Flibraries
@@ -34,16 +31,12 @@ TrollSpeed_CODESIGN_FLAGS += -Ssupports/entitlements.plist
 
 include $(THEOS_MAKE_PATH)/application.mk
 
-ifeq ($(SPAWN_AS_ROOT),1)
 ifneq ($(FINALPACKAGE),1)
 SUBPROJECTS += memory_pressure
 include $(THEOS_MAKE_PATH)/aggregate.mk
 endif
-endif
 
 before-all::
-	$(ECHO_NOTHING)[ ! -z $(SPAWN_AS_ROOT) ] && defaults write $(ENT_PLIST) com.apple.private.persona-mgmt -bool true || defaults delete $(ENT_PLIST) com.apple.private.persona-mgmt || true$(ECHO_END)
-	$(ECHO_NOTHING)plutil -convert xml1 $(ENT_PLIST)$(ECHO_END)
 	$(ECHO_NOTHING)defaults write $(LAUNCHD_PLIST) ProgramArguments -array "$(THEOS_PACKAGE_INSTALL_PREFIX)/Applications/TrollSpeed.app/TrollSpeed" "-hud" || true$(ECHO_END)
 	$(ECHO_NOTHING)plutil -convert xml1 $(LAUNCHD_PLIST)$(ECHO_END)
 

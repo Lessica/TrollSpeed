@@ -16,18 +16,14 @@
 {
     if (self = [super init])
     {
-#if DEBUG
-        os_log_debug(OS_LOG_DEFAULT, "- [HUDMainApplicationDelegate init]");
-#endif
+        log_debug(OS_LOG_DEFAULT, "- [HUDMainApplicationDelegate init]");
     }
     return self;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary <UIApplicationLaunchOptionsKey, id> *)launchOptions
 {
-#if DEBUG
-    os_log_debug(OS_LOG_DEFAULT, "- [HUDMainApplicationDelegate application:%{public}@ didFinishLaunchingWithOptions:%{public}@]", application, launchOptions);
-#endif
+    log_debug(OS_LOG_DEFAULT, "- [HUDMainApplicationDelegate application:%{public}@ didFinishLaunchingWithOptions:%{public}@]", application, launchOptions);
 
     _rootViewController = [[HUDRootViewController alloc] init];
 

@@ -6,12 +6,10 @@
 
 extern "C" char **environ;
 
-#if SPAWN_AS_ROOT
 #define POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE 1
 extern "C" int posix_spawnattr_set_persona_np(const posix_spawnattr_t* __restrict, uid_t, uint32_t);
 extern "C" int posix_spawnattr_set_persona_uid_np(const posix_spawnattr_t* __restrict, uid_t);
 extern "C" int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restrict, uid_t);
-#endif
 
 BOOL IsHUDEnabled(void)
 {
@@ -24,28 +22,21 @@ BOOL IsHUDEnabled(void)
     posix_spawnattr_t attr;
     posix_spawnattr_init(&attr);
 
-#if SPAWN_AS_ROOT
     posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
     posix_spawnattr_set_persona_uid_np(&attr, 0);
     posix_spawnattr_set_persona_gid_np(&attr, 0);
-#endif
 
     pid_t task_pid;
     const char *args[] = { executablePath, "-check", NULL };
     posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
     posix_spawnattr_destroy(&attr);
-
-#if DEBUG
-    os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -check pid = %{public}d", executablePath, task_pid);
-#endif
+    log_debug(OS_LOG_DEFAULT, "spawned %{public}s -check pid = %{public}d", executablePath, task_pid);
     
     int status;
     do {
         if (waitpid(task_pid, &status, 0) != -1)
         {
-#if DEBUG
-            os_log_debug(OS_LOG_DEFAULT, "child status %d", WEXITSTATUS(status));
-#endif
+            log_debug(OS_LOG_DEFAULT, "child status %d", WEXITSTATUS(status));
         }
     } while (!WIFEXITED(status) && !WIFSIGNALED(status));
 
@@ -56,18 +47,14 @@ BOOL IsHUDEnabled(void)
 
 void SetHUDEnabled(BOOL isEnabled)
 {
-#ifdef NOTIFY_DISMISSAL_HUD
     notify_post(NOTIFY_DISMISSAL_HUD);
-#endif
 
     posix_spawnattr_t attr;
     posix_spawnattr_init(&attr);
 
-#if SPAWN_AS_ROOT
     posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
     posix_spawnattr_set_persona_uid_np(&attr, 0);
     posix_spawnattr_set_persona_gid_np(&attr, 0);
-#endif
 
     if (access(LAUNCH_DAEMON_PATH, F_OK) == 0)
     {
@@ -80,18 +67,13 @@ void SetHUDEnabled(BOOL isEnabled)
         const char *args[] = { executablePath, isEnabled ? "load" : "unload", LAUNCH_DAEMON_PATH, NULL };
         posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
         posix_spawnattr_destroy(&attr);
-
-#if DEBUG
-        os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -exit pid = %{public}d", executablePath, task_pid);
-#endif
+        log_debug(OS_LOG_DEFAULT, "spawned %{public}s -exit pid = %{public}d", executablePath, task_pid);
 
         int status;
         do {
             if (waitpid(task_pid, &status, 0) != -1)
             {
-#if DEBUG
-                os_log_debug(OS_LOG_DEFAULT, "child status %d", WEXITSTATUS(status));
-#endif
+                log_debug(OS_LOG_DEFAULT, "child status %d", WEXITSTATUS(status));
             }
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
 
@@ -113,10 +95,7 @@ void SetHUDEnabled(BOOL isEnabled)
         const char *args[] = { executablePath, "-hud", NULL };
         posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
         posix_spawnattr_destroy(&attr);
-
-#if DEBUG
-        os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -hud pid = %{public}d", executablePath, task_pid);
-#endif
+        log_debug(OS_LOG_DEFAULT, "spawned %{public}s -hud pid = %{public}d", executablePath, task_pid);
     }
     else
     {
@@ -126,24 +105,19 @@ void SetHUDEnabled(BOOL isEnabled)
         const char *args[] = { executablePath, "-exit", NULL };
         posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
         posix_spawnattr_destroy(&attr);
-
-#if DEBUG
-        os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -exit pid = %{public}d", executablePath, task_pid);
-#endif
+        log_debug(OS_LOG_DEFAULT, "spawned %{public}s -exit pid = %{public}d", executablePath, task_pid);
 
         int status;
         do {
             if (waitpid(task_pid, &status, 0) != -1)
             {
-#if DEBUG
-                os_log_debug(OS_LOG_DEFAULT, "child status %d", WEXITSTATUS(status));
-#endif
+                log_debug(OS_LOG_DEFAULT, "child status %d", WEXITSTATUS(status));
             }
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
     }
 }
 
-#if DEBUG && SPAWN_AS_ROOT
+#if DEBUG
 void SimulateMemoryPressure(void)
 {
     static NSString *nsExecutablePath = nil;
@@ -173,6 +147,6 @@ void SimulateMemoryPressure(void)
     posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
     posix_spawnattr_destroy(&attr);
 
-    os_log_debug(OS_LOG_DEFAULT, "spawned %{public}s -l critical pid = %{public}d", executablePath, task_pid);
+    log_debug(OS_LOG_DEFAULT, "spawned %{public}s -l critical pid = %{public}d", executablePath, task_pid);
 }
 #endif

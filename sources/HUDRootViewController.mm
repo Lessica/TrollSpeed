@@ -547,9 +547,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
 - (void)updateSpeedLabel
 {
-#if DEBUG
-    os_log_debug(OS_LOG_DEFAULT, "updateSpeedLabel");
-#endif
+    log_debug(OS_LOG_DEFAULT, "updateSpeedLabel");
     NSAttributedString *attributedText = formattedAttributedString(_isFocused);
     if (attributedText)
         [_speedLabel setAttributedText:attributedText];
@@ -852,9 +850,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
 - (void)tapGestureRecognized:(UITapGestureRecognizer *)sender
 {
-#if DEBUG
-    os_log_info(OS_LOG_DEFAULT, "TAPPED");
-#endif
+    log_info(OS_LOG_DEFAULT, "TAPPED");
     if (!_isFocused) {
         [self onFocus:sender.view];
     } else {

@@ -10,9 +10,7 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-#if DEBUG
-        os_log_debug(OS_LOG_DEFAULT, "- [MainApplicationDelegate init]");
-#endif
+        log_debug(OS_LOG_DEFAULT, "- [MainApplicationDelegate init]");
     }
     return self;
 }
@@ -55,9 +53,7 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary <UIApplicationLaunchOptionsKey, id> *)launchOptions {
-#if DEBUG
-    os_log_debug(OS_LOG_DEFAULT, "- [MainApplicationDelegate application:%{public}@ didFinishLaunchingWithOptions:%{public}@]", application, launchOptions);
-#endif
+    log_debug(OS_LOG_DEFAULT, "- [MainApplicationDelegate application:%{public}@ didFinishLaunchingWithOptions:%{public}@]", application, launchOptions);
 
     _rootViewController = [[RootViewController alloc] init];
 
@@ -69,9 +65,7 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-#if DEBUG
-    os_log_debug(OS_LOG_DEFAULT, "- [MainApplicationDelegate applicationDidBecomeActive:%{public}@]", application);
-#endif
+    log_debug(OS_LOG_DEFAULT, "- [MainApplicationDelegate applicationDidBecomeActive:%{public}@]", application);
 
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^(void) {

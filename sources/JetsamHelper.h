@@ -22,5 +22,5 @@ void BypassJetsamByProcess(pid_t me, BOOL critical) {
     if (critical && rc < 0) { perror ("memorystatus_control"); exit(rc); }
     rc = proc_track_dirty(me, 0);
     if (critical && rc != 0) { perror("proc_track_dirty"); exit(rc); }
-    os_log_debug(OS_LOG_DEFAULT, "Oh, My Jetsam: %d", me);
+    log_debug(OS_LOG_DEFAULT, "Oh, My Jetsam: %d", me);
 }

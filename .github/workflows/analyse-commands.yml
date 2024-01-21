@@ -96,7 +96,6 @@ jobs:
         run: |
           echo "Available SDKs: $(find $THEOS/sdks -name "*.sdk" -maxdepth 1 -print)"
           echo "FINALPACKAGE=1" >> $GITHUB_ENV
-          echo "SPAWN_AS_ROOT=1" >> $GITHUB_ENV
           cd $GITHUB_WORKSPACE/TrollSpeed
           git fetch --tags
           echo "GIT_TAG=$(git describe --tags --always --abbrev=0)" >> $GITHUB_ENV
@@ -105,6 +104,6 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/TrollSpeed
           ./gen-control.sh ${{ env.GIT_TAG }}
-          SPAWN_AS_ROOT=1 THEOS_PACKAGE_SCHEME=rootless make commands
-          SPAWN_AS_ROOT=1 make clean
-          SPAWN_AS_ROOT=1 make commands
+          THEOS_PACKAGE_SCHEME=rootless make commands
+          make clean
+          make commands

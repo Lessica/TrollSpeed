@@ -22,16 +22,12 @@ static void DumpThreads(void)
         if (pt)
         {
             name[0] = '\0';
-#if DEBUG
-            int rc = pthread_getname_np(pt, name, sizeof name);
-            os_log_debug(OS_LOG_DEFAULT, "mach thread %u: getname returned %d: %{public}s", list[i], rc, name);
-#endif
+            __unused int rc = pthread_getname_np(pt, name, sizeof name);
+            log_debug(OS_LOG_DEFAULT, "mach thread %u: getname returned %d: %{public}s", list[i], rc, name);
         }
         else
         {
-#if DEBUG
-            os_log_debug(OS_LOG_DEFAULT, "mach thread %u: no pthread found", list[i]);
-#endif
+            log_debug(OS_LOG_DEFAULT, "mach thread %u: no pthread found", list[i]);
         }
     }
 }
@@ -42,11 +38,8 @@ static void DumpThreads(void)
 {
     if (self = [super init])
     {
-#if DEBUG
-        os_log_debug(OS_LOG_DEFAULT, "- [HUDMainApplication init]");
-#endif
-        
-#ifdef NOTIFY_DISMISSAL_HUD
+        log_debug(OS_LOG_DEFAULT, "- [HUDMainApplication init]");
+
         {
             int outToken;
             notify_register_dispatch(NOTIFY_DISMISSAL_HUD, &outToken, dispatch_get_main_queue(), ^(int token) {
@@ -61,20 +54,15 @@ static void DumpThreads(void)
                 }];
             });
         }
-#endif
+
         do {
             UIEventDispatcher *dispatcher = (UIEventDispatcher *)[self valueForKey:@"eventDispatcher"];
             if (!dispatcher)
             {
-#if DEBUG
-                os_log_error(OS_LOG_DEFAULT, "failed to get ivar _eventDispatcher");
-#endif
+                log_error(OS_LOG_DEFAULT, "failed to get ivar _eventDispatcher");
                 break;
             }
-
-#if DEBUG
-            os_log_debug(OS_LOG_DEFAULT, "got ivar _eventDispatcher: %p", dispatcher);
-#endif
+            log_debug(OS_LOG_DEFAULT, "got ivar _eventDispatcher: %p", dispatcher);
 
             if ([dispatcher respondsToSelector:@selector(_installEventRunLoopSources:)])
             {
@@ -86,16 +74,12 @@ static void DumpThreads(void)
                 IMP runMethodIMP = class_getMethodImplementation([self class], @selector(_run));
                 if (!runMethodIMP)
                 {
-#if DEBUG
-                    os_log_error(OS_LOG_DEFAULT, "failed to get - [UIApplication _run] method");
-#endif
+                    log_error(OS_LOG_DEFAULT, "failed to get - [UIApplication _run] method");
                     break;
                 }
 
                 uint32_t *runMethodPtr = (uint32_t *)make_sym_readable((void *)runMethodIMP);
-#if DEBUG
-                os_log_debug(OS_LOG_DEFAULT, "- [UIApplication _run]: %p", runMethodPtr);
-#endif
+                log_debug(OS_LOG_DEFAULT, "- [UIApplication _run]: %p", runMethodPtr);
 
                 void (*orig_UIEventDispatcher__installEventRunLoopSources_)(id _Nonnull, SEL _Nonnull, CFRunLoopRef) = NULL;
                 for (int i = 0; i < 0x140; i++)
@@ -110,82 +94,44 @@ static void DumpThreads(void)
                     uint32_t *blInstPtr = &runMethodPtr[i + 2];
                     if ((blInst & 0xfc000000) != 0x94000000)
                     {
-#if DEBUG
-                        os_log_error(OS_LOG_DEFAULT, "not a BL instruction: 0x%x, address %p", blInst, blInstPtr);
-#endif
+                        log_error(OS_LOG_DEFAULT, "not a BL instruction: 0x%x, address %p", blInst, blInstPtr);
                         continue;
                     }
-
-#if DEBUG
-                    os_log_debug(OS_LOG_DEFAULT, "found BL instruction: 0x%x, address %p", blInst, blInstPtr);
-#endif
+                    log_debug(OS_LOG_DEFAULT, "found BL instruction: 0x%x, address %p", blInst, blInstPtr);
 
                     int32_t blOffset = blInst & 0x03ffffff;
                     if (blOffset & 0x02000000)
                         blOffset |= 0xfc000000;
                     blOffset <<= 2;
-
-#if DEBUG
-                    os_log_debug(OS_LOG_DEFAULT, "BL offset: 0x%x", blOffset);
-#endif
+                    log_debug(OS_LOG_DEFAULT, "BL offset: 0x%x", blOffset);
 
                     uint64_t blAddr = (uint64_t)blInstPtr + blOffset;
-
-#if DEBUG
-                    os_log_debug(OS_LOG_DEFAULT, "BL target address: %p", (void *)blAddr);
-#endif
+                    log_debug(OS_LOG_DEFAULT, "BL target address: %p", (void *)blAddr);
                     
                     // cbz x0, loc_?????????
                     uint32_t cbzInst = *((uint32_t *)make_sym_readable((void *)blAddr));
                     if ((cbzInst & 0xff000000) != 0xb4000000)
                     {
-#if DEBUG
-                        os_log_error(OS_LOG_DEFAULT, "not a CBZ instruction: 0x%x", cbzInst);
-#endif
+                        log_error(OS_LOG_DEFAULT, "not a CBZ instruction: 0x%x", cbzInst);
                         continue;
                     }
 
-#if DEBUG
-                    os_log_debug(OS_LOG_DEFAULT, "found CBZ instruction: 0x%x, address %p", cbzInst, (void *)blAddr);
-#endif
+                    log_debug(OS_LOG_DEFAULT, "found CBZ instruction: 0x%x, address %p", cbzInst, (void *)blAddr);
                     
                     orig_UIEventDispatcher__installEventRunLoopSources_ = (void (*)(id  _Nonnull __strong, SEL _Nonnull, CFRunLoopRef))make_sym_callable((void *)blAddr);
                 }
 
                 if (!orig_UIEventDispatcher__installEventRunLoopSources_)
                 {
-#if DEBUG
-                    os_log_error(OS_LOG_DEFAULT, "failed to find -[UIEventDispatcher _installEventRunLoopSources:]");
-#endif
+                    log_error(OS_LOG_DEFAULT, "failed to find -[UIEventDispatcher _installEventRunLoopSources:]");
                     break;
                 }
 
-#if DEBUG
-                os_log_debug(OS_LOG_DEFAULT, "- [UIEventDispatcher _installEventRunLoopSources:]: %p", orig_UIEventDispatcher__installEventRunLoopSources_);
-#endif
+                log_debug(OS_LOG_DEFAULT, "- [UIEventDispatcher _installEventRunLoopSources:]: %p", orig_UIEventDispatcher__installEventRunLoopSources_);
 
                 CFRunLoopRef mainRunLoop = CFRunLoopGetMain();
                 orig_UIEventDispatcher__installEventRunLoopSources_(dispatcher, @selector(_installEventRunLoopSources:), mainRunLoop);
             }
-
-#if DEBUG
-            // Get image base with dyld, the image is /System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore.
-            uint64_t imageUIKitCore = 0;
-            {
-                uint32_t imageCount = _dyld_image_count();
-                for (uint32_t i = 0; i < imageCount; i++)
-                {
-                    const char *imageName = _dyld_get_image_name(i);
-                    if (imageName && !strcmp(imageName, "/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore"))
-                    {
-                        imageUIKitCore = _dyld_get_image_vmaddr_slide(i);
-                        break;
-                    }
-                }
-            }
-
-            os_log_debug(OS_LOG_DEFAULT, "UIKitCore: %p", (void *)imageUIKitCore);
-#endif
 
             UIEventFetcher *fetcher = [[objc_getClass("UIEventFetcher") alloc] init];
             [dispatcher setValue:fetcher forKey:@"eventFetcher"];
