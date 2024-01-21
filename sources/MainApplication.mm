@@ -5,6 +5,7 @@
 #import <rootless.h>
 #import "TrollSpeed-Swift.h"
 #import "HUDPresetPosition.h"
+#import "MainButton.h"
 
 #define HUD_TRANSITION_DURATION 0.25
 
@@ -61,29 +62,6 @@ static NSString * const kToggleHUDAfterLaunchNotificationActionToggleOff = @"tog
 
 #pragma mark - RootViewController
 
-@interface MainButton : UIButton
-@end
-
-@implementation MainButton
-
-- (void)setHighlighted:(BOOL)highlighted
-{
-    [super setHighlighted:highlighted];
-    if (highlighted)
-    {
-        [UIView animateWithDuration:0.27 delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:(UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState) animations:^{
-            self.transform = CGAffineTransformMakeScale(0.92, 0.92);
-        } completion:nil];
-    }
-    else
-    {
-        [UIView animateWithDuration:0.27 delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:(UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState) animations:^{
-            self.transform = CGAffineTransformIdentity;
-        } completion:nil];
-    }
-}
-
-@end
 
 @interface RootViewController : UIViewController <TSSettingsControllerDelegate>
 @property (nonatomic, strong) UIView *backgroundView;
