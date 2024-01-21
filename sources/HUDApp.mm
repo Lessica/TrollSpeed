@@ -2,13 +2,18 @@
 #import <mach-o/dyld.h>
 #import <objc/runtime.h>
 
+#if !NO_TROLL
 #import "IOKit+SPI.h"
+#import "HUDHelper.h"
 #import "TSEventFetcher.h"
 #import "BackboardServices.h"
 #import "AXEventRepresentation.h"
 #import "UIApplication+Private.h"
 
 #define PID_PATH "/var/mobile/Library/Caches/ch.xxtou.hudapp.pid"
+#endif  // !NO_TROLL
+
+#if !NO_TROLL
 static __used
 void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHIDEventRef event)
 {
@@ -79,7 +84,7 @@ void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHI
         }
     }
 }
-OBJC_EXTERN void SetHUDEnabled(BOOL isEnabled);
+#endif  // !NO_TROLL
 
 int main(int argc, char *argv[])
 {
@@ -89,8 +94,12 @@ int main(int argc, char *argv[])
         os_log_debug(OS_LOG_DEFAULT, "launched argc %{public}d, argv[1] %{public}s", argc, argc > 1 ? argv[1] : "NULL");
 #endif
 
-        if (argc <= 1)
+#if NO_TROLL
+        return UIApplicationMain(argc, argv, @"MainApplication", @"MainApplicationDelegate");
+#else
+        if (argc <= 1) {
             return UIApplicationMain(argc, argv, @"MainApplication", @"MainApplicationDelegate");
+        }
         
         if (strcmp(argv[1], "-hud") == 0)
         {
@@ -175,5 +184,6 @@ int main(int argc, char *argv[])
             }
             else return EXIT_SUCCESS;  // No PID file, so HUD is not running
         }
+#endif  // NO_TROLL
     }
 }
