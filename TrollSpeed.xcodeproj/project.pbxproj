@@ -1,0 +1,837 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CC2BAFBA2B5CA9DD00A429D1 /* SPLarkPresentingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D312B5BF5C6007235A6 /* SPLarkPresentingAnimationController.swift */; };
+		CC2BAFBB2B5CA9DD00A429D1 /* SPLarkDismissingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D372B5BF5C6007235A6 /* SPLarkDismissingAnimationController.swift */; };
+		CC2BAFBC2B5CA9DD00A429D1 /* MainButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D2E2B5BF5C6007235A6 /* MainButton.mm */; };
+		CC2BAFBD2B5CA9DD00A429D1 /* HiddenContainerRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D3D2B5BF5C6007235A6 /* HiddenContainerRecognizer.swift */; };
+		CC2BAFC02B5CA9DD00A429D1 /* SPLarkSettingsCloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D302B5BF5C6007235A6 /* SPLarkSettingsCloseButton.swift */; };
+		CC2BAFC12B5CA9DD00A429D1 /* SPLarkPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D362B5BF5C6007235A6 /* SPLarkPresentationController.swift */; };
+		CC2BAFC22B5CA9DD00A429D1 /* TSSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D462B5BF5C6007235A6 /* TSSettingsController.swift */; };
+		CC2BAFC42B5CA9DD00A429D1 /* MainApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D422B5BF5C6007235A6 /* MainApplication.mm */; };
+		CC2BAFC52B5CA9DD00A429D1 /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D1F2B5BF5C6007235A6 /* RootViewController.mm */; };
+		CC2BAFC62B5CA9DD00A429D1 /* ScreenshotInvisibleContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D3B2B5BF5C6007235A6 /* ScreenshotInvisibleContainer.swift */; };
+		CC2BAFC72B5CA9DD00A429D1 /* ScreenshotInvincibleContainerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D3C2B5BF5C6007235A6 /* ScreenshotInvincibleContainerProtocol.swift */; };
+		CC2BAFC82B5CA9DD00A429D1 /* SPLarkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D342B5BF5C6007235A6 /* SPLarkController.swift */; };
+		CC2BAFC92B5CA9DD00A429D1 /* HUDApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D482B5BF5C6007235A6 /* HUDApp.mm */; };
+		CC2BAFCB2B5CA9DD00A429D1 /* SPLarkSettingsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D352B5BF5C6007235A6 /* SPLarkSettingsCollectionView.swift */; };
+		CC2BAFCC2B5CA9DD00A429D1 /* SPLarkSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D332B5BF5C6007235A6 /* SPLarkSettingsController.swift */; };
+		CC2BAFCD2B5CA9DD00A429D1 /* SPLarkControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D392B5BF5C6007235A6 /* SPLarkControllerExtension.swift */; };
+		CC2BAFCE2B5CA9DD00A429D1 /* MainApplicationDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D222B5BF5C6007235A6 /* MainApplicationDelegate.mm */; };
+		CC2BAFCF2B5CA9DD00A429D1 /* HUDRootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D442B5BF5C6007235A6 /* HUDRootViewController.mm */; };
+		CC2BAFD12B5CA9DD00A429D1 /* SPLarkTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D382B5BF5C6007235A6 /* SPLarkTransitioningDelegate.swift */; };
+		CC2BAFD22B5CA9DD00A429D1 /* SPLarkSettingsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D322B5BF5C6007235A6 /* SPLarkSettingsCollectionViewCell.swift */; };
+		CC2BAFDB2B5CA9DD00A429D1 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = CC711D922B5BFE66007235A6 /* icon.png */; };
+		CC2BAFDC2B5CA9DD00A429D1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC711D8E2B5BFD50007235A6 /* InfoPlist.strings */; };
+		CC2BAFDD2B5CA9DD00A429D1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC711D872B5BFCC4007235A6 /* Localizable.strings */; };
+		CC2BAFDE2B5CA9DD00A429D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC711D102B5BF551007235A6 /* Assets.xcassets */; };
+		CC711D112B5BF551007235A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC711D102B5BF551007235A6 /* Assets.xcassets */; };
+		CC711D4A2B5BF5C6007235A6 /* HUDHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D1E2B5BF5C6007235A6 /* HUDHelper.mm */; };
+		CC711D4B2B5BF5C6007235A6 /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D1F2B5BF5C6007235A6 /* RootViewController.mm */; };
+		CC711D4C2B5BF5C6007235A6 /* HUDMainWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D202B5BF5C6007235A6 /* HUDMainWindow.mm */; };
+		CC711D4D2B5BF5C6007235A6 /* MainApplicationDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D222B5BF5C6007235A6 /* MainApplicationDelegate.mm */; };
+		CC711D4E2B5BF5C6007235A6 /* HUDMainApplicationDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D272B5BF5C6007235A6 /* HUDMainApplicationDelegate.mm */; };
+		CC711D4F2B5BF5C6007235A6 /* UITouch-KIFAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC711D2B2B5BF5C6007235A6 /* UITouch-KIFAdditions.m */; };
+		CC711D502B5BF5C6007235A6 /* IOHIDEvent+KIF.m in Sources */ = {isa = PBXBuildFile; fileRef = CC711D2C2B5BF5C6007235A6 /* IOHIDEvent+KIF.m */; };
+		CC711D512B5BF5C6007235A6 /* MainButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D2E2B5BF5C6007235A6 /* MainButton.mm */; };
+		CC711D522B5BF5C6007235A6 /* SPLarkSettingsCloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D302B5BF5C6007235A6 /* SPLarkSettingsCloseButton.swift */; };
+		CC711D532B5BF5C6007235A6 /* SPLarkPresentingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D312B5BF5C6007235A6 /* SPLarkPresentingAnimationController.swift */; };
+		CC711D542B5BF5C6007235A6 /* SPLarkSettingsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D322B5BF5C6007235A6 /* SPLarkSettingsCollectionViewCell.swift */; };
+		CC711D552B5BF5C6007235A6 /* SPLarkSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D332B5BF5C6007235A6 /* SPLarkSettingsController.swift */; };
+		CC711D562B5BF5C6007235A6 /* SPLarkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D342B5BF5C6007235A6 /* SPLarkController.swift */; };
+		CC711D572B5BF5C6007235A6 /* SPLarkSettingsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D352B5BF5C6007235A6 /* SPLarkSettingsCollectionView.swift */; };
+		CC711D582B5BF5C6007235A6 /* SPLarkPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D362B5BF5C6007235A6 /* SPLarkPresentationController.swift */; };
+		CC711D592B5BF5C6007235A6 /* SPLarkDismissingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D372B5BF5C6007235A6 /* SPLarkDismissingAnimationController.swift */; };
+		CC711D5A2B5BF5C6007235A6 /* SPLarkTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D382B5BF5C6007235A6 /* SPLarkTransitioningDelegate.swift */; };
+		CC711D5B2B5BF5C6007235A6 /* SPLarkControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D392B5BF5C6007235A6 /* SPLarkControllerExtension.swift */; };
+		CC711D5C2B5BF5C6007235A6 /* ScreenshotInvisibleContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D3B2B5BF5C6007235A6 /* ScreenshotInvisibleContainer.swift */; };
+		CC711D5D2B5BF5C6007235A6 /* ScreenshotInvincibleContainerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D3C2B5BF5C6007235A6 /* ScreenshotInvincibleContainerProtocol.swift */; };
+		CC711D5E2B5BF5C6007235A6 /* HiddenContainerRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D3D2B5BF5C6007235A6 /* HiddenContainerRecognizer.swift */; };
+		CC711D5F2B5BF5C6007235A6 /* MainApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D422B5BF5C6007235A6 /* MainApplication.mm */; };
+		CC711D602B5BF5C6007235A6 /* HUDRootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D442B5BF5C6007235A6 /* HUDRootViewController.mm */; };
+		CC711D612B5BF5C6007235A6 /* HUDMainApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D452B5BF5C6007235A6 /* HUDMainApplication.mm */; };
+		CC711D622B5BF5C6007235A6 /* TSSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D462B5BF5C6007235A6 /* TSSettingsController.swift */; };
+		CC711D632B5BF5C6007235A6 /* TSEventFetcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D472B5BF5C6007235A6 /* TSEventFetcher.mm */; };
+		CC711D642B5BF5C6007235A6 /* HUDApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D482B5BF5C6007235A6 /* HUDApp.mm */; };
+		CC711D852B5BFCC4007235A6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC711D872B5BFCC4007235A6 /* Localizable.strings */; };
+		CC711D8C2B5BFD50007235A6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC711D8E2B5BFD50007235A6 /* InfoPlist.strings */; };
+		CC711D932B5BFE6A007235A6 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = CC711D922B5BFE66007235A6 /* icon.png */; };
+		CC711D982B5BFF2F007235A6 /* GraphicsServices.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC711D952B5BFF2F007235A6 /* GraphicsServices.tbd */; };
+		CC711D992B5BFF2F007235A6 /* SpringBoardServices.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC711D962B5BFF2F007235A6 /* SpringBoardServices.tbd */; };
+		CC711D9A2B5BFF2F007235A6 /* BackBoardServices.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC711D972B5BFF2F007235A6 /* BackBoardServices.tbd */; };
+		CC711D9C2B5C0032007235A6 /* IOKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC711D9B2B5C0032007235A6 /* IOKit.tbd */; };
+		CC711D9E2B5C0081007235A6 /* AssertionServices.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC711D9D2B5C0081007235A6 /* AssertionServices.tbd */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		CC2BAFE22B5CA9DD00A429D1 /* TrollSpeed-Sandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TrollSpeed-Sandbox.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC2BAFE42B5CAF2200A429D1 /* Sandbox-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Sandbox-Info.plist"; sourceTree = "<group>"; };
+		CC711D012B5BF550007235A6 /* TrollSpeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrollSpeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC711D102B5BF551007235A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CC711D1E2B5BF5C6007235A6 /* HUDHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDHelper.mm; sourceTree = "<group>"; };
+		CC711D1F2B5BF5C6007235A6 /* RootViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RootViewController.mm; sourceTree = "<group>"; };
+		CC711D202B5BF5C6007235A6 /* HUDMainWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDMainWindow.mm; sourceTree = "<group>"; };
+		CC711D212B5BF5C6007235A6 /* HUDPresetPosition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUDPresetPosition.h; sourceTree = "<group>"; };
+		CC711D222B5BF5C6007235A6 /* MainApplicationDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainApplicationDelegate.mm; sourceTree = "<group>"; };
+		CC711D232B5BF5C6007235A6 /* TSEventFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSEventFetcher.h; sourceTree = "<group>"; };
+		CC711D242B5BF5C6007235A6 /* MainApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainApplication.h; sourceTree = "<group>"; };
+		CC711D252B5BF5C6007235A6 /* HUDRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUDRootViewController.h; sourceTree = "<group>"; };
+		CC711D262B5BF5C6007235A6 /* MainApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainApplicationDelegate.h; sourceTree = "<group>"; };
+		CC711D272B5BF5C6007235A6 /* HUDMainApplicationDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDMainApplicationDelegate.mm; sourceTree = "<group>"; };
+		CC711D282B5BF5C6007235A6 /* HUDMainApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUDMainApplication.h; sourceTree = "<group>"; };
+		CC711D2A2B5BF5C6007235A6 /* IOHIDEvent+KIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IOHIDEvent+KIF.h"; sourceTree = "<group>"; };
+		CC711D2B2B5BF5C6007235A6 /* UITouch-KIFAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITouch-KIFAdditions.m"; sourceTree = "<group>"; };
+		CC711D2C2B5BF5C6007235A6 /* IOHIDEvent+KIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "IOHIDEvent+KIF.m"; sourceTree = "<group>"; };
+		CC711D2D2B5BF5C6007235A6 /* UITouch-KIFAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITouch-KIFAdditions.h"; sourceTree = "<group>"; };
+		CC711D2E2B5BF5C6007235A6 /* MainButton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainButton.mm; sourceTree = "<group>"; };
+		CC711D302B5BF5C6007235A6 /* SPLarkSettingsCloseButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLarkSettingsCloseButton.swift; sourceTree = "<group>"; };
+		CC711D312B5BF5C6007235A6 /* SPLarkPresentingAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLarkPresentingAnimationController.swift; sourceTree = "<group>"; };
+		CC711D322B5BF5C6007235A6 /* SPLarkSettingsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLarkSettingsCollectionViewCell.swift; sourceTree = "<group>"; };
+		CC711D332B5BF5C6007235A6 /* SPLarkSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLarkSettingsController.swift; sourceTree = "<group>"; };
+		CC711D342B5BF5C6007235A6 /* SPLarkController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLarkController.swift; sourceTree = "<group>"; };
+		CC711D352B5BF5C6007235A6 /* SPLarkSettingsCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLarkSettingsCollectionView.swift; sourceTree = "<group>"; };
+		CC711D362B5BF5C6007235A6 /* SPLarkPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLarkPresentationController.swift; sourceTree = "<group>"; };
+		CC711D372B5BF5C6007235A6 /* SPLarkDismissingAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLarkDismissingAnimationController.swift; sourceTree = "<group>"; };
+		CC711D382B5BF5C6007235A6 /* SPLarkTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLarkTransitioningDelegate.swift; sourceTree = "<group>"; };
+		CC711D392B5BF5C6007235A6 /* SPLarkControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLarkControllerExtension.swift; sourceTree = "<group>"; };
+		CC711D3B2B5BF5C6007235A6 /* ScreenshotInvisibleContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenshotInvisibleContainer.swift; sourceTree = "<group>"; };
+		CC711D3C2B5BF5C6007235A6 /* ScreenshotInvincibleContainerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenshotInvincibleContainerProtocol.swift; sourceTree = "<group>"; };
+		CC711D3D2B5BF5C6007235A6 /* HiddenContainerRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenContainerRecognizer.swift; sourceTree = "<group>"; };
+		CC711D3E2B5BF5C6007235A6 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		CC711D3F2B5BF5C6007235A6 /* JetsamHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JetsamHelper.h; sourceTree = "<group>"; };
+		CC711D402B5BF5C6007235A6 /* HUDMainApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUDMainApplicationDelegate.h; sourceTree = "<group>"; };
+		CC711D412B5BF5C6007235A6 /* HUDMainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUDMainWindow.h; sourceTree = "<group>"; };
+		CC711D422B5BF5C6007235A6 /* MainApplication.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainApplication.mm; sourceTree = "<group>"; };
+		CC711D432B5BF5C6007235A6 /* HUDHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUDHelper.h; sourceTree = "<group>"; };
+		CC711D442B5BF5C6007235A6 /* HUDRootViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDRootViewController.mm; sourceTree = "<group>"; };
+		CC711D452B5BF5C6007235A6 /* HUDMainApplication.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDMainApplication.mm; sourceTree = "<group>"; };
+		CC711D462B5BF5C6007235A6 /* TSSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSettingsController.swift; sourceTree = "<group>"; };
+		CC711D472B5BF5C6007235A6 /* TSEventFetcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TSEventFetcher.mm; sourceTree = "<group>"; };
+		CC711D482B5BF5C6007235A6 /* HUDApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDApp.mm; sourceTree = "<group>"; };
+		CC711D492B5BF5C6007235A6 /* MainButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainButton.h; sourceTree = "<group>"; };
+		CC711D662B5BF6B7007235A6 /* UIApplicationRotationFollowingControllerNoTouches.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIApplicationRotationFollowingControllerNoTouches.h; sourceTree = "<group>"; };
+		CC711D672B5BF6B7007235A6 /* UITouch+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITouch+Private.h"; sourceTree = "<group>"; };
+		CC711D682B5BF6B7007235A6 /* UIApplicationRotationFollowingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIApplicationRotationFollowingController.h; sourceTree = "<group>"; };
+		CC711D692B5BF6B7007235A6 /* UIApplication+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Private.h"; sourceTree = "<group>"; };
+		CC711D6A2B5BF6B7007235A6 /* FBSOrientationUpdate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSOrientationUpdate.h; sourceTree = "<group>"; };
+		CC711D6B2B5BF6B7007235A6 /* LSApplicationProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSApplicationProxy.h; sourceTree = "<group>"; };
+		CC711D6C2B5BF6B7007235A6 /* libproc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libproc.h; sourceTree = "<group>"; };
+		CC711D6D2B5BF6B7007235A6 /* AXEventHandInfoRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXEventHandInfoRepresentation.h; sourceTree = "<group>"; };
+		CC711D6E2B5BF6B7007235A6 /* UIApplicationRotationFollowingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIApplicationRotationFollowingWindow.h; sourceTree = "<group>"; };
+		CC711D6F2B5BF6B7007235A6 /* SpringBoardServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpringBoardServices.h; sourceTree = "<group>"; };
+		CC711D702B5BF6B7007235A6 /* pac_helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pac_helper.h; sourceTree = "<group>"; };
+		CC711D712B5BF6B7007235A6 /* AXEventPathInfoRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXEventPathInfoRepresentation.h; sourceTree = "<group>"; };
+		CC711D722B5BF6B7007235A6 /* SBSAccessibilityWindowHostingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBSAccessibilityWindowHostingController.h; sourceTree = "<group>"; };
+		CC711D732B5BF6B7007235A6 /* UIEventFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIEventFetcher.h; sourceTree = "<group>"; };
+		CC711D742B5BF6B7007235A6 /* BackboardServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackboardServices.h; sourceTree = "<group>"; };
+		CC711D752B5BF6B7007235A6 /* kern_memorystatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kern_memorystatus.h; sourceTree = "<group>"; };
+		CC711D762B5BF6B7007235A6 /* LSApplicationWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSApplicationWorkspace.h; sourceTree = "<group>"; };
+		CC711D772B5BF6B7007235A6 /* UIAutoRotatingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIAutoRotatingWindow.h; sourceTree = "<group>"; };
+		CC711D782B5BF6B7007235A6 /* UIEvent+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIEvent+Private.h"; sourceTree = "<group>"; };
+		CC711D792B5BF6B7007235A6 /* AXEventRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXEventRepresentation.h; sourceTree = "<group>"; };
+		CC711D7A2B5BF6B7007235A6 /* IOKit+SPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IOKit+SPI.h"; sourceTree = "<group>"; };
+		CC711D7B2B5BF6B7007235A6 /* UIWindow+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+Private.h"; sourceTree = "<group>"; };
+		CC711D7C2B5BF6B7007235A6 /* FBSOrientationObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSOrientationObserver.h; sourceTree = "<group>"; };
+		CC711D7D2B5BF6B7007235A6 /* UIEventDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIEventDispatcher.h; sourceTree = "<group>"; };
+		CC711D7E2B5BF772007235A6 /* hudapp-prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "hudapp-prefix.pch"; sourceTree = "<group>"; };
+		CC711D7F2B5BF772007235A6 /* entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = entitlements.plist; sourceTree = "<group>"; };
+		CC711D812B5BFA64007235A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Info.plist; path = layout/Applications/TrollSpeed.app/Info.plist; sourceTree = SOURCE_ROOT; };
+		CC711D862B5BFCC4007235A6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = layout/Applications/TrollSpeed.app/en.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
+		CC711D892B5BFCE0007235A6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "layout/Applications/TrollSpeed.app/zh-Hans.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		CC711D8D2B5BFD50007235A6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = layout/Applications/TrollSpeed.app/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
+		CC711D8F2B5BFD51007235A6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "layout/Applications/TrollSpeed.app/zh-Hans.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
+		CC711D922B5BFE66007235A6 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = layout/Applications/TrollSpeed.app/icon.png; sourceTree = SOURCE_ROOT; };
+		CC711D952B5BFF2F007235A6 /* GraphicsServices.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = GraphicsServices.tbd; sourceTree = "<group>"; };
+		CC711D962B5BFF2F007235A6 /* SpringBoardServices.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = SpringBoardServices.tbd; sourceTree = "<group>"; };
+		CC711D972B5BFF2F007235A6 /* BackBoardServices.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = BackBoardServices.tbd; sourceTree = "<group>"; };
+		CC711D9B2B5C0032007235A6 /* IOKit.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = IOKit.tbd; sourceTree = "<group>"; };
+		CC711D9D2B5C0081007235A6 /* AssertionServices.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = AssertionServices.tbd; sourceTree = "<group>"; };
+		CCB6B6FA2B5C06DD00AD2A89 /* NSUserDefaults+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+Private.h"; sourceTree = "<group>"; };
+		CCB6B6FB2B5C074F00AD2A89 /* rootless.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rootless.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CC2BAFD42B5CA9DD00A429D1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC711CFE2B5BF550007235A6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC711D992B5BFF2F007235A6 /* SpringBoardServices.tbd in Frameworks */,
+				CC711D9E2B5C0081007235A6 /* AssertionServices.tbd in Frameworks */,
+				CC711D9C2B5C0032007235A6 /* IOKit.tbd in Frameworks */,
+				CC711D9A2B5BFF2F007235A6 /* BackBoardServices.tbd in Frameworks */,
+				CC711D982B5BFF2F007235A6 /* GraphicsServices.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CC711CF82B5BF550007235A6 = {
+			isa = PBXGroup;
+			children = (
+				CC711D022B5BF550007235A6 /* Products */,
+				CC711D652B5BF6B7007235A6 /* headers */,
+				CC711D942B5BFE9F007235A6 /* libraries */,
+				CC711D032B5BF550007235A6 /* resources */,
+				CC711D1D2B5BF5C6007235A6 /* sources */,
+			);
+			sourceTree = "<group>";
+		};
+		CC711D022B5BF550007235A6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CC711D012B5BF550007235A6 /* TrollSpeed.app */,
+				CC2BAFE22B5CA9DD00A429D1 /* TrollSpeed-Sandbox.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CC711D032B5BF550007235A6 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				CC711D102B5BF551007235A6 /* Assets.xcassets */,
+				CC711D922B5BFE66007235A6 /* icon.png */,
+				CC711D7F2B5BF772007235A6 /* entitlements.plist */,
+				CC711D7E2B5BF772007235A6 /* hudapp-prefix.pch */,
+				CC711D812B5BFA64007235A6 /* Info.plist */,
+				CC2BAFE42B5CAF2200A429D1 /* Sandbox-Info.plist */,
+				CC711D872B5BFCC4007235A6 /* Localizable.strings */,
+				CC711D8E2B5BFD50007235A6 /* InfoPlist.strings */,
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
+		CC711D1D2B5BF5C6007235A6 /* sources */ = {
+			isa = PBXGroup;
+			children = (
+				CC711D292B5BF5C6007235A6 /* KIF */,
+				CC711D3A2B5BF5C6007235A6 /* SnapshotSafeView */,
+				CC711D2F2B5BF5C6007235A6 /* SPLarkController */,
+				CC711D3F2B5BF5C6007235A6 /* JetsamHelper.h */,
+				CC711D212B5BF5C6007235A6 /* HUDPresetPosition.h */,
+				CC711D482B5BF5C6007235A6 /* HUDApp.mm */,
+				CC711D432B5BF5C6007235A6 /* HUDHelper.h */,
+				CC711D1E2B5BF5C6007235A6 /* HUDHelper.mm */,
+				CC711D282B5BF5C6007235A6 /* HUDMainApplication.h */,
+				CC711D452B5BF5C6007235A6 /* HUDMainApplication.mm */,
+				CC711D402B5BF5C6007235A6 /* HUDMainApplicationDelegate.h */,
+				CC711D272B5BF5C6007235A6 /* HUDMainApplicationDelegate.mm */,
+				CC711D412B5BF5C6007235A6 /* HUDMainWindow.h */,
+				CC711D202B5BF5C6007235A6 /* HUDMainWindow.mm */,
+				CC711D252B5BF5C6007235A6 /* HUDRootViewController.h */,
+				CC711D442B5BF5C6007235A6 /* HUDRootViewController.mm */,
+				CC711D242B5BF5C6007235A6 /* MainApplication.h */,
+				CC711D422B5BF5C6007235A6 /* MainApplication.mm */,
+				CC711D262B5BF5C6007235A6 /* MainApplicationDelegate.h */,
+				CC711D222B5BF5C6007235A6 /* MainApplicationDelegate.mm */,
+				CC711D492B5BF5C6007235A6 /* MainButton.h */,
+				CC711D2E2B5BF5C6007235A6 /* MainButton.mm */,
+				CC711D3E2B5BF5C6007235A6 /* RootViewController.h */,
+				CC711D1F2B5BF5C6007235A6 /* RootViewController.mm */,
+				CC711D232B5BF5C6007235A6 /* TSEventFetcher.h */,
+				CC711D472B5BF5C6007235A6 /* TSEventFetcher.mm */,
+				CC711D462B5BF5C6007235A6 /* TSSettingsController.swift */,
+			);
+			path = sources;
+			sourceTree = "<group>";
+		};
+		CC711D292B5BF5C6007235A6 /* KIF */ = {
+			isa = PBXGroup;
+			children = (
+				CC711D2A2B5BF5C6007235A6 /* IOHIDEvent+KIF.h */,
+				CC711D2C2B5BF5C6007235A6 /* IOHIDEvent+KIF.m */,
+				CC711D2D2B5BF5C6007235A6 /* UITouch-KIFAdditions.h */,
+				CC711D2B2B5BF5C6007235A6 /* UITouch-KIFAdditions.m */,
+			);
+			path = KIF;
+			sourceTree = "<group>";
+		};
+		CC711D2F2B5BF5C6007235A6 /* SPLarkController */ = {
+			isa = PBXGroup;
+			children = (
+				CC711D342B5BF5C6007235A6 /* SPLarkController.swift */,
+				CC711D392B5BF5C6007235A6 /* SPLarkControllerExtension.swift */,
+				CC711D372B5BF5C6007235A6 /* SPLarkDismissingAnimationController.swift */,
+				CC711D362B5BF5C6007235A6 /* SPLarkPresentationController.swift */,
+				CC711D312B5BF5C6007235A6 /* SPLarkPresentingAnimationController.swift */,
+				CC711D302B5BF5C6007235A6 /* SPLarkSettingsCloseButton.swift */,
+				CC711D352B5BF5C6007235A6 /* SPLarkSettingsCollectionView.swift */,
+				CC711D322B5BF5C6007235A6 /* SPLarkSettingsCollectionViewCell.swift */,
+				CC711D332B5BF5C6007235A6 /* SPLarkSettingsController.swift */,
+				CC711D382B5BF5C6007235A6 /* SPLarkTransitioningDelegate.swift */,
+			);
+			path = SPLarkController;
+			sourceTree = "<group>";
+		};
+		CC711D3A2B5BF5C6007235A6 /* SnapshotSafeView */ = {
+			isa = PBXGroup;
+			children = (
+				CC711D3D2B5BF5C6007235A6 /* HiddenContainerRecognizer.swift */,
+				CC711D3C2B5BF5C6007235A6 /* ScreenshotInvincibleContainerProtocol.swift */,
+				CC711D3B2B5BF5C6007235A6 /* ScreenshotInvisibleContainer.swift */,
+			);
+			path = SnapshotSafeView;
+			sourceTree = "<group>";
+		};
+		CC711D652B5BF6B7007235A6 /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				CC711D6D2B5BF6B7007235A6 /* AXEventHandInfoRepresentation.h */,
+				CC711D712B5BF6B7007235A6 /* AXEventPathInfoRepresentation.h */,
+				CC711D792B5BF6B7007235A6 /* AXEventRepresentation.h */,
+				CC711D742B5BF6B7007235A6 /* BackboardServices.h */,
+				CC711D7C2B5BF6B7007235A6 /* FBSOrientationObserver.h */,
+				CC711D6A2B5BF6B7007235A6 /* FBSOrientationUpdate.h */,
+				CC711D7A2B5BF6B7007235A6 /* IOKit+SPI.h */,
+				CC711D752B5BF6B7007235A6 /* kern_memorystatus.h */,
+				CC711D6C2B5BF6B7007235A6 /* libproc.h */,
+				CC711D6B2B5BF6B7007235A6 /* LSApplicationProxy.h */,
+				CC711D762B5BF6B7007235A6 /* LSApplicationWorkspace.h */,
+				CCB6B6FA2B5C06DD00AD2A89 /* NSUserDefaults+Private.h */,
+				CC711D702B5BF6B7007235A6 /* pac_helper.h */,
+				CCB6B6FB2B5C074F00AD2A89 /* rootless.h */,
+				CC711D722B5BF6B7007235A6 /* SBSAccessibilityWindowHostingController.h */,
+				CC711D6F2B5BF6B7007235A6 /* SpringBoardServices.h */,
+				CC711D692B5BF6B7007235A6 /* UIApplication+Private.h */,
+				CC711D682B5BF6B7007235A6 /* UIApplicationRotationFollowingController.h */,
+				CC711D662B5BF6B7007235A6 /* UIApplicationRotationFollowingControllerNoTouches.h */,
+				CC711D6E2B5BF6B7007235A6 /* UIApplicationRotationFollowingWindow.h */,
+				CC711D772B5BF6B7007235A6 /* UIAutoRotatingWindow.h */,
+				CC711D782B5BF6B7007235A6 /* UIEvent+Private.h */,
+				CC711D7D2B5BF6B7007235A6 /* UIEventDispatcher.h */,
+				CC711D732B5BF6B7007235A6 /* UIEventFetcher.h */,
+				CC711D672B5BF6B7007235A6 /* UITouch+Private.h */,
+				CC711D7B2B5BF6B7007235A6 /* UIWindow+Private.h */,
+			);
+			path = headers;
+			sourceTree = "<group>";
+		};
+		CC711D942B5BFE9F007235A6 /* libraries */ = {
+			isa = PBXGroup;
+			children = (
+				CC711D9D2B5C0081007235A6 /* AssertionServices.tbd */,
+				CC711D9B2B5C0032007235A6 /* IOKit.tbd */,
+				CC711D972B5BFF2F007235A6 /* BackBoardServices.tbd */,
+				CC711D952B5BFF2F007235A6 /* GraphicsServices.tbd */,
+				CC711D962B5BFF2F007235A6 /* SpringBoardServices.tbd */,
+			);
+			path = libraries;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CC2BAFB72B5CA9DD00A429D1 /* TrollSpeed-Sandbox */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC2BAFDF2B5CA9DD00A429D1 /* Build configuration list for PBXNativeTarget "TrollSpeed-Sandbox" */;
+			buildPhases = (
+				CC2BAFB82B5CA9DD00A429D1 /* Sources */,
+				CC2BAFD42B5CA9DD00A429D1 /* Frameworks */,
+				CC2BAFDA2B5CA9DD00A429D1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "TrollSpeed-Sandbox";
+			productName = TrollSpeed;
+			productReference = CC2BAFE22B5CA9DD00A429D1 /* TrollSpeed-Sandbox.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CC711D002B5BF550007235A6 /* TrollSpeed */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC711D1A2B5BF551007235A6 /* Build configuration list for PBXNativeTarget "TrollSpeed" */;
+			buildPhases = (
+				CC711CFD2B5BF550007235A6 /* Sources */,
+				CC711CFE2B5BF550007235A6 /* Frameworks */,
+				CC711CFF2B5BF550007235A6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TrollSpeed;
+			productName = TrollSpeed;
+			productReference = CC711D012B5BF550007235A6 /* TrollSpeed.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CC711CF92B5BF550007235A6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1510;
+				TargetAttributes = {
+					CC711D002B5BF550007235A6 = {
+						CreatedOnToolsVersion = 15.1;
+					};
+				};
+			};
+			buildConfigurationList = CC711CFC2B5BF550007235A6 /* Build configuration list for PBXProject "TrollSpeed" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				"zh-Hans",
+			);
+			mainGroup = CC711CF82B5BF550007235A6;
+			productRefGroup = CC711D022B5BF550007235A6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CC711D002B5BF550007235A6 /* TrollSpeed */,
+				CC2BAFB72B5CA9DD00A429D1 /* TrollSpeed-Sandbox */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CC2BAFDA2B5CA9DD00A429D1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC2BAFDB2B5CA9DD00A429D1 /* icon.png in Resources */,
+				CC2BAFDC2B5CA9DD00A429D1 /* InfoPlist.strings in Resources */,
+				CC2BAFDD2B5CA9DD00A429D1 /* Localizable.strings in Resources */,
+				CC2BAFDE2B5CA9DD00A429D1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC711CFF2B5BF550007235A6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC711D932B5BFE6A007235A6 /* icon.png in Resources */,
+				CC711D8C2B5BFD50007235A6 /* InfoPlist.strings in Resources */,
+				CC711D852B5BFCC4007235A6 /* Localizable.strings in Resources */,
+				CC711D112B5BF551007235A6 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CC2BAFB82B5CA9DD00A429D1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC2BAFBA2B5CA9DD00A429D1 /* SPLarkPresentingAnimationController.swift in Sources */,
+				CC2BAFBB2B5CA9DD00A429D1 /* SPLarkDismissingAnimationController.swift in Sources */,
+				CC2BAFBC2B5CA9DD00A429D1 /* MainButton.mm in Sources */,
+				CC2BAFBD2B5CA9DD00A429D1 /* HiddenContainerRecognizer.swift in Sources */,
+				CC2BAFC02B5CA9DD00A429D1 /* SPLarkSettingsCloseButton.swift in Sources */,
+				CC2BAFC12B5CA9DD00A429D1 /* SPLarkPresentationController.swift in Sources */,
+				CC2BAFC22B5CA9DD00A429D1 /* TSSettingsController.swift in Sources */,
+				CC2BAFC42B5CA9DD00A429D1 /* MainApplication.mm in Sources */,
+				CC2BAFC52B5CA9DD00A429D1 /* RootViewController.mm in Sources */,
+				CC2BAFC62B5CA9DD00A429D1 /* ScreenshotInvisibleContainer.swift in Sources */,
+				CC2BAFC72B5CA9DD00A429D1 /* ScreenshotInvincibleContainerProtocol.swift in Sources */,
+				CC2BAFC82B5CA9DD00A429D1 /* SPLarkController.swift in Sources */,
+				CC2BAFC92B5CA9DD00A429D1 /* HUDApp.mm in Sources */,
+				CC2BAFCB2B5CA9DD00A429D1 /* SPLarkSettingsCollectionView.swift in Sources */,
+				CC2BAFCC2B5CA9DD00A429D1 /* SPLarkSettingsController.swift in Sources */,
+				CC2BAFCD2B5CA9DD00A429D1 /* SPLarkControllerExtension.swift in Sources */,
+				CC2BAFCE2B5CA9DD00A429D1 /* MainApplicationDelegate.mm in Sources */,
+				CC2BAFCF2B5CA9DD00A429D1 /* HUDRootViewController.mm in Sources */,
+				CC2BAFD12B5CA9DD00A429D1 /* SPLarkTransitioningDelegate.swift in Sources */,
+				CC2BAFD22B5CA9DD00A429D1 /* SPLarkSettingsCollectionViewCell.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC711CFD2B5BF550007235A6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC711D4A2B5BF5C6007235A6 /* HUDHelper.mm in Sources */,
+				CC711D532B5BF5C6007235A6 /* SPLarkPresentingAnimationController.swift in Sources */,
+				CC711D592B5BF5C6007235A6 /* SPLarkDismissingAnimationController.swift in Sources */,
+				CC711D512B5BF5C6007235A6 /* MainButton.mm in Sources */,
+				CC711D5E2B5BF5C6007235A6 /* HiddenContainerRecognizer.swift in Sources */,
+				CC711D632B5BF5C6007235A6 /* TSEventFetcher.mm in Sources */,
+				CC711D4F2B5BF5C6007235A6 /* UITouch-KIFAdditions.m in Sources */,
+				CC711D522B5BF5C6007235A6 /* SPLarkSettingsCloseButton.swift in Sources */,
+				CC711D582B5BF5C6007235A6 /* SPLarkPresentationController.swift in Sources */,
+				CC711D622B5BF5C6007235A6 /* TSSettingsController.swift in Sources */,
+				CC711D612B5BF5C6007235A6 /* HUDMainApplication.mm in Sources */,
+				CC711D5F2B5BF5C6007235A6 /* MainApplication.mm in Sources */,
+				CC711D4B2B5BF5C6007235A6 /* RootViewController.mm in Sources */,
+				CC711D5C2B5BF5C6007235A6 /* ScreenshotInvisibleContainer.swift in Sources */,
+				CC711D5D2B5BF5C6007235A6 /* ScreenshotInvincibleContainerProtocol.swift in Sources */,
+				CC711D562B5BF5C6007235A6 /* SPLarkController.swift in Sources */,
+				CC711D642B5BF5C6007235A6 /* HUDApp.mm in Sources */,
+				CC711D502B5BF5C6007235A6 /* IOHIDEvent+KIF.m in Sources */,
+				CC711D572B5BF5C6007235A6 /* SPLarkSettingsCollectionView.swift in Sources */,
+				CC711D552B5BF5C6007235A6 /* SPLarkSettingsController.swift in Sources */,
+				CC711D5B2B5BF5C6007235A6 /* SPLarkControllerExtension.swift in Sources */,
+				CC711D4D2B5BF5C6007235A6 /* MainApplicationDelegate.mm in Sources */,
+				CC711D602B5BF5C6007235A6 /* HUDRootViewController.mm in Sources */,
+				CC711D4E2B5BF5C6007235A6 /* HUDMainApplicationDelegate.mm in Sources */,
+				CC711D5A2B5BF5C6007235A6 /* SPLarkTransitioningDelegate.swift in Sources */,
+				CC711D542B5BF5C6007235A6 /* SPLarkSettingsCollectionViewCell.swift in Sources */,
+				CC711D4C2B5BF5C6007235A6 /* HUDMainWindow.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		CC711D872B5BFCC4007235A6 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CC711D862B5BFCC4007235A6 /* en */,
+				CC711D892B5BFCE0007235A6 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		CC711D8E2B5BFD50007235A6 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CC711D8D2B5BFD50007235A6 /* en */,
+				CC711D8F2B5BFD51007235A6 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		CC2BAFE02B5CA9DD00A429D1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GXZ23M5TP2;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "resources/hudapp-prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",
+					"NO_TROLL=1",
+				);
+				INFOPLIST_FILE = "resources/Sandbox-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = TrollSpeed;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libraries",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "ch.xxtou.hudapp-sandbox";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CC2BAFE12B5CA9DD00A429D1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GXZ23M5TP2;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "resources/hudapp-prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",
+					"NO_TROLL=1",
+				);
+				INFOPLIST_FILE = "resources/Sandbox-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = TrollSpeed;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libraries",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "ch.xxtou.hudapp-sandbox";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CC711D182B5BF551007235A6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.9.6;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = TrollSpeed;
+				SDKROOT = iphoneos;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		CC711D192B5BF551007235A6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.9.6;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_MODULE_NAME = TrollSpeed;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		CC711D1B2B5BF551007235A6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_ENTITLEMENTS = resources/entitlements.plist;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "-";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "resources/hudapp-prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",
+				);
+				INFOPLIST_FILE = layout/Applications/TrollSpeed.app/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TrollSpeed;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libraries",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CC711D1C2B5BF551007235A6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_ENTITLEMENTS = resources/entitlements.plist;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "-";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "resources/hudapp-prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",
+				);
+				INFOPLIST_FILE = layout/Applications/TrollSpeed.app/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TrollSpeed;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libraries",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CC2BAFDF2B5CA9DD00A429D1 /* Build configuration list for PBXNativeTarget "TrollSpeed-Sandbox" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC2BAFE02B5CA9DD00A429D1 /* Debug */,
+				CC2BAFE12B5CA9DD00A429D1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CC711CFC2B5BF550007235A6 /* Build configuration list for PBXProject "TrollSpeed" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC711D182B5BF551007235A6 /* Debug */,
+				CC711D192B5BF551007235A6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CC711D1A2B5BF551007235A6 /* Build configuration list for PBXNativeTarget "TrollSpeed" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC711D1B2B5BF551007235A6 /* Debug */,
+				CC711D1C2B5BF551007235A6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CC711CF92B5BF550007235A6 /* Project object */;
+}
