@@ -754,7 +754,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         [_speedLabel.bottomAnchor constraintEqualToAnchor:_contentView.bottomAnchor],
     ]];
 
-    _centerXConstraint = [_speedLabel.centerXAnchor constraintEqualToAnchor:_contentView.centerXAnchor];
+    _centerXConstraint = [_speedLabel.centerXAnchor constraintEqualToAnchor:layoutGuide.centerXAnchor];
     if (isCentered) {
         [_constraints addObject:_centerXConstraint];
     }
@@ -1059,6 +1059,11 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
     } completion:^(BOOL finished) {
         [weakSelf.view setHidden:NO];
     }];
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

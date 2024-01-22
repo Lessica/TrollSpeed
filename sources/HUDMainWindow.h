@@ -1,4 +1,4 @@
-#import "UIAutoRotatingWindow.h"
+#import <UIKit/UIKit.h>
 
-@interface HUDMainWindow : UIAutoRotatingWindow
+@interface HUDMainWindow : UIWindow
 @end

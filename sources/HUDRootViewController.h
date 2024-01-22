@@ -1,12 +1,7 @@
-#import "UIApplicationRotationFollowingControllerNoTouches.h"
+#import <UIKit/UIKit.h>
 
-#if !NO_TROLL
-@interface HUDRootViewController: UIApplicationRotationFollowingControllerNoTouches
+@interface HUDRootViewController: UIViewController
 + (BOOL)passthroughMode;
 - (void)resetLoopTimer;
 - (void)stopLoopTimer;
 @end
-#else
-@interface HUDRootViewController: UIViewController
-@end
-#endif
