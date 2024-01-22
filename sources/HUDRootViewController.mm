@@ -955,7 +955,13 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         
         if (sender.state == UIGestureRecognizerStateEnded)
         {
-            if (UIInterfaceOrientationIsLandscape(_localOrientation))
+            UIInterfaceOrientation orientation;
+#if !NO_TROLL
+            orientation = _remoteOrientation;
+#else
+            orientation = _localOrientation;
+#endif
+            if (UIInterfaceOrientationIsLandscape(orientation))
                 [self setCurrentLandscapePositionY:_topConstraint.constant];
             else
                 [self setCurrentPositionY:_topConstraint.constant];
