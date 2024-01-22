@@ -649,9 +649,11 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     [self verticalSizeClassUpdated];
 }
 
+#if !NO_TROLL
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskPortrait;
 }
+#endif
 
 @end

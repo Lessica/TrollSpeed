@@ -659,14 +659,18 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;
     if (isLandscape)
     {
+        CGFloat notchHeight;
+        CGFloat paddingNearNotch;
+        CGFloat paddingFarFromNotch;
+
 #if !NO_TROLL
-        CGFloat notchHeight = CGRectGetMinY(layoutGuide.layoutFrame);
-        CGFloat paddingNearNotch = (notchHeight > 40) ? notchHeight - 16 : 4;
-        CGFloat paddingFarFromNotch = (notchHeight > 40) ? -24 : -4;
+        notchHeight = CGRectGetMinY(layoutGuide.layoutFrame);
+        paddingNearNotch = (notchHeight > 40) ? notchHeight - 16 : 4;
+        paddingFarFromNotch = (notchHeight > 40) ? -24 : -4;
 #else
-        CGFloat notchHeight = CGRectGetMinX(layoutGuide.layoutFrame);
-        CGFloat paddingNearNotch = (notchHeight > 40) ? -16 : 4;
-        CGFloat paddingFarFromNotch = (notchHeight > 40) ? notchHeight - 24 : -4;
+        notchHeight = CGRectGetMinX(layoutGuide.layoutFrame);
+        paddingNearNotch = (notchHeight > 40) ? -16 : 4;
+        paddingFarFromNotch = (notchHeight > 40) ? notchHeight - 24 : -4;
 #endif
 
         [_constraints addObjectsFromArray:@[
@@ -674,16 +678,19 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
             [_contentView.trailingAnchor constraintEqualToAnchor:layoutGuide.trailingAnchor constant:(orientation == UIInterfaceOrientationLandscapeLeft ? -paddingNearNotch : paddingFarFromNotch)],
         ]];
 
-        CGFloat minimumLandscapeConstant = (isPad ? 30 : 10);
+        CGFloat minimumLandscapeTopConstant = 0;
+        CGFloat minimumLandscapeBottomConstant = 0;
+        minimumLandscapeTopConstant = (isPad ? 30 : 10);
+        minimumLandscapeBottomConstant = (isPad ? -34 : -14);
 
         /* Fixed Constraints */
         [_constraints addObjectsFromArray:@[
-            [_contentView.topAnchor constraintGreaterThanOrEqualToAnchor:self.view.topAnchor constant:minimumLandscapeConstant],
-            [_contentView.bottomAnchor constraintLessThanOrEqualToAnchor:self.view.bottomAnchor constant:-(minimumLandscapeConstant + 4)],
+            [_contentView.topAnchor constraintGreaterThanOrEqualToAnchor:self.view.topAnchor constant:minimumLandscapeTopConstant],
+            [_contentView.bottomAnchor constraintLessThanOrEqualToAnchor:self.view.bottomAnchor constant:minimumLandscapeBottomConstant],
         ]];
 
         /* Flexible Constraint */
-        _topConstraint = [_contentView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:minimumLandscapeConstant];
+        _topConstraint = [_contentView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:minimumLandscapeTopConstant];
         if (!isCentered) {
             CGFloat currentPositionY = [self currentLandscapePositionY];
             if (currentPositionY < CGFLOAT_MAX) {
@@ -700,22 +707,34 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
             [_contentView.leadingAnchor constraintEqualToAnchor:layoutGuide.leadingAnchor],
             [_contentView.trailingAnchor constraintEqualToAnchor:layoutGuide.trailingAnchor],
         ]];
-        
+
         if (isCenteredMost && !isPad) {
             [_constraints addObject:[_contentView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:0]];
-        } else {
-            CGFloat minimumTopConstraintConstant;
-            if (CGRectGetMinY(layoutGuide.layoutFrame) > 40)
+        }
+        else
+        {
+            CGFloat minimumTopConstraintConstant = 0;
+            CGFloat minimumBottomConstraintConstant = 0;
+
+            if (CGRectGetMinY(layoutGuide.layoutFrame) > 40) {
                 minimumTopConstraintConstant = -10;
-            else
+                minimumBottomConstraintConstant = -4;
+            } else {
+#if !NO_TROLL
                 minimumTopConstraintConstant = (isPad ? 30 : 20);
-            
+                minimumBottomConstraintConstant = -20;
+#else
+                minimumTopConstraintConstant = (isPad ? 10 : 0);
+                minimumBottomConstraintConstant = -20;
+#endif
+            }
+
             /* Fixed Constraints */
             [_constraints addObjectsFromArray:@[
                 [_contentView.topAnchor constraintGreaterThanOrEqualToAnchor:layoutGuide.topAnchor constant:minimumTopConstraintConstant],
-                [_contentView.bottomAnchor constraintLessThanOrEqualToAnchor:layoutGuide.bottomAnchor constant:-4],
+                [_contentView.bottomAnchor constraintLessThanOrEqualToAnchor:layoutGuide.bottomAnchor constant:minimumBottomConstraintConstant],
             ]];
-            
+
             /* Flexible Constraint */
             _topConstraint = [_contentView.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor constant:minimumTopConstraintConstant];
             if (!isCentered) {
@@ -729,7 +748,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
             [_constraints addObject:_topConstraint];
         }
     }
-    
+
     [_constraints addObjectsFromArray:@[
         [_speedLabel.topAnchor constraintEqualToAnchor:_contentView.topAnchor],
         [_speedLabel.bottomAnchor constraintEqualToAnchor:_contentView.bottomAnchor],
