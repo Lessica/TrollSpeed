@@ -108,7 +108,13 @@ private enum TSSettingsIndex: Int, CaseIterable {
     }
 
     open override func settingColorHighlighted(index: Int) -> UIColor {
-        return UIColor(red: 22.0/255.0, green: 160.0/255.0, blue: 133.0/255.0, alpha: 1.0)
+        return UIColor { traitCollection in
+            if traitCollection.userInterfaceStyle == .dark {
+                return UIColor(red: 28/255.0, green: 74/255.0, blue: 82/255.0, alpha: 1.0)
+            } else {
+                return UIColor(red: 22/255.0, green: 160/255.0, blue: 133/255.0, alpha: 1.0)
+            }
+        }
     }
 
     open override func settingDidSelect(index: Int, completion: @escaping () -> ()) {
@@ -120,4 +126,11 @@ private enum TSSettingsIndex: Int, CaseIterable {
     }
 
     open override var supportedInterfaceOrientations: UIInterfaceOrientationMask { [.portrait] }
+
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
 }
