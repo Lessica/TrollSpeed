@@ -1,1 +1,1 @@
-* Feature: Add option to hide the HUD when taking screenshots.
+- App: Supports all interface orientations or styles.
