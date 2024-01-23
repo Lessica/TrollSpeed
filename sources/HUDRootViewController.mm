@@ -665,12 +665,12 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
 #if !NO_TROLL
         notchHeight = CGRectGetMinY(layoutGuide.layoutFrame);
-        paddingNearNotch = (notchHeight > 40) ? notchHeight - 16 : 4;
-        paddingFarFromNotch = (notchHeight > 40) ? -24 : -4;
+        paddingNearNotch = (notchHeight > 30) ? notchHeight - 16 : 4;
+        paddingFarFromNotch = (notchHeight > 30) ? -24 : -4;
 #else
         notchHeight = CGRectGetMinX(layoutGuide.layoutFrame);
-        paddingNearNotch = (notchHeight > 40) ? -16 : 4;
-        paddingFarFromNotch = (notchHeight > 40) ? notchHeight - 24 : -4;
+        paddingNearNotch = (notchHeight > 30) ? -16 : 4;
+        paddingFarFromNotch = (notchHeight > 30) ? notchHeight - 24 : -4;
 #endif
 
         [_constraints addObjectsFromArray:@[
@@ -716,7 +716,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
             CGFloat minimumTopConstraintConstant = 0;
             CGFloat minimumBottomConstraintConstant = 0;
 
-            if (CGRectGetMinY(layoutGuide.layoutFrame) > 40) {
+            if (CGRectGetMinY(layoutGuide.layoutFrame) > 30) {
                 minimumTopConstraintConstant = -10;
                 minimumBottomConstraintConstant = -4;
             } else {
