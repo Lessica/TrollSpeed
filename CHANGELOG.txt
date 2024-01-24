@@ -1,3 +1,4 @@
 - App: Supports all interface orientations or styles.
+- Feature: Supports inverted color.
 - Bugfix: Fixed misplaced HUD in zoomed mode.
 - Translations: Updated Spanish translation (Thanks to @Deci8BelioS).
