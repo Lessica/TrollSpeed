@@ -125,7 +125,26 @@ private enum TSSettingsIndex: Int, CaseIterable {
         completion()
     }
 
-    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask { [.portrait] }
+    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        guard let currentOrientation = view.window?.windowScene?.interfaceOrientation else {
+            return [.portrait]
+        }
+        switch currentOrientation {
+        case .unknown: fallthrough
+        case .portrait:
+            return [.portrait]
+        case .portraitUpsideDown:
+            return [.portraitUpsideDown]
+        case .landscapeLeft:
+            return [.landscapeLeft]
+        case .landscapeRight:
+            return [.landscapeRight]
+        @unknown default:
+            return [.portrait]
+        }
+    }
+
+    open override var shouldAutorotate: Bool { false }
 
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)

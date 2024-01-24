@@ -13,6 +13,7 @@
 static BOOL _gShouldToggleHUDAfterLaunch = NO;
 static const CGFloat _gTopButtonConstraintsConstantCompact = 40.f;
 static const CGFloat _gTopButtonConstraintsConstantRegular = 28.f;
+static const CGFloat _gTopButtonConstraintsConstantRegularPad = 40.f;
 static const CGFloat _gAuthorLabelBottomConstraintConstantCompact = -20.f;
 static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
@@ -659,18 +660,21 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 - (void)verticalSizeClassUpdated
 {
     UIUserInterfaceSizeClass verticalClass = self.traitCollection.verticalSizeClass;
+    BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
     if (verticalClass == UIUserInterfaceSizeClassCompact) {
+        CGFloat topConstant = _gTopButtonConstraintsConstantCompact;
         [_settingsButton setHidden:YES];
         [_authorLabelBottomConstraint setConstant:_gAuthorLabelBottomConstraintConstantCompact];
-        [_topLeftConstraint setConstant:_gTopButtonConstraintsConstantCompact];
-        [_topRightConstraint setConstant:_gTopButtonConstraintsConstantCompact];
-        [_topCenterConstraint setConstant:_gTopButtonConstraintsConstantCompact];
+        [_topLeftConstraint setConstant:topConstant];
+        [_topRightConstraint setConstant:topConstant];
+        [_topCenterConstraint setConstant:topConstant];
     } else {
+        CGFloat topConstant = isPad ? _gTopButtonConstraintsConstantRegularPad : _gTopButtonConstraintsConstantRegular;
         [_settingsButton setHidden:NO];
         [_authorLabelBottomConstraint setConstant:_gAuthorLabelBottomConstraintConstantRegular];
-        [_topLeftConstraint setConstant:_gTopButtonConstraintsConstantRegular];
-        [_topRightConstraint setConstant:_gTopButtonConstraintsConstantRegular];
-        [_topCenterConstraint setConstant:_gTopButtonConstraintsConstantRegular];
+        [_topLeftConstraint setConstant:topConstant];
+        [_topRightConstraint setConstant:topConstant];
+        [_topCenterConstraint setConstant:topConstant];
     }
 }
 
