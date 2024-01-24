@@ -70,6 +70,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0F43B7702B60D397003A435D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../layout/Applications/TrollSpeed.app/es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0F43B7712B60D397003A435D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../layout/Applications/TrollSpeed.app/es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CC2BAFE22B5CA9DD00A429D1 /* TrollSpeed-Sandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TrollSpeed-Sandbox.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC2BAFE42B5CAF2200A429D1 /* Sandbox-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Sandbox-Info.plist"; sourceTree = "<group>"; };
 		CC711D012B5BF550007235A6 /* TrollSpeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrollSpeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -390,6 +392,7 @@
 				en,
 				Base,
 				"zh-Hans",
+				es,
 			);
 			mainGroup = CC711CF82B5BF550007235A6;
 			productRefGroup = CC711D022B5BF550007235A6 /* Products */;
@@ -497,6 +500,7 @@
 			children = (
 				CC711D862B5BFCC4007235A6 /* en */,
 				CC711D892B5BFCE0007235A6 /* zh-Hans */,
+				0F43B7702B60D397003A435D /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -506,6 +510,7 @@
 			children = (
 				CC711D8D2B5BFD50007235A6 /* en */,
 				CC711D8F2B5BFD51007235A6 /* zh-Hans */,
+				0F43B7712B60D397003A435D /* es */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

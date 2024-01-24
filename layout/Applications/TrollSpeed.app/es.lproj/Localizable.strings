@@ -1,30 +1,137 @@
-"b/s"="b/s";
-"B/s"="B/s";
-"Choose an action below."="Elija una acción a continuación.";
-"Developer Area"="Área de desarrollo";
-"Dismiss"="Descartar";
-"Exit HUD"="Cerrar HUD";
-"Follow"="Habilitado";
-"Hide"="Oculto";
-"Hide @snapshot"="Ocultar en capturas";
-"Incoming Only"="Sólo descarga";
-"Keep In-place"="Mantener en el sitio";
-"Landscape"="Horizontal";
-"Large"="Grande";
-"Made with ♥ by @Lessica and @jmpews"="Hecho con ♥ por @Lessica y @jmpews";
-"Memory Pressure"="Presión en la memoria";
-"OFF"="Deshabilitado";
-"ON"="Habilitado";
-"Open HUD"="Abrir HUD";
-"Pass-through"="Pass-through";
-"Prefixes"="Prefijos";
-"Re-open to apply"="Reabrir para aplicar";
-"Reset Settings"="Restablecer ajustes";
-"Settings"="Ajustes";
-"Size"="Tamaño";
-"Standard"="Estándar";
-"Tap that button on the center again,\nto toggle ON\/OFF “Dynamic Island” mode."="Toque de nuevo ese botón en el centro,\npara activar\/desactivar el modo “Isla dinámica“.";
-"Unit"="Unid";
-"You can quit this app now.\nThe HUD will persist on your screen."="Puedes salir de esta aplicación ahora.\nEl HUD persistirá en tu pantalla.";
-"↑↓"="↑↓";
-"▲▼"="▲▼";
+/* No comment provided by engineer. */
+"b/s" = "b/s";
+
+/* No comment provided by engineer. */
+"B/s" = "B/s";
+
+/* No comment provided by engineer. */
+"Choose an action below." = "Elija una acción a continuación.";
+
+/* No comment provided by engineer. */
+"Developer Area" = "Área de desarrollo";
+
+/* No comment provided by engineer. */
+"Dismiss" = "Descartar";
+
+/* No comment provided by engineer. */
+"Exit HUD" = "Cerrar HUD";
+
+/* No comment provided by engineer. */
+"Follow" = "Habilitado";
+
+/* No comment provided by engineer. */
+"Hide" = "Oculto";
+
+/* No comment provided by engineer. */
+"Hide @snapshot" = "Ocultar en capturas";
+
+/* No comment provided by engineer. */
+"Incoming Only" = "Sólo descarga";
+
+/* No comment provided by engineer. */
+"Keep In-place" = "Mantener en el sitio";
+
+/* No comment provided by engineer. */
+"Landscape" = "Horizontal";
+
+/* No comment provided by engineer. */
+"Large" = "Grande";
+
+/* No comment provided by engineer. */
+"Made with ♥ by @Lessica and @jmpews" = "Hecho con ♥ por @Lessica y @jmpews";
+
+/* No comment provided by engineer. */
+"Memory Pressure" = "Presión en la memoria";
+
+/* No comment provided by engineer. */
+"OFF" = "Deshabilitado";
+
+/* No comment provided by engineer. */
+"ON" = "Habilitado";
+
+/* No comment provided by engineer. */
+"Open HUD" = "Abrir HUD";
+
+/* No comment provided by engineer. */
+"Pass-through" = "Pass-through";
+
+/* No comment provided by engineer. */
+"Prefixes" = "Prefijos";
+
+/* No comment provided by engineer. */
+"Re-open to apply" = "Reabrir para aplicar";
+
+/* No comment provided by engineer. */
+"Reset Settings" = "Restablecer ajustes";
+
+/* No comment provided by engineer. */
+"Settings" = "Ajustes";
+
+/* No comment provided by engineer. */
+"Size" = "Tamaño";
+
+/* No comment provided by engineer. */
+"Standard" = "Estándar";
+
+/* No comment provided by engineer. */
+"Unit" = "Unid";
+
+/* No comment provided by engineer. */
+"You can quit this app now.\nThe HUD will persist on your screen." = "Puedes salir de esta aplicación ahora.\nEl HUD persistirá en tu pantalla.";
+
+/* No comment provided by engineer. */
+"↑↓" = "↑↓";
+
+/* No comment provided by engineer. */
+"▲▼" = "▲▼";
+
+/* formattedSpeed */
+"%.0f KB" = "%.0f KB";
+
+/* formattedSpeed */
+"%.0f Kb" = "%.0f Kb";
+
+/* formattedSpeed */
+"%.0f Kb/s" = "%.0f Kb/s";
+
+/* formattedSpeed */
+"%.0f KB/s" = "%.0f KB/s";
+
+/* formattedSpeed */
+"%.2f GB" = "%.2f GB";
+
+/* formattedSpeed */
+"%.2f Gb" = "%.2f Gb";
+
+/* formattedSpeed */
+"%.2f GB/s" = "%.2f GB/s";
+
+/* formattedSpeed */
+"%.2f Gb/s" = "%.2f Gb/s";
+
+/* formattedSpeed */
+"%.2f MB" = "%.2f MB";
+
+/* formattedSpeed */
+"%.2f Mb" = "%.2f Mb";
+
+/* formattedSpeed */
+"%.2f MB/s" = "%.2f MB/s";
+
+/* formattedSpeed */
+"%.2f Mb/s" = "%.2f Mb/s";
+
+/* formattedSpeed */
+"0 KB" = "0 KB";
+
+/* formattedSpeed */
+"0 Kb" = "0 Kb";
+
+/* formattedSpeed */
+"0 Kb/s" = "0 Kb/s";
+
+/* formattedSpeed */
+"0 KB/s" = "0 KB/s";
+
+/* No comment provided by engineer. */
+"Tap that button on the center again,\nto toggle ON/OFF “Dynamic Island” mode." = "Tap that button on the center again,\nto toggle ON/OFF “Dynamic Island” mode.";
