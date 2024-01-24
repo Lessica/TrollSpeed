@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HUDBackdropLabel : UILabel
-
+- (void)setColorInvertEnabled:(BOOL)colorInvertEnabled;
 @end
 
 NS_ASSUME_NONNULL_END

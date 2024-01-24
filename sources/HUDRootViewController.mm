@@ -13,6 +13,7 @@
 
 #import "HUDPresetPosition.h"
 #import "HUDRootViewController.h"
+#import "HUDBackdropLabel.h"
 #import "TrollSpeed-Swift.h"
 
 #pragma mark -
@@ -199,7 +200,7 @@ static NSAttributedString *attributedDownloadPrefix = nil;
 static NSAttributedString *attributedInlineSeparator = nil;
 static NSAttributedString *attributedLineSeparator = nil;
 
-static NSAttributedString* formattedAttributedString(BOOL isFocused)
+static NSAttributedString *formattedAttributedString(BOOL isFocused)
 {
     @autoreleasepool
     {
@@ -212,8 +213,8 @@ static NSAttributedString* formattedAttributedString(BOOL isFocused)
         if (!attributedLineSeparator)
             attributedLineSeparator = [[NSAttributedString alloc] initWithString:@"\n" attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:FONT_SIZE]}];
 
-        NSMutableAttributedString* mutableString = [[NSMutableAttributedString alloc] init];
-        
+        NSMutableAttributedString *mutableString = [[NSMutableAttributedString alloc] init];
+
         UpDownBytes upDownBytes = getUpDownBytes();
 
         uint64_t upDiff;
@@ -303,17 +304,17 @@ static NSAttributedString* formattedAttributedString(BOOL isFocused)
 - (void)updateOrientation:(UIInterfaceOrientation)orientation animateWithDuration:(NSTimeInterval)duration;
 @end
 
-// static const CACornerMask kCornerMaskNone = 0;
 static const CACornerMask kCornerMaskBottom = kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
 static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
 
 @implementation HUDRootViewController {
     NSMutableDictionary *_userDefaults;
     NSMutableArray <NSLayoutConstraint *> *_constraints;
+    UIBlurEffect *_blurEffect;
     UIVisualEffectView *_blurView;
     ScreenshotInvisibleContainer *_containerView;
     UIView *_contentView;
-    UILabel *_speedLabel;
+    HUDBackdropLabel *_speedLabel;
     UIImageView *_lockedView;
     NSTimer *_timer;
     UITapGestureRecognizer *_tapGestureRecognizer;
@@ -392,14 +393,17 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     BOOL usesBitrate = [self usesBitrate];
     BOOL usesArrowPrefixes = [self usesArrowPrefixes];
     BOOL usesLargeFont = [self usesLargeFont] && !isCenteredMost;
+    BOOL usesInvertedColor = [self usesInvertedColor];
     BOOL hideAtSnapshot = [self hideAtSnapshot];
 
-    _blurView.layer.cornerRadius = (usesLargeFont ? 4.5 : 4.0);
-    _speedLabel.textAlignment = (isCentered ? NSTextAlignmentCenter : NSTextAlignmentLeft);
+    [_blurView.layer setCornerRadius:(usesLargeFont ? 4.5 : 4.0)];
+    [_blurView setEffect:(usesInvertedColor ? nil : _blurEffect)];
+    [_speedLabel setTextAlignment:(isCentered ? NSTextAlignmentCenter : NSTextAlignmentLeft)];
+    [_speedLabel setColorInvertEnabled:usesInvertedColor];
     if (isCentered) {
-        _lockedView.image = [UIImage systemImageNamed:@"hand.raised.slash.fill"];
+        [_lockedView setImage:[UIImage systemImageNamed:@"hand.raised.slash.fill"]];
     } else {
-        _lockedView.image = [UIImage systemImageNamed:@"lock.fill"];
+        [_lockedView setImage:[UIImage systemImageNamed:@"lock.fill"]];
     }
 
     DATAUNIT = usesBitrate;
@@ -480,6 +484,13 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"usesRotation"];
+    return mode != nil ? [mode boolValue] : NO;
+}
+
+- (BOOL)usesInvertedColor
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"usesInvertedColor"];
     return mode != nil ? [mode boolValue] : NO;
 }
 
@@ -571,7 +582,8 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     _contentView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:_contentView];
 
-    _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+    _blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+    _blurView = [[UIVisualEffectView alloc] initWithEffect:_blurEffect];
     _blurView.layer.cornerRadius = 4.0;
     _blurView.layer.masksToBounds = YES;
     _blurView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -579,7 +591,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     _containerView.hiddenContainer.translatesAutoresizingMaskIntoConstraints = NO;
     [_contentView addSubview:_containerView.hiddenContainer];
 
-    _speedLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    _speedLabel = [[HUDBackdropLabel alloc] initWithFrame:CGRectZero];
     _speedLabel.numberOfLines = 0;
     _speedLabel.textAlignment = NSTextAlignmentCenter;
     _speedLabel.textColor = [UIColor whiteColor];

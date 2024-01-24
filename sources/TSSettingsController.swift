@@ -16,6 +16,7 @@ private enum TSSettingsIndex: Int, CaseIterable {
     case usesLargeFont
     case usesBitrate
     case usesArrowPrefixes
+    case usesInvertedColor
 
     var key: String {
         switch self {
@@ -35,6 +36,8 @@ private enum TSSettingsIndex: Int, CaseIterable {
             return "usesBitrate"
         case .usesArrowPrefixes:
             return "usesArrowPrefixes"
+        case .usesInvertedColor:
+            return "usesInvertedColor"
         }
     }
 
@@ -56,6 +59,8 @@ private enum TSSettingsIndex: Int, CaseIterable {
             return NSLocalizedString("Unit", comment: "")
         case .usesArrowPrefixes:
             return NSLocalizedString("Prefixes", comment: "")
+        case .usesInvertedColor:
+            return NSLocalizedString("Appearance", comment: "")
         }
     }
 
@@ -79,6 +84,8 @@ private enum TSSettingsIndex: Int, CaseIterable {
             return highlighted ? NSLocalizedString("b/s", comment: "") : NSLocalizedString("B/s", comment: "")
         case .usesArrowPrefixes:
             return highlighted ? NSLocalizedString("↑↓", comment: "") : NSLocalizedString("▲▼", comment: "")
+        case .usesInvertedColor:
+            return highlighted ? NSLocalizedString("Inverted", comment: "") : NSLocalizedString("Classic", comment: "")
         }
     }
 }

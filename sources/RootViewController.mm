@@ -437,6 +437,20 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     [self saveUserDefaults];
 }
 
+- (BOOL)usesInvertedColor
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"usesInvertedColor"];
+    return mode != nil ? [mode boolValue] : NO;
+}
+
+- (void)setUsesInvertedColor:(BOOL)usesInvertedColor
+{
+    [self loadUserDefaults:NO];
+    [_userDefaults setObject:@(usesInvertedColor) forKey:@"usesInvertedColor"];
+    [self saveUserDefaults];
+}
+
 - (BOOL)keepInPlace
 {
     [self loadUserDefaults:NO];
