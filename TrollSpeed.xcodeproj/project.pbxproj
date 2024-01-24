@@ -69,6 +69,8 @@
 		CC711D9E2B5C0081007235A6 /* AssertionServices.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC711D9D2B5C0081007235A6 /* AssertionServices.tbd */; };
 		CC91309E2B616541006E3280 /* HUDBackdropLabel.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC91309D2B616541006E3280 /* HUDBackdropLabel.mm */; };
 		CC91309F2B616541006E3280 /* HUDBackdropLabel.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC91309D2B616541006E3280 /* HUDBackdropLabel.mm */; };
+		CC9130A32B616C18006E3280 /* HUDBackdropView.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC9130A22B616C18006E3280 /* HUDBackdropView.mm */; };
+		CC9130A42B616C18006E3280 /* HUDBackdropView.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC9130A22B616C18006E3280 /* HUDBackdropView.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -158,6 +160,9 @@
 		CC711D9D2B5C0081007235A6 /* AssertionServices.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = AssertionServices.tbd; sourceTree = "<group>"; };
 		CC91309C2B616541006E3280 /* HUDBackdropLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HUDBackdropLabel.h; sourceTree = "<group>"; };
 		CC91309D2B616541006E3280 /* HUDBackdropLabel.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDBackdropLabel.mm; sourceTree = "<group>"; };
+		CC9130A02B616BBF006E3280 /* CAFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CAFilter.h; sourceTree = "<group>"; };
+		CC9130A12B616C18006E3280 /* HUDBackdropView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HUDBackdropView.h; sourceTree = "<group>"; };
+		CC9130A22B616C18006E3280 /* HUDBackdropView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDBackdropView.mm; sourceTree = "<group>"; };
 		CCB6B6FA2B5C06DD00AD2A89 /* NSUserDefaults+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+Private.h"; sourceTree = "<group>"; };
 		CCB6B6FB2B5C074F00AD2A89 /* rootless.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rootless.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -239,6 +244,8 @@
 				CC711D202B5BF5C6007235A6 /* HUDMainWindow.mm */,
 				CC711D252B5BF5C6007235A6 /* HUDRootViewController.h */,
 				CC711D442B5BF5C6007235A6 /* HUDRootViewController.mm */,
+				CC9130A12B616C18006E3280 /* HUDBackdropView.h */,
+				CC9130A22B616C18006E3280 /* HUDBackdropView.mm */,
 				CC91309C2B616541006E3280 /* HUDBackdropLabel.h */,
 				CC91309D2B616541006E3280 /* HUDBackdropLabel.mm */,
 				CC711D242B5BF5C6007235A6 /* MainApplication.h */,
@@ -323,6 +330,7 @@
 				CC711D732B5BF6B7007235A6 /* UIEventFetcher.h */,
 				CC711D672B5BF6B7007235A6 /* UITouch+Private.h */,
 				CC711D7B2B5BF6B7007235A6 /* UIWindow+Private.h */,
+				CC9130A02B616BBF006E3280 /* CAFilter.h */,
 			);
 			path = headers;
 			sourceTree = "<group>";
@@ -451,6 +459,7 @@
 				CC2BAFC22B5CA9DD00A429D1 /* TSSettingsController.swift in Sources */,
 				CC2BAFC42B5CA9DD00A429D1 /* MainApplication.mm in Sources */,
 				CC2BAFC52B5CA9DD00A429D1 /* RootViewController.mm in Sources */,
+				CC9130A42B616C18006E3280 /* HUDBackdropView.mm in Sources */,
 				CC2BAFC62B5CA9DD00A429D1 /* ScreenshotInvisibleContainer.swift in Sources */,
 				CC2BAFC72B5CA9DD00A429D1 /* ScreenshotInvincibleContainerProtocol.swift in Sources */,
 				CC2BAFC82B5CA9DD00A429D1 /* SPLarkController.swift in Sources */,
@@ -472,6 +481,7 @@
 				CC711D4A2B5BF5C6007235A6 /* HUDHelper.mm in Sources */,
 				CC711D532B5BF5C6007235A6 /* SPLarkPresentingAnimationController.swift in Sources */,
 				CC711D592B5BF5C6007235A6 /* SPLarkDismissingAnimationController.swift in Sources */,
+				CC9130A32B616C18006E3280 /* HUDBackdropView.mm in Sources */,
 				CC711D512B5BF5C6007235A6 /* MainButton.mm in Sources */,
 				CC711D5E2B5BF5C6007235A6 /* HiddenContainerRecognizer.swift in Sources */,
 				CC711D632B5BF5C6007235A6 /* TSEventFetcher.mm in Sources */,

@@ -259,7 +259,7 @@ static NSAttributedString *formattedAttributedString(BOOL isFocused)
             if (SHOW_DOWNLOAD_SPEED)
             {
                 [mutableString appendAttributedString:attributedDownloadPrefix];
-                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(downDiff, isFocused) attributes:@{NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:FONT_SIZE weight:UIFontWeightRegular]}]];
+                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(downDiff, isFocused) attributes:@{ NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:FONT_SIZE weight:UIFontWeightRegular] }]];
             }
 
             if (SHOW_UPLOAD_SPEED)
@@ -271,7 +271,7 @@ static NSAttributedString *formattedAttributedString(BOOL isFocused)
                 }
 
                 [mutableString appendAttributedString:attributedUploadPrefix];
-                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(upDiff, isFocused) attributes:@{NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:FONT_SIZE weight:UIFontWeightRegular]}]];
+                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(upDiff, isFocused) attributes:@{ NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:FONT_SIZE weight:UIFontWeightRegular] }]];
             }
         }
         else
@@ -279,7 +279,7 @@ static NSAttributedString *formattedAttributedString(BOOL isFocused)
             if (SHOW_UPLOAD_SPEED)
             {
                 [mutableString appendAttributedString:attributedUploadPrefix];
-                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(upDiff, isFocused) attributes:@{NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:FONT_SIZE weight:UIFontWeightRegular]}]];
+                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(upDiff, isFocused) attributes:@{ NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:FONT_SIZE weight:UIFontWeightRegular] }]];
             }
             if (SHOW_DOWNLOAD_SPEED)
             {
@@ -290,7 +290,7 @@ static NSAttributedString *formattedAttributedString(BOOL isFocused)
                 }
 
                 [mutableString appendAttributedString:attributedDownloadPrefix];
-                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(downDiff, isFocused) attributes:@{NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:FONT_SIZE weight:UIFontWeightRegular]}]];
+                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(downDiff, isFocused) attributes:@{ NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:FONT_SIZE weight:UIFontWeightRegular] }]];
             }
         }
         
