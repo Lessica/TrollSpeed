@@ -54,3 +54,10 @@ You need to enable “Developer Mode” on iOS 16 or above to use TrollSpeed or 
 ## License
 
 TrollSpeed is [Free Software](https://www.gnu.org/philosophy/free-sw.html) licensed under the [GNU General Public License](LICENSE).
+
+### Localization
+
+To add a language, create a new `.lproj` folder in `layout/Applications/TrollSpeed.app`.
+
+- en/zh-Hans [@Lessica](https://github.com/Lessica)
+- es [@Deci8BelioS](https://github.com/Deci8BelioS)
