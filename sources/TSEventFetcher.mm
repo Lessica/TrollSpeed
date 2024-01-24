@@ -1,3 +1,10 @@
+//
+//  TSEventFetcher.mm
+//  TrollSpeed
+//
+//  Created by Lessica on 2024/1/24.
+//
+
 #import <dlfcn.h>
 #import <string.h>
 #import <CoreFoundation/CoreFoundation.h>

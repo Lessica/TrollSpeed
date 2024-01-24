@@ -1,3 +1,10 @@
+//
+//  TSSettingsController.swift
+//  TrollSpeed
+//
+//  Created by Lessica on 2024/1/24.
+//
+
 import UIKit
 
 private enum TSSettingsIndex: Int, CaseIterable {

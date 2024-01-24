@@ -1,3 +1,10 @@
+//
+//  JetsamHelper.h
+//  TrollSpeed
+//
+//  Created by Lessica on 2024/1/24.
+//
+
 #ifdef __cplusplus
 extern "C" {
 #endif

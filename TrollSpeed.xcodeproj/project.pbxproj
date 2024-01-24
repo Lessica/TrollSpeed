@@ -67,6 +67,8 @@
 		CC711D9A2B5BFF2F007235A6 /* BackBoardServices.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC711D972B5BFF2F007235A6 /* BackBoardServices.tbd */; };
 		CC711D9C2B5C0032007235A6 /* IOKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC711D9B2B5C0032007235A6 /* IOKit.tbd */; };
 		CC711D9E2B5C0081007235A6 /* AssertionServices.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC711D9D2B5C0081007235A6 /* AssertionServices.tbd */; };
+		CC91309E2B616541006E3280 /* HUDBackdropLabel.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC91309D2B616541006E3280 /* HUDBackdropLabel.mm */; };
+		CC91309F2B616541006E3280 /* HUDBackdropLabel.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC91309D2B616541006E3280 /* HUDBackdropLabel.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -154,6 +156,8 @@
 		CC711D972B5BFF2F007235A6 /* BackBoardServices.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = BackBoardServices.tbd; sourceTree = "<group>"; };
 		CC711D9B2B5C0032007235A6 /* IOKit.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = IOKit.tbd; sourceTree = "<group>"; };
 		CC711D9D2B5C0081007235A6 /* AssertionServices.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = AssertionServices.tbd; sourceTree = "<group>"; };
+		CC91309C2B616541006E3280 /* HUDBackdropLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HUDBackdropLabel.h; sourceTree = "<group>"; };
+		CC91309D2B616541006E3280 /* HUDBackdropLabel.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDBackdropLabel.mm; sourceTree = "<group>"; };
 		CCB6B6FA2B5C06DD00AD2A89 /* NSUserDefaults+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+Private.h"; sourceTree = "<group>"; };
 		CCB6B6FB2B5C074F00AD2A89 /* rootless.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rootless.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -235,6 +239,8 @@
 				CC711D202B5BF5C6007235A6 /* HUDMainWindow.mm */,
 				CC711D252B5BF5C6007235A6 /* HUDRootViewController.h */,
 				CC711D442B5BF5C6007235A6 /* HUDRootViewController.mm */,
+				CC91309C2B616541006E3280 /* HUDBackdropLabel.h */,
+				CC91309D2B616541006E3280 /* HUDBackdropLabel.mm */,
 				CC711D242B5BF5C6007235A6 /* MainApplication.h */,
 				CC711D422B5BF5C6007235A6 /* MainApplication.mm */,
 				CC711D262B5BF5C6007235A6 /* MainApplicationDelegate.h */,
@@ -436,6 +442,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC2BAFBA2B5CA9DD00A429D1 /* SPLarkPresentingAnimationController.swift in Sources */,
+				CC91309F2B616541006E3280 /* HUDBackdropLabel.mm in Sources */,
 				CC2BAFBB2B5CA9DD00A429D1 /* SPLarkDismissingAnimationController.swift in Sources */,
 				CC2BAFBC2B5CA9DD00A429D1 /* MainButton.mm in Sources */,
 				CC2BAFBD2B5CA9DD00A429D1 /* HiddenContainerRecognizer.swift in Sources */,
@@ -470,6 +477,7 @@
 				CC711D632B5BF5C6007235A6 /* TSEventFetcher.mm in Sources */,
 				CC711D4F2B5BF5C6007235A6 /* UITouch-KIFAdditions.m in Sources */,
 				CC711D522B5BF5C6007235A6 /* SPLarkSettingsCloseButton.swift in Sources */,
+				CC91309E2B616541006E3280 /* HUDBackdropLabel.mm in Sources */,
 				CC711D582B5BF5C6007235A6 /* SPLarkPresentationController.swift in Sources */,
 				CC711D622B5BF5C6007235A6 /* TSSettingsController.swift in Sources */,
 				CC711D612B5BF5C6007235A6 /* HUDMainApplication.mm in Sources */,

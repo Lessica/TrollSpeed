@@ -1,5 +1,5 @@
 //
-//  MainButton.h
+//  HUDBackdropLabel.h
 //  TrollSpeed
 //
 //  Created by Lessica on 2024/1/24.
@@ -9,7 +9,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MainButton : UIButton
+@interface HUDBackdropLabel : UILabel
+
 @end
 
 NS_ASSUME_NONNULL_END
