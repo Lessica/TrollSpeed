@@ -1,90 +1,3 @@
-/* No comment provided by engineer. */
-"b/s" = "b/s";
-
-/* No comment provided by engineer. */
-"B/s" = "B/s";
-
-/* No comment provided by engineer. */
-"Choose an action below." = "Elija una acción a continuación.";
-
-/* No comment provided by engineer. */
-"Developer Area" = "Área de desarrollo";
-
-/* No comment provided by engineer. */
-"Dismiss" = "Descartar";
-
-/* No comment provided by engineer. */
-"Exit HUD" = "Cerrar HUD";
-
-/* No comment provided by engineer. */
-"Follow" = "Habilitado";
-
-/* No comment provided by engineer. */
-"Hide" = "Oculto";
-
-/* No comment provided by engineer. */
-"Hide @snapshot" = "Ocultar en capturas";
-
-/* No comment provided by engineer. */
-"Incoming Only" = "Sólo descarga";
-
-/* No comment provided by engineer. */
-"Keep In-place" = "Mantener en el sitio";
-
-/* No comment provided by engineer. */
-"Landscape" = "Horizontal";
-
-/* No comment provided by engineer. */
-"Large" = "Grande";
-
-/* No comment provided by engineer. */
-"Made with ♥ by @Lessica and @jmpews" = "Hecho con ♥ por @Lessica y @jmpews";
-
-/* No comment provided by engineer. */
-"Memory Pressure" = "Presión en la memoria";
-
-/* No comment provided by engineer. */
-"OFF" = "Deshabilitado";
-
-/* No comment provided by engineer. */
-"ON" = "Habilitado";
-
-/* No comment provided by engineer. */
-"Open HUD" = "Abrir HUD";
-
-/* No comment provided by engineer. */
-"Pass-through" = "Pass-through";
-
-/* No comment provided by engineer. */
-"Prefixes" = "Prefijos";
-
-/* No comment provided by engineer. */
-"Re-open to apply" = "Reabrir para aplicar";
-
-/* No comment provided by engineer. */
-"Reset Settings" = "Restablecer ajustes";
-
-/* No comment provided by engineer. */
-"Settings" = "Ajustes";
-
-/* No comment provided by engineer. */
-"Size" = "Tamaño";
-
-/* No comment provided by engineer. */
-"Standard" = "Estándar";
-
-/* No comment provided by engineer. */
-"Unit" = "Unid";
-
-/* No comment provided by engineer. */
-"You can quit this app now.\nThe HUD will persist on your screen." = "Puedes salir de esta aplicación ahora.\nEl HUD persistirá en tu pantalla.";
-
-/* No comment provided by engineer. */
-"↑↓" = "↑↓";
-
-/* No comment provided by engineer. */
-"▲▼" = "▲▼";
-
 /* formattedSpeed */
 "%.0f KB" = "%.0f KB";
 
@@ -134,4 +47,91 @@
 "0 KB/s" = "0 KB/s";
 
 /* No comment provided by engineer. */
+"b/s" = "b/s";
+
+/* No comment provided by engineer. */
+"B/s" = "B/s";
+
+/* No comment provided by engineer. */
+"Choose an action below." = "Elija una acción a continuación.";
+
+/* No comment provided by engineer. */
+"Developer Area" = "Área de desarrollo";
+
+/* No comment provided by engineer. */
+"Dismiss" = "Descartar";
+
+/* No comment provided by engineer. */
+"Exit HUD" = "Cerrar HUD";
+
+/* No comment provided by engineer. */
+"Follow" = "Habilitado";
+
+/* No comment provided by engineer. */
+"Hide" = "Oculto";
+
+/* No comment provided by engineer. */
+"Hide @snapshot" = "Ocultar en capturas";
+
+/* No comment provided by engineer. */
+"Incoming Only" = "Sólo descarga";
+
+/* No comment provided by engineer. */
+"Keep In-place" = "Mantener en el sitio";
+
+/* No comment provided by engineer. */
+"Landscape" = "Horizontal";
+
+/* No comment provided by engineer. */
+"Large" = "Grande";
+
+/* No comment provided by engineer. */
+"Made with ♥ by @GITHUB@Lessica and @GITHUB@jmpews\nTranslation @TRANSLATION@" = "Hecho con ♥ por @GITHUB@Lessica y @GITHUB@jmpews\nTraducción @TRANSLATION@Deci8BelioS";
+
+/* No comment provided by engineer. */
+"Memory Pressure" = "Presión en la memoria";
+
+/* No comment provided by engineer. */
+"OFF" = "Deshabilitado";
+
+/* No comment provided by engineer. */
+"ON" = "Habilitado";
+
+/* No comment provided by engineer. */
+"Open HUD" = "Abrir HUD";
+
+/* No comment provided by engineer. */
+"Pass-through" = "Pass-through";
+
+/* No comment provided by engineer. */
+"Prefixes" = "Prefijos";
+
+/* No comment provided by engineer. */
+"Re-open to apply" = "Reabrir para aplicar";
+
+/* No comment provided by engineer. */
+"Reset Settings" = "Restablecer ajustes";
+
+/* No comment provided by engineer. */
+"Settings" = "Ajustes";
+
+/* No comment provided by engineer. */
+"Size" = "Tamaño";
+
+/* No comment provided by engineer. */
+"Standard" = "Estándar";
+
+/* No comment provided by engineer. */
 "Tap that button on the center again,\nto toggle ON/OFF “Dynamic Island” mode." = "Tap that button on the center again,\nto toggle ON/OFF “Dynamic Island” mode.";
+
+/* No comment provided by engineer. */
+"Unit" = "Unid";
+
+/* No comment provided by engineer. */
+"You can quit this app now.\nThe HUD will persist on your screen." = "Puedes salir de esta aplicación ahora.\nEl HUD persistirá en tu pantalla.";
+
+/* No comment provided by engineer. */
+"↑↓" = "↑↓";
+
+/* No comment provided by engineer. */
+"▲▼" = "▲▼";

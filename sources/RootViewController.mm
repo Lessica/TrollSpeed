@@ -462,39 +462,63 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     _isRemoteHUDActive = [self isHUDEnabled];
 
     static NSAttributedString *hintAttributedString = nil;
-    static NSAttributedString *githubAttributedString = nil;
+    static NSAttributedString *creditsAttributedString = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSDictionary *defaultAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor], NSFontAttributeName: [UIFont systemFontOfSize:14]};
+        NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
+        paraStyle.lineHeightMultiple = 1.2;
+        paraStyle.alignment = NSTextAlignmentCenter;
         
+        NSDictionary *defaultAttributes = @{
+            NSForegroundColorAttributeName: [UIColor whiteColor],
+            NSFontAttributeName: [UIFont systemFontOfSize:14],
+            NSParagraphStyleAttributeName: paraStyle,
+        };
+
         NSString *hintText = NSLocalizedString(@"You can quit this app now.\nThe HUD will persist on your screen.", nil);
         hintAttributedString = [[NSAttributedString alloc] initWithString:hintText attributes:defaultAttributes];
-        
+
         NSTextAttachment *githubIcon = [NSTextAttachment textAttachmentWithImage:[UIImage imageNamed:@"github-mark-white"]];
         [githubIcon setBounds:CGRectMake(0, 0, 14, 14)];
-        
+
+        NSTextAttachment *i18nIcon = [NSTextAttachment textAttachmentWithImage:[UIImage systemImageNamed:@"character.bubble.fill"]];
+        [i18nIcon setBounds:CGRectMake(0, 0, 14, 14)];
+
         NSAttributedString *githubIconText = [NSAttributedString attributedStringWithAttachment:githubIcon];
         NSMutableAttributedString *githubIconTextFull = [[NSMutableAttributedString alloc] initWithAttributedString:githubIconText];
-        [githubIconTextFull appendAttributedString:[[NSAttributedString alloc] initWithString:@" " attributes:defaultAttributes]];
+        [githubIconTextFull appendAttributedString:[[NSAttributedString alloc] initWithString:@" " attributes:defaultAttributes]];
+
+        NSAttributedString *i18nIconText = [NSAttributedString attributedStringWithAttachment:i18nIcon];
+        NSMutableAttributedString *i18nIconTextFull = [[NSMutableAttributedString alloc] initWithAttributedString:i18nIconText];
+        [i18nIconTextFull appendAttributedString:[[NSAttributedString alloc] initWithString:@" " attributes:defaultAttributes]];
+
+        NSString *creditsText = NSLocalizedString(@"Made with ♥ by @GITHUB@Lessica and @GITHUB@jmpews\nTranslation @TRANSLATION@", nil);
+        NSMutableAttributedString *creditsAttributedText = [[NSMutableAttributedString alloc] initWithString:creditsText attributes:defaultAttributes];
+
+        // replace all "@GITHUB@" with github icon
+        NSRange atRange;
         
-        NSString *githubText = NSLocalizedString(@"Made with ♥ by @Lessica and @jmpews", nil);
-        NSMutableAttributedString *githubAttributedText = [[NSMutableAttributedString alloc] initWithString:githubText attributes:defaultAttributes];
-        
-        // replace all "@" with github icon
-        NSRange atRange = [githubAttributedText.string rangeOfString:@"@"];
+        atRange = [creditsAttributedText.string rangeOfString:@"@GITHUB@"];
         while (atRange.location != NSNotFound) {
-            [githubAttributedText replaceCharactersInRange:atRange withAttributedString:githubIconTextFull];
-            atRange = [githubAttributedText.string rangeOfString:@"@"];
+            [creditsAttributedText replaceCharactersInRange:atRange withAttributedString:githubIconTextFull];
+            atRange = [creditsAttributedText.string rangeOfString:@"@GITHUB@"];
         }
         
-        githubAttributedString = githubAttributedText;
+        // replace all "@TRANSLATION@" with character bubble
+        atRange = [creditsAttributedText.string rangeOfString:@"@TRANSLATION@"];
+        while (atRange.location != NSNotFound) {
+            [creditsAttributedText replaceCharactersInRange:atRange withAttributedString:i18nIconTextFull];
+            atRange = [creditsAttributedText.string rangeOfString:@"@TRANSLATION@"];
+        }
+
+        creditsAttributedString = creditsAttributedText;
     });
-    
+
     __weak typeof(self) weakSelf = self;
     [UIView transitionWithView:self.backgroundView duration:HUD_TRANSITION_DURATION options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         __strong typeof(weakSelf) strongSelf = weakSelf;
         [strongSelf->_mainButton setTitle:(strongSelf->_isRemoteHUDActive ? NSLocalizedString(@"Exit HUD", nil) : NSLocalizedString(@"Open HUD", nil)) forState:UIControlStateNormal];
-        [strongSelf->_authorLabel setAttributedText:(strongSelf->_isRemoteHUDActive ? hintAttributedString : githubAttributedString)];
+        [strongSelf->_authorLabel setAttributedText:(strongSelf->_isRemoteHUDActive ? hintAttributedString : creditsAttributedString)];
     } completion:nil];
 }
 
