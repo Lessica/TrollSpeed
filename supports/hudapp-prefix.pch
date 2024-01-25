@@ -46,9 +46,4 @@
 
 #ifdef __OBJC__
 #import "hudapp-bridging-header.h"
-
-NS_INLINE HUDUserDefaultsKey HUDUserDefaultsKeySelectedModeForOrientation(UIInterfaceOrientation orientation)
-{
-    return UIInterfaceOrientationIsLandscape(orientation) ? HUDUserDefaultsKeySelectedModeLandscape : HUDUserDefaultsKeySelectedMode;
-}
 #endif

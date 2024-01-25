@@ -335,22 +335,41 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     notify_post(NOTIFY_RELOAD_HUD);
 }
 
-- (HUDPresetPosition)selectedMode
+- (BOOL)isLandscapeOrientation
+{
+    UIInterfaceOrientation orientation;
+    orientation = self.view.window.windowScene.interfaceOrientation;
+    BOOL isLandscape;
+    if (orientation == UIInterfaceOrientationUnknown) {
+        isLandscape = CGRectGetWidth(self.view.bounds) > CGRectGetHeight(self.view.bounds);
+    } else {
+        isLandscape = UIInterfaceOrientationIsLandscape(orientation);
+    }
+    return isLandscape;
+}
+
+- (HUDUserDefaultsKey)selectedModeKeyForCurrentOrientation
+{
+    return [self isLandscapeOrientation] ? HUDUserDefaultsKeySelectedModeLandscape : HUDUserDefaultsKeySelectedMode;
+}
+
+- (HUDPresetPosition)selectedModeForCurrentOrientation
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeySelectedMode];
+    NSNumber *mode = [_userDefaults objectForKey:[self selectedModeKeyForCurrentOrientation]];
     return mode != nil ? (HUDPresetPosition)[mode integerValue] : HUDPresetPositionTopCenter;
 }
 
-- (void)setSelectedMode:(HUDPresetPosition)selectedMode
+- (void)setSelectedModeForCurrentOrientation:(HUDPresetPosition)selectedMode
 {
     [self loadUserDefaults:NO];
     // Remove some keys that are not persistent
-    [_userDefaults removeObjectsForKeys:@[
-        HUDUserDefaultsKeyCurrentPositionY,
-        HUDUserDefaultsKeyCurrentLandscapePositionY,
-    ]];
-    [_userDefaults setObject:@(selectedMode) forKey:HUDUserDefaultsKeySelectedMode];
+    if ([self isLandscapeOrientation]) {
+        [_userDefaults removeObjectForKey:HUDUserDefaultsKeyCurrentLandscapePositionY];
+    } else {
+        [_userDefaults removeObjectForKey:HUDUserDefaultsKeyCurrentPositionY];
+    }
+    [_userDefaults setObject:@(selectedMode) forKey:[self selectedModeKeyForCurrentOrientation]];
     [self saveUserDefaults];
 }
 
@@ -574,7 +593,7 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
 - (void)reloadModeButtonState
 {
-    HUDPresetPosition selectedMode = [self selectedMode];
+    HUDPresetPosition selectedMode = [self selectedModeForCurrentOrientation];
     BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
     [_topLeftButton setSelected:(selectedMode == HUDPresetPositionTopLeft)];
@@ -597,32 +616,32 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 - (void)tapTopLeftButton:(UIButton *)sender
 {
     log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopLeftButton:%{public}@]", sender);
-    [self setSelectedMode:HUDPresetPositionTopLeft];
+    [self setSelectedModeForCurrentOrientation:HUDPresetPositionTopLeft];
     [self reloadModeButtonState];
 }
 
 - (void)tapTopRightButton:(UIButton *)sender
 {
     log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopRightButton:%{public}@]", sender);
-    [self setSelectedMode:HUDPresetPositionTopRight];
+    [self setSelectedModeForCurrentOrientation:HUDPresetPositionTopRight];
     [self reloadModeButtonState];
 }
 
 - (void)tapTopCenterButton:(UIButton *)sender
 {
     log_debug(OS_LOG_DEFAULT, "- [RootViewController tapTopCenterButton:%{public}@]", sender);
-    HUDPresetPosition selectedMode = [self selectedMode];
+    HUDPresetPosition selectedMode = [self selectedModeForCurrentOrientation];
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
     if (!sender.isSelected || !_supportsCenterMost) {
-        [self setSelectedMode:HUDPresetPositionTopCenter];
+        [self setSelectedModeForCurrentOrientation:HUDPresetPositionTopCenter];
         if (_supportsCenterMost) {
             [self presentTopCenterMostHints];
         }
     } else {
         if (isCenteredMost) {
-            [self setSelectedMode:HUDPresetPositionTopCenter];
+            [self setSelectedModeForCurrentOrientation:HUDPresetPositionTopCenter];
         } else {
-            [self setSelectedMode:HUDPresetPositionTopCenterMost];
+            [self setSelectedModeForCurrentOrientation:HUDPresetPositionTopCenterMost];
         }
     }
     [self reloadModeButtonState];
@@ -712,6 +731,8 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         [self reloadModeButtonState];
     } completion:nil];

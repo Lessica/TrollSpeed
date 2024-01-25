@@ -72,6 +72,11 @@
             _backdropTextLayer = [CATextLayer layer];
             _backdropTextLayer.contentsScale = self.layer.contentsScale;
             _backdropTextLayer.allowsFontSubpixelQuantization = YES;
+            _backdropTextLayer.actions = @{
+                @"bounds": [NSNull null],
+                @"contents": [NSNull null],
+                @"position": [NSNull null],
+            };
             _backdropView.layer.mask = _backdropTextLayer;
 
             [self addSubview:_backdropView];
@@ -99,7 +104,6 @@
 - (void)setAttributedText:(NSAttributedString *)attributedText
 {
     [super setAttributedText:attributedText];
-    [CATransaction setDisableActions:YES];
     [_backdropTextLayer setString:attributedText];
 }
 

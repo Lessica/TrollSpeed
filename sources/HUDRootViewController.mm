@@ -324,14 +324,15 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     UIImpactFeedbackGenerator *_impactFeedbackGenerator;
     UINotificationFeedbackGenerator *_notificationFeedbackGenerator;
     BOOL _isFocused;
-    UIInterfaceOrientation _remoteOrientation;
-    UIInterfaceOrientation _localOrientation;
     NSLayoutConstraint *_topConstraint;
     NSLayoutConstraint *_centerXConstraint;
     NSLayoutConstraint *_leadingConstraint;
     NSLayoutConstraint *_trailingConstraint;
 #if !NO_TROLL
     FBSOrientationObserver *_remoteOrientationObserver;
+    UIInterfaceOrientation _remoteOrientation;
+#else
+    UIInterfaceOrientation _localOrientation;
 #endif
 }
 
@@ -387,13 +388,6 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 {
     [self loadUserDefaults:YES];
 
-    HUDPresetPosition selectedMode = [self selectedMode];
-    BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
-    HUD_SHOW_DOWNLOAD_SPEED_FIRST = isCentered;
-    HUD_SHOW_SECOND_SPEED_IN_NEW_LINE = !isCentered;
-    [_speedLabel setTextAlignment:(isCentered ? NSTextAlignmentCenter : NSTextAlignmentLeft)];
-    [_lockedView setImage:[UIImage systemImageNamed:(isCentered ? @"hand.raised.slash.fill" : @"lock.fill")]];
-
     BOOL singleLineMode = [self singleLineMode];
     HUD_SHOW_UPLOAD_SPEED = !singleLineMode;
 
@@ -445,10 +439,32 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     return [[[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH))] objectForKey:HUDUserDefaultsKeyPassthroughMode] boolValue];
 }
 
-- (HUDPresetPosition)selectedMode
+- (BOOL)isLandscapeOrientation
+{
+    UIInterfaceOrientation orientation;
+#if !NO_TROLL
+    orientation = _remoteOrientation;
+#else
+    orientation = _localOrientation;
+#endif
+    BOOL isLandscape;
+    if (orientation == UIInterfaceOrientationUnknown) {
+        isLandscape = CGRectGetWidth(self.view.bounds) > CGRectGetHeight(self.view.bounds);
+    } else {
+        isLandscape = UIInterfaceOrientationIsLandscape(orientation);
+    }
+    return isLandscape;
+}
+
+- (HUDUserDefaultsKey)selectedModeKeyForCurrentOrientation
+{
+    return [self isLandscapeOrientation] ? HUDUserDefaultsKeySelectedModeLandscape : HUDUserDefaultsKeySelectedMode;
+}
+
+- (HUDPresetPosition)selectedModeForCurrentOrientation
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeySelectedMode];
+    NSNumber *mode = [_userDefaults objectForKey:[self selectedModeKeyForCurrentOrientation]];
     return mode != nil ? (HUDPresetPosition)[mode integerValue] : HUDPresetPositionTopCenter;
 }
 
@@ -655,11 +671,15 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     [NSLayoutConstraint deactivateConstraints:_constraints];
     [_constraints removeAllObjects];
 
-#if !NO_TROLL
-    UIInterfaceOrientation orientation = _remoteOrientation;
-#else
+#if NO_TROLL
     _localOrientation = [self.view.window.windowScene interfaceOrientation];
-    UIInterfaceOrientation orientation = _localOrientation;
+#endif
+
+    UIInterfaceOrientation orientation;
+#if !NO_TROLL
+    orientation = _remoteOrientation;
+#else
+    orientation = _localOrientation;
 #endif
 
     BOOL isLandscape;
@@ -669,12 +689,16 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         isLandscape = UIInterfaceOrientationIsLandscape(orientation);
     }
 
-    HUDPresetPosition selectedMode = [self selectedMode];
+    HUDPresetPosition selectedMode = [self selectedModeForCurrentOrientation];
     BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
     BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
     BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
 
-    _blurView.layer.maskedCorners = (isCenteredMost && !isLandscape) ? kCornerMaskBottom : kCornerMaskAll;
+    HUD_SHOW_DOWNLOAD_SPEED_FIRST = isCentered;
+    HUD_SHOW_SECOND_SPEED_IN_NEW_LINE = !isCentered;
+    [_speedLabel setTextAlignment:(isCentered ? NSTextAlignmentCenter : NSTextAlignmentLeft)];
+    [_lockedView setImage:[UIImage systemImageNamed:(isCentered ? @"hand.raised.slash.fill" : @"lock.fill")]];
+    [_blurView.layer setMaskedCorners:((isCenteredMost && !isLandscape) ? kCornerMaskBottom : kCornerMaskAll)];
 
     UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;
     if (isLandscape)
@@ -830,7 +854,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     [self updateSpeedLabel];
     [self resetLoopTimer];
 
-    HUDPresetPosition selectedMode = [self selectedMode];
+    HUDPresetPosition selectedMode = [self selectedModeForCurrentOrientation];
     BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
     
     CGFloat topTrans = CGRectGetHeight(view.bounds) * (scaleFactor / 2);
@@ -935,10 +959,10 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 {
     if (!_isFocused)
         return;
-    
-    HUDPresetPosition selectedMode = [self selectedMode];
+
+    HUDPresetPosition selectedMode = [self selectedModeForCurrentOrientation];
     BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
-    
+
     if (isCentered || [self keepInPlace])
     {
         if (sender.state == UIGestureRecognizerStateBegan)
@@ -956,7 +980,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
             [self flashLockedViewWithDuration:0.2];
         }
-        
+
         return;
     }
 
@@ -973,7 +997,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
             CGFloat currentOffsetY = [sender translationInView:sender.view.superview].y;
             [_topConstraint setConstant:beginConstantY + currentOffsetY];
         }
-        
+
         if (sender.state == UIGestureRecognizerStateEnded)
         {
             UIInterfaceOrientation orientation;
@@ -987,7 +1011,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
             else
                 [self setCurrentPositionY:_topConstraint.constant];
         }
-        
+
         if (sender.state != UIGestureRecognizerStateChanged)
         {
             [self onFocus:sender.view scaleFactor:0.1 duration:0.1 beginFromInitialState:NO blurWhenDone:NO];
@@ -1124,11 +1148,6 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
         }
         else
         {
-            if (orientation == strongSelf->_localOrientation) {
-                return;
-            }
-
-            strongSelf->_localOrientation = orientation;
             [strongSelf cancelPreviousPerformRequestsWithTarget:strongSelf->_contentView];
 
             [strongSelf.view setNeedsUpdateConstraints];
