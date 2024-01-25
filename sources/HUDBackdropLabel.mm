@@ -9,20 +9,6 @@
 #import "HUDBackdropView.h"
 #import "CAFilter.h"
 
-@interface HUDBackdropTextLayer : CATextLayer
-
-@end
-
-@implementation HUDBackdropTextLayer
-
-- (void)drawInContext:(CGContextRef)ctx
-{
-    CGContextSetShouldSmoothFonts(ctx, true);
-    [super drawInContext:ctx];
-}
-
-@end
-
 @implementation HUDBackdropLabel {
     BOOL _isColorInvertEnabled;
     HUDBackdropView *_backdropView;
@@ -64,14 +50,14 @@
             _backdropView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
             CAFilter *blurFilter = [CAFilter filterWithName:kCAFilterGaussianBlur];
-            [blurFilter setValue:@(50.0) forKey:@"inputRadius"];
+            [blurFilter setValue:@(50.0) forKey:@"inputRadius"];  // radius 50pt
             [blurFilter setValue:@YES forKey:@"inputNormalizeEdges"];  // inputHardEdges
 
             CAFilter *brightnessFilter = [CAFilter filterWithName:kCAFilterColorBrightness];
-            [brightnessFilter setValue:@(0.06) forKey:@"inputAmount"];
+            [brightnessFilter setValue:@(-0.3) forKey:@"inputAmount"];  // -30%
 
             CAFilter *contrastFilter = [CAFilter filterWithName:kCAFilterColorContrast];
-            [contrastFilter setValue:@(10.0) forKey:@"inputAmount"];
+            [contrastFilter setValue:@(500.0) forKey:@"inputAmount"];   // 500x
 
             CAFilter *saturateFilter = [CAFilter filterWithName:kCAFilterColorSaturate];
             [saturateFilter setValue:@(0.0) forKey:@"inputAmount"];
@@ -83,7 +69,7 @@
                 saturateFilter, colorInvertFilter,
             ]];
 
-            _backdropTextLayer = [HUDBackdropTextLayer layer];
+            _backdropTextLayer = [CATextLayer layer];
             _backdropTextLayer.contentsScale = self.layer.contentsScale;
             _backdropTextLayer.allowsEdgeAntialiasing = NO;
             _backdropTextLayer.allowsFontSubpixelQuantization = YES;
