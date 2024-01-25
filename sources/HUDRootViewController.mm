@@ -389,47 +389,43 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
     HUDPresetPosition selectedMode = [self selectedMode];
     BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
-    BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
-
-    BOOL singleLineMode = [self singleLineMode];
-    BOOL usesBitrate = [self usesBitrate];
-    BOOL usesArrowPrefixes = [self usesArrowPrefixes];
-    BOOL usesLargeFont = [self usesLargeFont] && !isCenteredMost;
-    BOOL usesInvertedColor = [self usesInvertedColor];
-    BOOL hideAtSnapshot = [self hideAtSnapshot];
-
-    [_blurView.layer setCornerRadius:(usesLargeFont ? 4.5 : 4.0)];
-    [_blurView setEffect:(usesInvertedColor ? nil : _blurEffect)];
-    [_speedLabel setTextAlignment:(isCentered ? NSTextAlignmentCenter : NSTextAlignmentLeft)];
-    [_speedLabel setColorInvertEnabled:usesInvertedColor];
-    if (isCentered) {
-        [_lockedView setImage:[UIImage systemImageNamed:@"hand.raised.slash.fill"]];
-    } else {
-        [_lockedView setImage:[UIImage systemImageNamed:@"lock.fill"]];
-    }
-
-    HUD_DATA_UNIT = usesBitrate;
-    HUD_SHOW_UPLOAD_SPEED = !singleLineMode;
     HUD_SHOW_DOWNLOAD_SPEED_FIRST = isCentered;
     HUD_SHOW_SECOND_SPEED_IN_NEW_LINE = !isCentered;
-    HUD_FONT_SIZE = (usesLargeFont ? 9.0 : 8.0);
-    HUD_FONT_WEIGHT = (usesInvertedColor ? UIFontWeightSemibold : UIFontWeightRegular);
-    HUD_INACTIVE_OPACITY = (usesInvertedColor ? 1.0 : 0.667);
+    [_speedLabel setTextAlignment:(isCentered ? NSTextAlignmentCenter : NSTextAlignmentLeft)];
+    [_lockedView setImage:[UIImage systemImageNamed:(isCentered ? @"hand.raised.slash.fill" : @"lock.fill")]];
 
+    BOOL singleLineMode = [self singleLineMode];
+    HUD_SHOW_UPLOAD_SPEED = !singleLineMode;
+
+    BOOL usesBitrate = [self usesBitrate];
+    HUD_DATA_UNIT = usesBitrate;
+
+    BOOL usesArrowPrefixes = [self usesArrowPrefixes];
     HUD_UPLOAD_PREFIX = (usesArrowPrefixes ? "↑" : "▲");
     HUD_DOWNLOAD_PREFIX = (usesArrowPrefixes ? "↓" : "▼");
 
-    prevInputBytes = 0;
-    prevOutputBytes = 0;
+    BOOL usesLargeFont = [self usesLargeFont];
+    HUD_FONT_SIZE = (usesLargeFont ? 9.0 : 8.0);
+    [_blurView.layer setCornerRadius:(usesLargeFont ? 4.5 : 4.0)];
 
-    attributedUploadPrefix = nil;
-    attributedDownloadPrefix = nil;
+    BOOL usesInvertedColor = [self usesInvertedColor];
+    HUD_FONT_WEIGHT = (usesInvertedColor ? UIFontWeightSemibold : UIFontWeightRegular);
+    HUD_INACTIVE_OPACITY = (usesInvertedColor ? 1.0 : 0.667);
+    [_blurView setEffect:(usesInvertedColor ? nil : _blurEffect)];
+    [_speedLabel setColorInvertEnabled:usesInvertedColor];
+    [_lockedView setHidden:usesInvertedColor];
 
+    BOOL hideAtSnapshot = [self hideAtSnapshot];
     if (hideAtSnapshot) {
         [_containerView setupContainerAsHideContentInScreenshots];
     } else {
         [_containerView setupContainerAsDisplayContentInScreenshots];
     }
+
+    prevInputBytes = 0;
+    prevOutputBytes = 0;
+    attributedUploadPrefix = nil;
+    attributedDownloadPrefix = nil;
 
     [self removeAllAnimations];
     [self resetGestureRecognizers];
@@ -446,97 +442,97 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
 + (BOOL)passthroughMode
 {
-    return [[[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH))] objectForKey:@"passthroughMode"] boolValue];
+    return [[[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH))] objectForKey:HUDUserDefaultsKeyPassthroughMode] boolValue];
 }
 
 - (HUDPresetPosition)selectedMode
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"selectedMode"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeySelectedMode];
     return mode != nil ? (HUDPresetPosition)[mode integerValue] : HUDPresetPositionTopCenter;
 }
 
 - (BOOL)singleLineMode
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"singleLineMode"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeySingleLineMode];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (BOOL)usesBitrate
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"usesBitrate"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyUsesBitrate];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (BOOL)usesArrowPrefixes
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"usesArrowPrefixes"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyUsesArrowPrefixes];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (BOOL)usesLargeFont
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"usesLargeFont"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyUsesLargeFont];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (BOOL)usesRotation
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"usesRotation"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyUsesRotation];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (BOOL)usesInvertedColor
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"usesInvertedColor"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyUsesInvertedColor];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (BOOL)keepInPlace
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"keepInPlace"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyKeepInPlace];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (BOOL)hideAtSnapshot
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"hideAtSnapshot"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyHideAtSnapshot];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (CGFloat)currentPositionY
 {
     [self loadUserDefaults:NO];
-    NSNumber *positionY = [_userDefaults objectForKey:@"currentPositionY"];
+    NSNumber *positionY = [_userDefaults objectForKey:HUDUserDefaultsKeyCurrentPositionY];
     return positionY != nil ? [positionY doubleValue] : CGFLOAT_MAX;
 }
 
 - (void)setCurrentPositionY:(CGFloat)positionY
 {
     [self loadUserDefaults:NO];
-    [_userDefaults setObject:[NSNumber numberWithDouble:positionY] forKey:@"currentPositionY"];
+    [_userDefaults setObject:[NSNumber numberWithDouble:positionY] forKey:HUDUserDefaultsKeyCurrentPositionY];
     [self saveUserDefaults];
 }
 
 - (CGFloat)currentLandscapePositionY
 {
     [self loadUserDefaults:NO];
-    NSNumber *positionY = [_userDefaults objectForKey:@"currentLandscapePositionY"];
+    NSNumber *positionY = [_userDefaults objectForKey:HUDUserDefaultsKeyCurrentLandscapePositionY];
     return positionY != nil ? [positionY doubleValue] : CGFLOAT_MAX;
 }
 
 - (void)setCurrentLandscapePositionY:(CGFloat)positionY
 {
     [self loadUserDefaults:NO];
-    [_userDefaults setObject:[NSNumber numberWithDouble:positionY] forKey:@"currentLandscapePositionY"];
+    [_userDefaults setObject:[NSNumber numberWithDouble:positionY] forKey:HUDUserDefaultsKeyCurrentLandscapePositionY];
     [self saveUserDefaults];
 }
 
@@ -659,11 +655,6 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     [NSLayoutConstraint deactivateConstraints:_constraints];
     [_constraints removeAllObjects];
 
-    HUDPresetPosition selectedMode = [self selectedMode];
-    BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
-    BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
-    BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
-
 #if !NO_TROLL
     UIInterfaceOrientation orientation = _remoteOrientation;
 #else
@@ -677,6 +668,12 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     } else {
         isLandscape = UIInterfaceOrientationIsLandscape(orientation);
     }
+
+    HUDPresetPosition selectedMode = [self selectedMode];
+    BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
+    BOOL isCenteredMost = (selectedMode == HUDPresetPositionTopCenterMost);
+    BOOL isPad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
+
     _blurView.layer.maskedCorners = (isCenteredMost && !isLandscape) ? kCornerMaskBottom : kCornerMaskAll;
 
     UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;

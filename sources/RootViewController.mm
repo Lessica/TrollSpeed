@@ -324,8 +324,9 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
 - (void)loadUserDefaults:(BOOL)forceReload
 {
-    if (forceReload || !_userDefaults)
+    if (forceReload || !_userDefaults) {
         _userDefaults = [[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH))] mutableCopy] ?: [NSMutableDictionary dictionary];
+    }
 }
 
 - (void)saveUserDefaults
@@ -337,7 +338,7 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 - (HUDPresetPosition)selectedMode
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"selectedMode"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeySelectedMode];
     return mode != nil ? (HUDPresetPosition)[mode integerValue] : HUDPresetPositionTopCenter;
 }
 
@@ -346,136 +347,136 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     [self loadUserDefaults:NO];
     // Remove some keys that are not persistent
     [_userDefaults removeObjectsForKeys:@[
-        @"currentPositionY",
-        @"currentLandscapePositionY",
+        HUDUserDefaultsKeyCurrentPositionY,
+        HUDUserDefaultsKeyCurrentLandscapePositionY,
     ]];
-    [_userDefaults setObject:@(selectedMode) forKey:@"selectedMode"];
+    [_userDefaults setObject:@(selectedMode) forKey:HUDUserDefaultsKeySelectedMode];
     [self saveUserDefaults];
 }
 
 - (BOOL)passthroughMode
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"passthroughMode"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyPassthroughMode];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setPassthroughMode:(BOOL)passthroughMode
 {
     [self loadUserDefaults:NO];
-    [_userDefaults setObject:@(passthroughMode) forKey:@"passthroughMode"];
+    [_userDefaults setObject:@(passthroughMode) forKey:HUDUserDefaultsKeyPassthroughMode];
     [self saveUserDefaults];
 }
 
 - (BOOL)singleLineMode
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"singleLineMode"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeySingleLineMode];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setSingleLineMode:(BOOL)singleLineMode
 {
     [self loadUserDefaults:NO];
-    [_userDefaults setObject:@(singleLineMode) forKey:@"singleLineMode"];
+    [_userDefaults setObject:@(singleLineMode) forKey:HUDUserDefaultsKeySingleLineMode];
     [self saveUserDefaults];
 }
 
 - (BOOL)usesBitrate
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"usesBitrate"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyUsesBitrate];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setUsesBitrate:(BOOL)usesBitrate
 {
     [self loadUserDefaults:NO];
-    [_userDefaults setObject:@(usesBitrate) forKey:@"usesBitrate"];
+    [_userDefaults setObject:@(usesBitrate) forKey:HUDUserDefaultsKeyUsesBitrate];
     [self saveUserDefaults];
 }
 
 - (BOOL)usesArrowPrefixes
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"usesArrowPrefixes"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyUsesArrowPrefixes];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setUsesArrowPrefixes:(BOOL)usesArrowPrefixes
 {
     [self loadUserDefaults:NO];
-    [_userDefaults setObject:@(usesArrowPrefixes) forKey:@"usesArrowPrefixes"];
+    [_userDefaults setObject:@(usesArrowPrefixes) forKey:HUDUserDefaultsKeyUsesArrowPrefixes];
     [self saveUserDefaults];
 }
 
 - (BOOL)usesLargeFont
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"usesLargeFont"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyUsesLargeFont];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setUsesLargeFont:(BOOL)usesLargeFont
 {
     [self loadUserDefaults:NO];
-    [_userDefaults setObject:@(usesLargeFont) forKey:@"usesLargeFont"];
+    [_userDefaults setObject:@(usesLargeFont) forKey:HUDUserDefaultsKeyUsesLargeFont];
     [self saveUserDefaults];
 }
 
 - (BOOL)usesRotation
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"usesRotation"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyUsesRotation];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setUsesRotation:(BOOL)usesRotation
 {
     [self loadUserDefaults:NO];
-    [_userDefaults setObject:@(usesRotation) forKey:@"usesRotation"];
+    [_userDefaults setObject:@(usesRotation) forKey:HUDUserDefaultsKeyUsesRotation];
     [self saveUserDefaults];
 }
 
 - (BOOL)usesInvertedColor
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"usesInvertedColor"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyUsesInvertedColor];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setUsesInvertedColor:(BOOL)usesInvertedColor
 {
     [self loadUserDefaults:NO];
-    [_userDefaults setObject:@(usesInvertedColor) forKey:@"usesInvertedColor"];
+    [_userDefaults setObject:@(usesInvertedColor) forKey:HUDUserDefaultsKeyUsesInvertedColor];
     [self saveUserDefaults];
 }
 
 - (BOOL)keepInPlace
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"keepInPlace"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyKeepInPlace];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setKeepInPlace:(BOOL)keepInPlace
 {
     [self loadUserDefaults:NO];
-    [_userDefaults setObject:@(keepInPlace) forKey:@"keepInPlace"];
+    [_userDefaults setObject:@(keepInPlace) forKey:HUDUserDefaultsKeyKeepInPlace];
     [self saveUserDefaults];
 }
 
 - (BOOL)hideAtSnapshot
 {
     [self loadUserDefaults:NO];
-    NSNumber *mode = [_userDefaults objectForKey:@"hideAtSnapshot"];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyHideAtSnapshot];
     return mode != nil ? [mode boolValue] : NO;
 }
 
 - (void)setHideAtSnapshot:(BOOL)hideAtSnapshot
 {
     [self loadUserDefaults:NO];
-    [_userDefaults setObject:@(hideAtSnapshot) forKey:@"hideAtSnapshot"];
+    [_userDefaults setObject:@(hideAtSnapshot) forKey:HUDUserDefaultsKeyHideAtSnapshot];
     [self saveUserDefaults];
 }
 
@@ -707,6 +708,13 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
     [self verticalSizeClassUpdated];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        [self reloadModeButtonState];
+    } completion:nil];
 }
 
 @end

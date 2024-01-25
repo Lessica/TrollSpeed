@@ -23,6 +23,8 @@ TrollSpeed_CFLAGS += -Isources/KIF
 TrollSpeed_CFLAGS += -include supports/hudapp-prefix.pch
 MainApplication.mm_CCFLAGS += -std=c++14
 
+TrollSpeed_SWIFT_BRIDGING_HEADER += supports/hudapp-bridging-header.h
+
 TrollSpeed_LDFLAGS += -Flibraries
 
 TrollSpeed_FRAMEWORKS += CoreGraphics CoreServices QuartzCore IOKit UIKit

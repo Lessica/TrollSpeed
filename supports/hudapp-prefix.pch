@@ -43,3 +43,12 @@
 
 // HUD -> APP: Notify APP that the user defaults has been changed by HUD.
 #define NOTIFY_RELOAD_APP "ch.xxtou.notification.app.reload"
+
+#ifdef __OBJC__
+#import "hudapp-bridging-header.h"
+
+NS_INLINE HUDUserDefaultsKey HUDUserDefaultsKeySelectedModeForOrientation(UIInterfaceOrientation orientation)
+{
+    return UIInterfaceOrientationIsLandscape(orientation) ? HUDUserDefaultsKeySelectedModeLandscape : HUDUserDefaultsKeySelectedMode;
+}
+#endif

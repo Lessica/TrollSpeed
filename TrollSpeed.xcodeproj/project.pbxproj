@@ -71,6 +71,8 @@
 		CC91309F2B616541006E3280 /* HUDBackdropLabel.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC91309D2B616541006E3280 /* HUDBackdropLabel.mm */; };
 		CC9130A32B616C18006E3280 /* HUDBackdropView.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC9130A22B616C18006E3280 /* HUDBackdropView.mm */; };
 		CC9130A42B616C18006E3280 /* HUDBackdropView.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC9130A22B616C18006E3280 /* HUDBackdropView.mm */; };
+		CC9130A72B62A33A006E3280 /* TSSettingsIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9130A62B62A33A006E3280 /* TSSettingsIndex.swift */; };
+		CC9130A82B62A33A006E3280 /* TSSettingsIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9130A62B62A33A006E3280 /* TSSettingsIndex.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -163,6 +165,8 @@
 		CC9130A02B616BBF006E3280 /* CAFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CAFilter.h; sourceTree = "<group>"; };
 		CC9130A12B616C18006E3280 /* HUDBackdropView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HUDBackdropView.h; sourceTree = "<group>"; };
 		CC9130A22B616C18006E3280 /* HUDBackdropView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDBackdropView.mm; sourceTree = "<group>"; };
+		CC9130A52B62A262006E3280 /* hudapp-bridging-header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "hudapp-bridging-header.h"; sourceTree = "<group>"; };
+		CC9130A62B62A33A006E3280 /* TSSettingsIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSSettingsIndex.swift; sourceTree = "<group>"; };
 		CCB6B6FA2B5C06DD00AD2A89 /* NSUserDefaults+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+Private.h"; sourceTree = "<group>"; };
 		CCB6B6FB2B5C074F00AD2A89 /* rootless.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rootless.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -217,6 +221,7 @@
 				CC711D922B5BFE66007235A6 /* icon.png */,
 				CC711D7F2B5BF772007235A6 /* entitlements.plist */,
 				CC711D7E2B5BF772007235A6 /* hudapp-prefix.pch */,
+				CC9130A52B62A262006E3280 /* hudapp-bridging-header.h */,
 				CC711D812B5BFA64007235A6 /* Info.plist */,
 				CC2BAFE42B5CAF2200A429D1 /* Sandbox-Info.plist */,
 				CC711D872B5BFCC4007235A6 /* Localizable.strings */,
@@ -258,6 +263,7 @@
 				CC711D1F2B5BF5C6007235A6 /* RootViewController.mm */,
 				CC711D232B5BF5C6007235A6 /* TSEventFetcher.h */,
 				CC711D472B5BF5C6007235A6 /* TSEventFetcher.mm */,
+				CC9130A62B62A33A006E3280 /* TSSettingsIndex.swift */,
 				CC711D462B5BF5C6007235A6 /* TSSettingsController.swift */,
 			);
 			path = sources;
@@ -465,6 +471,7 @@
 				CC2BAFC82B5CA9DD00A429D1 /* SPLarkController.swift in Sources */,
 				CC2BAFC92B5CA9DD00A429D1 /* HUDApp.mm in Sources */,
 				CC2BAFCB2B5CA9DD00A429D1 /* SPLarkSettingsCollectionView.swift in Sources */,
+				CC9130A82B62A33A006E3280 /* TSSettingsIndex.swift in Sources */,
 				CC2BAFCC2B5CA9DD00A429D1 /* SPLarkSettingsController.swift in Sources */,
 				CC2BAFCD2B5CA9DD00A429D1 /* SPLarkControllerExtension.swift in Sources */,
 				CC2BAFCE2B5CA9DD00A429D1 /* MainApplicationDelegate.mm in Sources */,
@@ -478,6 +485,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC9130A72B62A33A006E3280 /* TSSettingsIndex.swift in Sources */,
 				CC711D4A2B5BF5C6007235A6 /* HUDHelper.mm in Sources */,
 				CC711D532B5BF5C6007235A6 /* SPLarkPresentingAnimationController.swift in Sources */,
 				CC711D592B5BF5C6007235A6 /* SPLarkDismissingAnimationController.swift in Sources */,
@@ -572,6 +580,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "supports/hudapp-bridging-header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -613,6 +622,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "supports/hudapp-bridging-header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -781,6 +791,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "supports/hudapp-bridging-header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -823,6 +834,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "supports/hudapp-bridging-header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
