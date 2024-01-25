@@ -51,7 +51,7 @@
 
             CAFilter *blurFilter = [CAFilter filterWithName:kCAFilterGaussianBlur];
             [blurFilter setValue:@(50.0) forKey:@"inputRadius"];  // radius 50pt
-            [blurFilter setValue:@YES forKey:@"inputNormalizeEdges"];  // inputHardEdges
+            [blurFilter setValue:@YES forKey:@"inputNormalizeEdges"];  // do not use inputHardEdges
 
             CAFilter *brightnessFilter = [CAFilter filterWithName:kCAFilterColorBrightness];
             [brightnessFilter setValue:@(-0.3) forKey:@"inputAmount"];  // -30%
