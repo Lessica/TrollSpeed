@@ -1,4 +1,2 @@
-- App: Supports all interface orientations or styles.
-- Feature: Supports inverted color.
-- Bugfix: Fixed misplaced HUD in zoomed mode.
-- Translations: Updated Spanish translation (Thanks to @Deci8BelioS).
+- Appearance: Use semi-bold font for color inverted HUD.
+- Appearance: Disable fade out effect for color inverted HUD.
