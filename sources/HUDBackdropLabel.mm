@@ -53,11 +53,11 @@
             [blurFilter setValue:@(50.0) forKey:@"inputRadius"];  // radius 50pt
             [blurFilter setValue:@YES forKey:@"inputNormalizeEdges"];  // do not use inputHardEdges
 
-            CAFilter *brightnessFilter = [CAFilter filterWithName:kCAFilterColorBrightness];
-            [brightnessFilter setValue:@(-0.3) forKey:@"inputAmount"];  // -30%
-
             CAFilter *contrastFilter = [CAFilter filterWithName:kCAFilterColorContrast];
             [contrastFilter setValue:@(500.0) forKey:@"inputAmount"];   // 500x
+
+            CAFilter *brightnessFilter = [CAFilter filterWithName:kCAFilterColorBrightness];
+            [brightnessFilter setValue:@(-0.3) forKey:@"inputAmount"];  // -30%
 
             CAFilter *saturateFilter = [CAFilter filterWithName:kCAFilterColorSaturate];
             [saturateFilter setValue:@(0.0) forKey:@"inputAmount"];
@@ -71,7 +71,6 @@
 
             _backdropTextLayer = [CATextLayer layer];
             _backdropTextLayer.contentsScale = self.layer.contentsScale;
-            _backdropTextLayer.allowsEdgeAntialiasing = NO;
             _backdropTextLayer.allowsFontSubpixelQuantization = YES;
             _backdropView.layer.mask = _backdropTextLayer;
 

@@ -487,14 +487,19 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     static NSAttributedString *creditsAttributedString = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
-        paraStyle.lineHeightMultiple = 1.2;
-        paraStyle.alignment = NSTextAlignmentCenter;
-        
         NSDictionary *defaultAttributes = @{
             NSForegroundColorAttributeName: [UIColor whiteColor],
             NSFontAttributeName: [UIFont systemFontOfSize:14],
-            NSParagraphStyleAttributeName: paraStyle,
+        };
+
+        NSMutableParagraphStyle *creditsParaStyle = [[NSMutableParagraphStyle alloc] init];
+        creditsParaStyle.lineHeightMultiple = 1.2;
+        creditsParaStyle.alignment = NSTextAlignmentCenter;
+
+        NSDictionary *creditsAttributes = @{
+            NSForegroundColorAttributeName: [UIColor whiteColor],
+            NSFontAttributeName: [UIFont systemFontOfSize:14],
+            NSParagraphStyleAttributeName: creditsParaStyle,
         };
 
         NSString *hintText = NSLocalizedString(@"You can quit this app now.\nThe HUD will persist on your screen.", nil);
@@ -508,14 +513,14 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
         NSAttributedString *githubIconText = [NSAttributedString attributedStringWithAttachment:githubIcon];
         NSMutableAttributedString *githubIconTextFull = [[NSMutableAttributedString alloc] initWithAttributedString:githubIconText];
-        [githubIconTextFull appendAttributedString:[[NSAttributedString alloc] initWithString:@" " attributes:defaultAttributes]];
+        [githubIconTextFull appendAttributedString:[[NSAttributedString alloc] initWithString:@" " attributes:creditsAttributes]];
 
         NSAttributedString *i18nIconText = [NSAttributedString attributedStringWithAttachment:i18nIcon];
         NSMutableAttributedString *i18nIconTextFull = [[NSMutableAttributedString alloc] initWithAttributedString:i18nIconText];
-        [i18nIconTextFull appendAttributedString:[[NSAttributedString alloc] initWithString:@" " attributes:defaultAttributes]];
+        [i18nIconTextFull appendAttributedString:[[NSAttributedString alloc] initWithString:@" " attributes:creditsAttributes]];
 
         NSString *creditsText = NSLocalizedString(@"Made with ♥ by @GITHUB@Lessica and @GITHUB@jmpews\nTranslation @TRANSLATION@", nil);
-        NSMutableAttributedString *creditsAttributedText = [[NSMutableAttributedString alloc] initWithString:creditsText attributes:defaultAttributes];
+        NSMutableAttributedString *creditsAttributedText = [[NSMutableAttributedString alloc] initWithString:creditsText attributes:creditsAttributes];
 
         // replace all "@GITHUB@" with github icon
         NSRange atRange;

@@ -105,14 +105,16 @@ static void SpringBoardLockStatusChanged
 #define INLINE_SEPARATOR "\t"
 #define IDLE_INTERVAL 3.0
 
-static double FONT_SIZE = 8.0;
-static uint8_t DATAUNIT = 0;
-static uint8_t SHOW_UPLOAD_SPEED = 1;
-static uint8_t SHOW_DOWNLOAD_SPEED = 1;
-static uint8_t SHOW_DOWNLOAD_SPEED_FIRST = 1;
-static uint8_t SHOW_SECOND_SPEED_IN_NEW_LINE = 0;
-static const char *UPLOAD_PREFIX = "▲";
-static const char *DOWNLOAD_PREFIX = "▼";
+static double HUD_FONT_SIZE = 8.0;
+static UIFontWeight HUD_FONT_WEIGHT = UIFontWeightRegular;
+static CGFloat HUD_INACTIVE_OPACITY = 0.667;
+static uint8_t HUD_DATA_UNIT = 0;
+static uint8_t HUD_SHOW_UPLOAD_SPEED = 1;
+static uint8_t HUD_SHOW_DOWNLOAD_SPEED = 1;
+static uint8_t HUD_SHOW_DOWNLOAD_SPEED_FIRST = 1;
+static uint8_t HUD_SHOW_SECOND_SPEED_IN_NEW_LINE = 0;
+static const char *HUD_UPLOAD_PREFIX = "▲";
+static const char *HUD_DOWNLOAD_PREFIX = "▼";
 
 typedef struct {
     uint64_t inputBytes;
@@ -123,7 +125,7 @@ static NSString *formattedSpeed(uint64_t bytes, BOOL isFocused)
 {
     if (isFocused)
     {
-        if (0 == DATAUNIT)
+        if (0 == HUD_DATA_UNIT)
         {
             if (bytes < KILOBYTES) return NSLocalizedString(@"0 KB", @"formattedSpeed");
             else if (bytes < MEGABYTES) return [NSString stringWithFormat:NSLocalizedString(@"%.0f KB", @"formattedSpeed"), (double)bytes / KILOBYTES];
@@ -139,7 +141,7 @@ static NSString *formattedSpeed(uint64_t bytes, BOOL isFocused)
         }
     }
     else {
-        if (0 == DATAUNIT)
+        if (0 == HUD_DATA_UNIT)
         {
             if (bytes < KILOBYTES) return NSLocalizedString(@"0 KB/s", @"formattedSpeed");
             else if (bytes < MEGABYTES) return [NSString stringWithFormat:NSLocalizedString(@"%.0f KB/s", @"formattedSpeed"), (double)bytes / KILOBYTES];
@@ -205,13 +207,13 @@ static NSAttributedString *formattedAttributedString(BOOL isFocused)
     @autoreleasepool
     {
         if (!attributedUploadPrefix)
-            attributedUploadPrefix = [[NSAttributedString alloc] initWithString:[[NSString stringWithUTF8String:UPLOAD_PREFIX] stringByAppendingString:@" "] attributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:FONT_SIZE]}];
+            attributedUploadPrefix = [[NSAttributedString alloc] initWithString:[[NSString stringWithUTF8String:HUD_UPLOAD_PREFIX] stringByAppendingString:@" "] attributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:HUD_FONT_SIZE] }];
         if (!attributedDownloadPrefix)
-            attributedDownloadPrefix = [[NSAttributedString alloc] initWithString:[[NSString stringWithUTF8String:DOWNLOAD_PREFIX] stringByAppendingString:@" "] attributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:FONT_SIZE]}];
+            attributedDownloadPrefix = [[NSAttributedString alloc] initWithString:[[NSString stringWithUTF8String:HUD_DOWNLOAD_PREFIX] stringByAppendingString:@" "] attributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:HUD_FONT_SIZE] }];
         if (!attributedInlineSeparator)
-            attributedInlineSeparator = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:INLINE_SEPARATOR] attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:FONT_SIZE]}];
+            attributedInlineSeparator = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:INLINE_SEPARATOR] attributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:HUD_FONT_SIZE] }];
         if (!attributedLineSeparator)
-            attributedLineSeparator = [[NSAttributedString alloc] initWithString:@"\n" attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:FONT_SIZE]}];
+            attributedLineSeparator = [[NSAttributedString alloc] initWithString:@"\n" attributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:HUD_FONT_SIZE] }];
 
         NSMutableAttributedString *mutableString = [[NSMutableAttributedString alloc] init];
 
@@ -248,49 +250,49 @@ static NSAttributedString *formattedAttributedString(BOOL isFocused)
         }
         else shouldUpdateSpeedLabel = YES;
 
-        if (DATAUNIT == 1)
+        if (HUD_DATA_UNIT == 1)
         {
             upDiff *= BYTE_SIZE;
             downDiff *= BYTE_SIZE;
         }
 
-        if (SHOW_DOWNLOAD_SPEED_FIRST)
+        if (HUD_SHOW_DOWNLOAD_SPEED_FIRST)
         {
-            if (SHOW_DOWNLOAD_SPEED)
+            if (HUD_SHOW_DOWNLOAD_SPEED)
             {
                 [mutableString appendAttributedString:attributedDownloadPrefix];
-                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(downDiff, isFocused) attributes:@{ NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:FONT_SIZE weight:UIFontWeightRegular] }]];
+                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(downDiff, isFocused) attributes:@{ NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:HUD_FONT_SIZE weight:HUD_FONT_WEIGHT] }]];
             }
 
-            if (SHOW_UPLOAD_SPEED)
+            if (HUD_SHOW_UPLOAD_SPEED)
             {
                 if ([mutableString length] > 0)
                 {
-                    if (SHOW_SECOND_SPEED_IN_NEW_LINE) [mutableString appendAttributedString:attributedLineSeparator];
+                    if (HUD_SHOW_SECOND_SPEED_IN_NEW_LINE) [mutableString appendAttributedString:attributedLineSeparator];
                     else [mutableString appendAttributedString:attributedInlineSeparator];
                 }
 
                 [mutableString appendAttributedString:attributedUploadPrefix];
-                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(upDiff, isFocused) attributes:@{ NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:FONT_SIZE weight:UIFontWeightRegular] }]];
+                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(upDiff, isFocused) attributes:@{ NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:HUD_FONT_SIZE weight:HUD_FONT_WEIGHT] }]];
             }
         }
         else
         {
-            if (SHOW_UPLOAD_SPEED)
+            if (HUD_SHOW_UPLOAD_SPEED)
             {
                 [mutableString appendAttributedString:attributedUploadPrefix];
-                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(upDiff, isFocused) attributes:@{ NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:FONT_SIZE weight:UIFontWeightRegular] }]];
+                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(upDiff, isFocused) attributes:@{ NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:HUD_FONT_SIZE weight:HUD_FONT_WEIGHT] }]];
             }
-            if (SHOW_DOWNLOAD_SPEED)
+            if (HUD_SHOW_DOWNLOAD_SPEED)
             {
                 if ([mutableString length] > 0)
                 {
-                    if (SHOW_SECOND_SPEED_IN_NEW_LINE) [mutableString appendAttributedString:attributedLineSeparator];
+                    if (HUD_SHOW_SECOND_SPEED_IN_NEW_LINE) [mutableString appendAttributedString:attributedLineSeparator];
                     else [mutableString appendAttributedString:attributedInlineSeparator];
                 }
 
                 [mutableString appendAttributedString:attributedDownloadPrefix];
-                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(downDiff, isFocused) attributes:@{ NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:FONT_SIZE weight:UIFontWeightRegular] }]];
+                [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(downDiff, isFocused) attributes:@{ NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:HUD_FONT_SIZE weight:HUD_FONT_WEIGHT] }]];
             }
         }
         
@@ -406,14 +408,16 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         [_lockedView setImage:[UIImage systemImageNamed:@"lock.fill"]];
     }
 
-    DATAUNIT = usesBitrate;
-    SHOW_UPLOAD_SPEED = !singleLineMode;
-    SHOW_DOWNLOAD_SPEED_FIRST = isCentered;
-    SHOW_SECOND_SPEED_IN_NEW_LINE = !isCentered;
-    FONT_SIZE = (usesLargeFont ? 9.0 : 8.0);
+    HUD_DATA_UNIT = usesBitrate;
+    HUD_SHOW_UPLOAD_SPEED = !singleLineMode;
+    HUD_SHOW_DOWNLOAD_SPEED_FIRST = isCentered;
+    HUD_SHOW_SECOND_SPEED_IN_NEW_LINE = !isCentered;
+    HUD_FONT_SIZE = (usesLargeFont ? 9.0 : 8.0);
+    HUD_FONT_WEIGHT = (usesInvertedColor ? UIFontWeightSemibold : UIFontWeightRegular);
+    HUD_INACTIVE_OPACITY = (usesInvertedColor ? 1.0 : 0.667);
 
-    UPLOAD_PREFIX = (usesArrowPrefixes ? "↑" : "▲");
-    DOWNLOAD_PREFIX = (usesArrowPrefixes ? "↓" : "▼");
+    HUD_UPLOAD_PREFIX = (usesArrowPrefixes ? "↑" : "▲");
+    HUD_DOWNLOAD_PREFIX = (usesArrowPrefixes ? "↓" : "▼");
 
     prevInputBytes = 0;
     prevOutputBytes = 0;
@@ -595,7 +599,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     _speedLabel.numberOfLines = 0;
     _speedLabel.textAlignment = NSTextAlignmentCenter;
     _speedLabel.textColor = [UIColor whiteColor];
-    _speedLabel.font = [UIFont systemFontOfSize:FONT_SIZE];
+    _speedLabel.font = [UIFont systemFontOfSize:HUD_FONT_SIZE];
     _speedLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [_speedLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisVertical];
     [_blurView.contentView addSubview:_speedLabel];
@@ -847,8 +851,9 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
         view.alpha = 1.0;
     } completion:^(BOOL finished) {
-        if (blurWhenDone)
+        if (blurWhenDone) {
             [self performSelector:@selector(onBlur:) withObject:view afterDelay:IDLE_INTERVAL];
+        }
     }];
 }
 
@@ -868,7 +873,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
     [UIView animateWithDuration:duration delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
         view.transform = CGAffineTransformIdentity;
-        view.alpha = 0.667;
+        view.alpha = HUD_INACTIVE_OPACITY;
     } completion:nil];
 }
 
@@ -1048,7 +1053,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
             __weak typeof(self) weakSelf = self;
             [UIView animateWithDuration:duration animations:^{
                 __strong typeof(weakSelf) strongSelf = weakSelf;
-                strongSelf->_contentView.alpha = strongSelf->_isFocused ? 1.0 : 0.667;
+                strongSelf->_contentView.alpha = strongSelf->_isFocused ? 1.0 : HUD_INACTIVE_OPACITY;
             }];
         }
         else
@@ -1115,7 +1120,7 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
             [strongSelf onBlur:strongSelf->_contentView duration:0];
 
             if (orientation == UIInterfaceOrientationPortrait) {
-                strongSelf->_contentView.alpha = strongSelf->_isFocused ? 1.0 : 0.667;
+                strongSelf->_contentView.alpha = strongSelf->_isFocused ? 1.0 : HUD_INACTIVE_OPACITY;
             } else {
                 strongSelf->_contentView.alpha = 0.0;
             }
