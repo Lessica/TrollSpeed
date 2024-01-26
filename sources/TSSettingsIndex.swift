@@ -12,11 +12,11 @@ enum TSSettingsIndex: Int, CaseIterable {
     case keepInPlace
     case hideAtSnapshot
     case singleLineMode
+    case usesInvertedColor
     case usesRotation
     case usesLargeFont
-    case usesBitrate
     case usesArrowPrefixes
-    case usesInvertedColor
+    case usesBitrate
 
     var key: String {
         switch self {
@@ -28,16 +28,16 @@ enum TSSettingsIndex: Int, CaseIterable {
             return HUDUserDefaultsKeyHideAtSnapshot
         case .singleLineMode:
             return HUDUserDefaultsKeySingleLineMode
+        case .usesInvertedColor:
+            return HUDUserDefaultsKeyUsesInvertedColor
         case .usesRotation:
             return HUDUserDefaultsKeyUsesRotation
         case .usesLargeFont:
             return HUDUserDefaultsKeyUsesLargeFont
-        case .usesBitrate:
-            return HUDUserDefaultsKeyUsesBitrate
         case .usesArrowPrefixes:
             return HUDUserDefaultsKeyUsesArrowPrefixes
-        case .usesInvertedColor:
-            return HUDUserDefaultsKeyUsesInvertedColor
+        case .usesBitrate:
+            return HUDUserDefaultsKeyUsesBitrate
         }
     }
 
@@ -51,16 +51,16 @@ enum TSSettingsIndex: Int, CaseIterable {
             return NSLocalizedString("Hide @snapshot", comment: "TSSettingsIndex")
         case .singleLineMode:
             return NSLocalizedString("Incoming Only", comment: "TSSettingsIndex")
+        case .usesInvertedColor:
+            return NSLocalizedString("Appearance", comment: "TSSettingsIndex")
         case .usesRotation:
             return NSLocalizedString("Landscape", comment: "TSSettingsIndex")
         case .usesLargeFont:
             return NSLocalizedString("Size", comment: "TSSettingsIndex")
-        case .usesBitrate:
-            return NSLocalizedString("Unit", comment: "TSSettingsIndex")
         case .usesArrowPrefixes:
             return NSLocalizedString("Prefixes", comment: "TSSettingsIndex")
-        case .usesInvertedColor:
-            return NSLocalizedString("Appearance", comment: "TSSettingsIndex")
+        case .usesBitrate:
+            return NSLocalizedString("Unit", comment: "TSSettingsIndex")
         }
     }
 
@@ -76,16 +76,16 @@ enum TSSettingsIndex: Int, CaseIterable {
         case .hideAtSnapshot: fallthrough
         case .singleLineMode:
             return highlighted ? NSLocalizedString("ON", comment: "TSSettingsIndex") : NSLocalizedString("OFF", comment: "TSSettingsIndex")
+        case .usesInvertedColor:
+            return highlighted ? NSLocalizedString("Inverted", comment: "TSSettingsIndex") : NSLocalizedString("Classic", comment: "TSSettingsIndex")
         case .usesRotation:
             return highlighted ? NSLocalizedString("Follow", comment: "TSSettingsIndex") : NSLocalizedString("Hide", comment: "TSSettingsIndex")
         case .usesLargeFont:
             return highlighted ? NSLocalizedString("Large", comment: "TSSettingsIndex") : NSLocalizedString("Standard", comment: "TSSettingsIndex")
-        case .usesBitrate:
-            return highlighted ? NSLocalizedString("b/s", comment: "TSSettingsIndex") : NSLocalizedString("B/s", comment: "TSSettingsIndex")
         case .usesArrowPrefixes:
             return highlighted ? NSLocalizedString("↑↓", comment: "TSSettingsIndex") : NSLocalizedString("▲▼", comment: "TSSettingsIndex")
-        case .usesInvertedColor:
-            return highlighted ? NSLocalizedString("Inverted", comment: "TSSettingsIndex") : NSLocalizedString("Classic", comment: "TSSettingsIndex")
+        case .usesBitrate:
+            return highlighted ? NSLocalizedString("b/s", comment: "TSSettingsIndex") : NSLocalizedString("B/s", comment: "TSSettingsIndex")
         }
     }
 }

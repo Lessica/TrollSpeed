@@ -47,6 +47,9 @@
 "0 KB/s" = "0 KB/s";
 
 /* No comment provided by engineer. */
+"Appearance" = "Appearance";
+
+/* No comment provided by engineer. */
 "b/s" = "b/s";
 
 /* No comment provided by engineer. */
@@ -54,6 +57,9 @@
 
 /* No comment provided by engineer. */
 "Choose an action below." = "Choose an action below.";
+
+/* No comment provided by engineer. */
+"Classic" = "Classic";
 
 /* No comment provided by engineer. */
 "Developer Area" = "Developer Area";
@@ -75,6 +81,9 @@
 
 /* No comment provided by engineer. */
 "Incoming Only" = "Incoming Only";
+
+/* No comment provided by engineer. */
+"Inverted" = "Inverted";
 
 /* No comment provided by engineer. */
 "Keep In-place" = "Keep In-place";
@@ -135,12 +144,3 @@
 
 /* No comment provided by engineer. */
 "▲▼" = "▲▼";
-
-/* No comment provided by engineer. */
-"Classic" = "Classic";
-
-/* No comment provided by engineer. */
-"Inverted" = "Inverted";
-
-/* No comment provided by engineer. */
-"Appearance" = "Appearance";

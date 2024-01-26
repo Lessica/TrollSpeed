@@ -47,6 +47,9 @@
 "0 KB/s" = "0 KB/s";
 
 /* No comment provided by engineer. */
+"Appearance" = "Apariencia";
+
+/* No comment provided by engineer. */
 "b/s" = "b/s";
 
 /* No comment provided by engineer. */
@@ -54,6 +57,9 @@
 
 /* No comment provided by engineer. */
 "Choose an action below." = "Elija una acción a continuación.";
+
+/* No comment provided by engineer. */
+"Classic" = "Clásico";
 
 /* No comment provided by engineer. */
 "Developer Area" = "Área de desarrollo";
@@ -75,6 +81,9 @@
 
 /* No comment provided by engineer. */
 "Incoming Only" = "Sólo descarga";
+
+/* No comment provided by engineer. */
+"Inverted" = "Invertido";
 
 /* No comment provided by engineer. */
 "Keep In-place" = "Mantener en el sitio";
@@ -135,12 +144,3 @@
 
 /* No comment provided by engineer. */
 "▲▼" = "▲▼";
-
-/* No comment provided by engineer. */
-"Classic" = "Clásico";
-
-/* No comment provided by engineer. */
-"Inverted" = "Invertido";
-
-/* No comment provided by engineer. */
-"Appearance" = "Apariencia";

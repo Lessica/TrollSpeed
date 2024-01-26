@@ -47,6 +47,9 @@
 "0 KB/s" = "0 KB/s";
 
 /* No comment provided by engineer. */
+"Appearance" = "外观";
+
+/* No comment provided by engineer. */
 "b/s" = "b/s";
 
 /* No comment provided by engineer. */
@@ -54,6 +57,9 @@
 
 /* No comment provided by engineer. */
 "Choose an action below." = "请选择以下任一选项。";
+
+/* No comment provided by engineer. */
+"Classic" = "经典";
 
 /* No comment provided by engineer. */
 "Developer Area" = "开发者工具";
@@ -75,6 +81,9 @@
 
 /* No comment provided by engineer. */
 "Incoming Only" = "仅显示下载";
+
+/* No comment provided by engineer. */
+"Inverted" = "实时反色";
 
 /* No comment provided by engineer. */
 "Keep In-place" = "锁定位置";
@@ -135,12 +144,3 @@
 
 /* No comment provided by engineer. */
 "▲▼" = "▲▼";
-
-/* No comment provided by engineer. */
-"Classic" = "经典";
-
-/* No comment provided by engineer. */
-"Inverted" = "实时反色";
-
-/* No comment provided by engineer. */
-"Appearance" = "外观";
