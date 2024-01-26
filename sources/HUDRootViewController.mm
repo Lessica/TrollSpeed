@@ -328,11 +328,9 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     NSLayoutConstraint *_centerXConstraint;
     NSLayoutConstraint *_leadingConstraint;
     NSLayoutConstraint *_trailingConstraint;
+    UIInterfaceOrientation _orientation;
 #if !NO_TROLL
-    FBSOrientationObserver *_remoteOrientationObserver;
-    UIInterfaceOrientation _remoteOrientation;
-#else
-    UIInterfaceOrientation _localOrientation;
+    FBSOrientationObserver *_orientationObserver;
 #endif
 }
 
@@ -441,17 +439,11 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
 - (BOOL)isLandscapeOrientation
 {
-    UIInterfaceOrientation orientation;
-#if !NO_TROLL
-    orientation = _remoteOrientation;
-#else
-    orientation = _localOrientation;
-#endif
     BOOL isLandscape;
-    if (orientation == UIInterfaceOrientationUnknown) {
+    if (_orientation == UIInterfaceOrientationUnknown) {
         isLandscape = CGRectGetWidth(self.view.bounds) > CGRectGetHeight(self.view.bounds);
     } else {
-        isLandscape = UIInterfaceOrientationIsLandscape(orientation);
+        isLandscape = UIInterfaceOrientationIsLandscape(_orientation);
     }
     return isLandscape;
 }
@@ -559,9 +551,9 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         _constraints = [NSMutableArray array];
         [self registerNotifications];
 #if !NO_TROLL
-        _remoteOrientationObserver = [[objc_getClass("FBSOrientationObserver") alloc] init];
+        _orientationObserver = [[objc_getClass("FBSOrientationObserver") alloc] init];
         __weak HUDRootViewController *weakSelf = self;
-        [_remoteOrientationObserver setHandler:^(FBSOrientationUpdate *orientationUpdate) {
+        [_orientationObserver setHandler:^(FBSOrientationUpdate *orientationUpdate) {
             HUDRootViewController *strongSelf = weakSelf;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [strongSelf updateOrientation:(UIInterfaceOrientation)orientationUpdate.orientation animateWithDuration:orientationUpdate.duration];
@@ -575,7 +567,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 - (void)dealloc
 {
 #if !NO_TROLL
-    [_remoteOrientationObserver invalidate];
+    [_orientationObserver invalidate];
 #endif
 }
 
@@ -583,8 +575,9 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 {
     log_debug(OS_LOG_DEFAULT, "updateSpeedLabel");
     NSAttributedString *attributedText = formattedAttributedString(_isFocused);
-    if (attributedText)
+    if (attributedText) {
         [_speedLabel setAttributedText:attributedText];
+    }
     [_speedLabel sizeToFit];
 }
 
@@ -672,21 +665,14 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     [_constraints removeAllObjects];
 
 #if NO_TROLL
-    _localOrientation = [self.view.window.windowScene interfaceOrientation];
-#endif
-
-    UIInterfaceOrientation orientation;
-#if !NO_TROLL
-    orientation = _remoteOrientation;
-#else
-    orientation = _localOrientation;
+    _orientation = [self.view.window.windowScene interfaceOrientation];
 #endif
 
     BOOL isLandscape;
-    if (orientation == UIInterfaceOrientationUnknown) {
+    if (_orientation == UIInterfaceOrientationUnknown) {
         isLandscape = CGRectGetWidth(self.view.bounds) > CGRectGetHeight(self.view.bounds);
     } else {
-        isLandscape = UIInterfaceOrientationIsLandscape(orientation);
+        isLandscape = UIInterfaceOrientationIsLandscape(_orientation);
     }
 
     HUDPresetPosition selectedMode = [self selectedModeForCurrentOrientation];
@@ -718,8 +704,8 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 #endif
 
         [_constraints addObjectsFromArray:@[
-            [_contentView.leadingAnchor constraintEqualToAnchor:layoutGuide.leadingAnchor constant:(orientation == UIInterfaceOrientationLandscapeLeft ? -paddingFarFromNotch : paddingNearNotch)],
-            [_contentView.trailingAnchor constraintEqualToAnchor:layoutGuide.trailingAnchor constant:(orientation == UIInterfaceOrientationLandscapeLeft ? -paddingNearNotch : paddingFarFromNotch)],
+            [_contentView.leadingAnchor constraintEqualToAnchor:layoutGuide.leadingAnchor constant:(_orientation == UIInterfaceOrientationLandscapeLeft ? -paddingFarFromNotch : paddingNearNotch)],
+            [_contentView.trailingAnchor constraintEqualToAnchor:layoutGuide.trailingAnchor constant:(_orientation == UIInterfaceOrientationLandscapeLeft ? -paddingNearNotch : paddingFarFromNotch)],
         ]];
 
         CGFloat minimumLandscapeTopConstant = 0;
@@ -1000,13 +986,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
         if (sender.state == UIGestureRecognizerStateEnded)
         {
-            UIInterfaceOrientation orientation;
-#if !NO_TROLL
-            orientation = _remoteOrientation;
-#else
-            orientation = _localOrientation;
-#endif
-            if (UIInterfaceOrientationIsLandscape(orientation))
+            if (UIInterfaceOrientationIsLandscape(_orientation))
                 [self setCurrentLandscapePositionY:_topConstraint.constant];
             else
                 [self setCurrentPositionY:_topConstraint.constant];
@@ -1089,11 +1069,11 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
         return;
     }
 
-    if (orientation == _remoteOrientation) {
+    if (orientation == _orientation) {
         return;
     }
 
-    _remoteOrientation = orientation;
+    _orientation = orientation;
     [self cancelPreviousPerformRequestsWithTarget:_contentView];
 
     CGRect bounds = orientationBounds(orientation, [UIScreen mainScreen].bounds);
