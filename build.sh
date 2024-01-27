@@ -30,4 +30,4 @@ ldid -Sentitlements.plist Payload/TrollSpeed.app
 zip -qr TrollSpeed.tipa Payload
 cd -
 mkdir -p packages
-mv TrollSpeed.xcarchive/Products/TrollSpeed.tipa packages/TrollSpeed+Intents_$VERSION.tipa
+mv TrollSpeed.xcarchive/Products/TrollSpeed.tipa packages/TrollSpeed+AppIntents16_$VERSION.tipa

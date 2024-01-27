@@ -1,2 +1,2 @@
-- Feature: Add App Intents (i.e. Shortcuts) support for iOS 16 and above, use `TrollSpeed+Intents_*.tipa`.
-- For those who don't want to use App Intents or are using iOS 15 and below, use `TrollSpeed_*.tipa`.
+- Feature: Add “App Intents” (i.e. “Shortcuts”) support for iOS 16 and above, use `TrollSpeed+AppIntents16_*.tipa`.
+- For those who don't want to use “App Intents” or are using iOS 15 and below, use `TrollSpeed_*.tipa`.

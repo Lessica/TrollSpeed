@@ -119,7 +119,7 @@ jobs:
           name: TrollSpeed_${{ env.GIT_TAG }}
           path: |
             TrollSpeed/packages/TrollSpeed_*.tipa
-            TrollSpeed/packages/TrollSpeed+Intents_*.tipa
+            TrollSpeed/packages/TrollSpeed+AppIntents16_*.tipa
             TrollSpeed/packages/ch.xxtou.hudapp_*.deb
 
       - name: Upload symbols
@@ -136,5 +136,5 @@ jobs:
           body_path: TrollSpeed/CHANGELOG.txt
           files: |
             TrollSpeed/packages/TrollSpeed_*.tipa
-            TrollSpeed/packages/TrollSpeed+Intents_*.tipa
+            TrollSpeed/packages/TrollSpeed+AppIntents16_*.tipa
             TrollSpeed/packages/ch.xxtou.hudapp_*.deb
