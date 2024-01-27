@@ -8,12 +8,6 @@
 	<true/>
 	<key>com.apple.backboard.client</key>
 	<true/>
-	<key>com.apple.backboardd.launchapplications</key>
-	<true/>
-	<key>com.apple.hid.manager.user-access-device</key>
-	<true/>
-	<key>com.apple.hid.manager.user-access-keyboard</key>
-	<true/>
 	<key>com.apple.private.hid.client.event-dispatch</key>
 	<true/>
 	<key>com.apple.private.hid.client.event-filter</key>
@@ -32,25 +26,15 @@
 	<true/>
 	<key>com.apple.private.security.no-sandbox</key>
 	<true/>
-	<key>com.apple.springboard-ui.client</key>
-	<true/>
 	<key>com.apple.springboard.CFUserNotification</key>
 	<true/>
 	<key>com.apple.springboard.accessibility-window-hosting</key>
 	<true/>
 	<key>com.apple.springboard.appbackgroundstyle</key>
 	<true/>
-	<key>com.apple.springboard.launchapplications</key>
-	<true/>
 	<key>file-read-data</key>
 	<true/>
-	<key>get-task-allow</key>
-	<true/>
 	<key>platform-application</key>
-	<true/>
-	<key>run-unsigned-code</key>
-	<true/>
-	<key>task_for_pid-allow</key>
 	<true/>
 	<key>user-preference-read</key>
 	<true/>
