@@ -47,6 +47,9 @@
 "0 KB/s" = "0 KB/s";
 
 /* No comment provided by engineer. */
+"Activate the network speed HUD." = "打开网速悬浮窗。";
+
+/* No comment provided by engineer. */
 "Appearance" = "外观";
 
 /* No comment provided by engineer. */
@@ -60,6 +63,9 @@
 
 /* No comment provided by engineer. */
 "Classic" = "经典";
+
+/* No comment provided by engineer. */
+"Deactivate the network speed HUD." = "关闭网速悬浮窗。";
 
 /* No comment provided by engineer. */
 "Developer Area" = "开发者工具";
@@ -134,7 +140,16 @@
 "Tap that button on the center again,\nto toggle ON/OFF “Dynamic Island” mode." = "多次轻按位于中间的布局按钮，\n可以在“灵动岛”上方或下方切换布局。";
 
 /* No comment provided by engineer. */
+"Toggle HUD" = "打开/关闭悬浮窗";
+
+/* No comment provided by engineer. */
+"Toggle the network speed HUD." = "打开/关闭网速悬浮窗。";
+
+/* No comment provided by engineer. */
 "Unit" = "单位";
+
+/* No comment provided by engineer. */
+"Utility" = "实用工具";
 
 /* No comment provided by engineer. */
 "You can quit this app now.\nThe HUD will persist on your screen." = "你现在可以退出这个应用了，\n悬浮窗将会一直显示在你的屏幕上。";

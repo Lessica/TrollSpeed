@@ -47,6 +47,9 @@
 "0 KB/s" = "0 KB/s";
 
 /* No comment provided by engineer. */
+"Activate the network speed HUD." = "Activate the network speed HUD.";
+
+/* No comment provided by engineer. */
 "Appearance" = "Apariencia";
 
 /* No comment provided by engineer. */
@@ -60,6 +63,9 @@
 
 /* No comment provided by engineer. */
 "Classic" = "Clásico";
+
+/* No comment provided by engineer. */
+"Deactivate the network speed HUD." = "Deactivate the network speed HUD.";
 
 /* No comment provided by engineer. */
 "Developer Area" = "Área de desarrollo";
@@ -134,7 +140,16 @@
 "Tap that button on the center again,\nto toggle ON/OFF “Dynamic Island” mode." = "Toca de nuevo el botón en el centro,\npara activar/desactivar el modo “Isla dinámica“.";
 
 /* No comment provided by engineer. */
+"Toggle HUD" = "Toggle HUD";
+
+/* No comment provided by engineer. */
+"Toggle the network speed HUD." = "Toggle the network speed HUD.";
+
+/* No comment provided by engineer. */
 "Unit" = "Unid";
+
+/* No comment provided by engineer. */
+"Utility" = "Utility";
 
 /* No comment provided by engineer. */
 "You can quit this app now.\nThe HUD will persist on your screen." = "Puedes salir de esta aplicación ahora.\nEl HUD persistirá en tu pantalla.";

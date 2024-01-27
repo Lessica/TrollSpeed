@@ -10,6 +10,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "HUDHelper.h"
+
 typedef NSString * HUDUserDefaultsKey;
 
 static HUDUserDefaultsKey const HUDUserDefaultsKeySelectedMode = @"selectedMode";

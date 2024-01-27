@@ -15,6 +15,7 @@ TrollSpeed_FILES += $(wildcard sources/KIF/*.mm sources/KIF/*.m)
 TrollSpeed_FILES += $(wildcard sources/*.swift)
 TrollSpeed_FILES += $(wildcard sources/SPLarkController/*.swift)
 TrollSpeed_FILES += $(wildcard sources/SnapshotSafeView/*.swift)
+TrollSpeed_FILES += $(wildcard sources/Intents/*.swift)
 
 TrollSpeed_CFLAGS += -fobjc-arc
 TrollSpeed_CFLAGS += -Iheaders
