@@ -1,5 +1,17 @@
 #!/bin/sh
 
+# This script is used to build the TrollSpeed app and create a tipa file with Xcode.
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <version>"
+    exit 1
+fi
+
+VERSION=$1
+
+# Strip leading "v" from version if present
+VERSION=${VERSION#v}
+
+# Build using Xcode
 xcodebuild clean build archive \
 -scheme TrollSpeed \
 -project TrollSpeed.xcodeproj \
@@ -17,4 +29,5 @@ mv Applications Payload
 ldid -Sentitlements.plist Payload/TrollSpeed.app
 zip -qr TrollSpeed.tipa Payload
 cd -
-mv TrollSpeed.xcarchive/Products/TrollSpeed.tipa .
+mkdir -p packages
+mv TrollSpeed.xcarchive/Products/TrollSpeed.tipa packages/TrollSpeed+Intents_$VERSION.tipa

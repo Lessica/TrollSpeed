@@ -103,6 +103,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/TrollSpeed
           ./gen-control.sh ${{ env.GIT_TAG }}
+          ./build.sh ${{ env.GIT_TAG }}
           THEOS_PACKAGE_SCHEME=rootless FINALPACKAGE=1 make package
           FINALPACKAGE=1 make clean
           FINALPACKAGE=1 make package
@@ -118,6 +119,7 @@ jobs:
           name: TrollSpeed_${{ env.GIT_TAG }}
           path: |
             TrollSpeed/packages/TrollSpeed_*.tipa
+            TrollSpeed/packages/TrollSpeed+Intents_*.tipa
             TrollSpeed/packages/ch.xxtou.hudapp_*.deb
 
       - name: Upload symbols
@@ -134,4 +136,5 @@ jobs:
           body_path: TrollSpeed/CHANGELOG.txt
           files: |
             TrollSpeed/packages/TrollSpeed_*.tipa
+            TrollSpeed/packages/TrollSpeed+Intents_*.tipa
             TrollSpeed/packages/ch.xxtou.hudapp_*.deb
