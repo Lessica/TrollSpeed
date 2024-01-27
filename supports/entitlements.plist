@@ -2,73 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>com.apple.AXMediaUtilitiesService-access</key>
-	<true/>
-	<key>com.apple.DragUI.accessibility</key>
-	<true/>
 	<key>com.apple.QuartzCore.displayable-context</key>
 	<true/>
 	<key>com.apple.QuartzCore.secure-mode</key>
 	<true/>
-	<key>com.apple.accessibility.api</key>
-	<true/>
-	<key>com.apple.accessibility.physicalinteraction.client</key>
-	<true/>
-	<key>com.apple.accessibility.zoom.client</key>
-	<true/>
-	<key>com.apple.assistivetouch.daemon</key>
-	<true/>
 	<key>com.apple.backboard.client</key>
 	<true/>
-	<key>com.apple.backboardd.global-pointer-event-routing</key>
-	<true/>
 	<key>com.apple.backboardd.launchapplications</key>
-	<true/>
-	<key>com.apple.bluetooth.system</key>
-	<true/>
-	<key>com.apple.carousel.backlightaccess</key>
-	<true/>
-	<key>com.apple.coreaudio.allow-opus-codec</key>
-	<true/>
-	<key>com.apple.coreaudio.register-internal-aus</key>
-	<true/>
-	<key>com.apple.developer.ubiquity-kvstore-identifier</key>
-	<string>ch.xxtou.hudapp</string>
-	<key>com.apple.diagnosticd.diagnostic</key>
-	<true/>
-	<key>com.apple.frontboard.debugapplications</key>
 	<true/>
 	<key>com.apple.hid.manager.user-access-device</key>
 	<true/>
 	<key>com.apple.hid.manager.user-access-keyboard</key>
-	<true/>
-	<key>com.apple.idle-timer-services</key>
-	<true/>
-	<key>com.apple.managedconfiguration.profiled-access</key>
-	<true/>
-	<key>com.apple.pointerui.persistentlyHidePointer</key>
-	<true/>
-	<key>com.apple.private.CoreAuthentication.SPI</key>
-	<true/>
-	<key>com.apple.private.LocalAuthentication.Storage</key>
-	<true/>
-	<key>com.apple.private.acccessibility.motionTrackingClient</key>
-	<true/>
-	<key>com.apple.private.appleaccount.app-hidden-from-icloud-settings</key>
-	<true/>
-	<key>com.apple.private.applecredentialmanager.allow</key>
-	<true/>
-	<key>com.apple.private.assets.accessible-asset-types</key>
-	<array>
-		<string>com.apple.MobileAsset.VoiceServices.CustomVoice</string>
-		<string>com.apple.MobileAsset.VoiceServicesVocalizerVoice</string>
-		<string>com.apple.MobileAsset.VoiceServices.GryphonVoice</string>
-		<string>com.apple.MobileAsset.MacinTalkVoiceAssets</string>
-		<string>com.apple.MobileAsset.VoiceServices.CombinedVocalizerVoices</string>
-	</array>
-	<key>com.apple.private.avfoundation.capture.nonstandard-client.allow</key>
-	<true/>
-	<key>com.apple.private.coreaudio.viewInterruptorName.allow</key>
 	<true/>
 	<key>com.apple.private.hid.client.event-dispatch</key>
 	<true/>
@@ -80,14 +24,6 @@
 	<true/>
 	<key>com.apple.private.hid.manager.client</key>
 	<true/>
-	<key>com.apple.private.ids.messaging</key>
-	<array>
-		<string>com.apple.private.alloy.accessibility.switchcontrol</string>
-	</array>
-	<key>com.apple.private.ids.messaging.urgent-priority</key>
-	<array>
-		<string>com.apple.private.alloy.accessibility.switchcontrol</string>
-	</array>
 	<key>com.apple.private.kernel.jetsam</key>
 	<true/>
 	<key>com.apple.private.memorystatus</key>
@@ -96,72 +32,15 @@
 	<true/>
 	<key>com.apple.private.security.no-sandbox</key>
 	<true/>
-	<key>com.apple.private.sysdiagnose</key>
-	<true/>
-	<key>com.apple.private.ubiquity-additional-kvstore-identifiers</key>
-	<array>
-		<string>com.apple.AssistiveTouch</string>
-		<string>com.apple.Accessibility.SwitchControl</string>
-		<string>com.apple.Accessibility</string>
-	</array>
-	<key>com.apple.security.exception.mach-lookup.global-name</key>
-	<array>
-		<string>com.apple.accessibility.motiontrackingd</string>
-		<string>com.apple.accessibility.AXSpringBoardServer</string>
-		<string>com.apple.accessibility.AXPineBoardServer</string>
-		<string>com.apple.accessibility.AXCarouselServer</string>
-		<string>AXPerformanceTestReportingServer</string>
-		<string>com.apple.telephonyutilities.callservicesdaemon.callstatecontroller</string>
-		<string>com.apple.AXMediaUtilitiesService</string>
-		<string>com.apple.audio.hapticd</string>
-		<string>AccessibilityDebuggerServices</string>
-		<string>com.apple.sysdiagnose.service.xpc</string>
-		<string>com.apple.TextInput</string>
-		<string>com.apple.SBUserNotification</string>
-		<string>com.apple.siri.activation.service</string>
-		<string>com.apple.commandandcontrol</string>
-		<string>com.apple.sharing.accessibility</string>
-		<string>com.apple.TextInput.accessibility</string>
-		<string>com.apple.appleneuralengine</string>
-		<string>com.apple.fontservicesd</string>
-		<string>com.apple.PointerUI.pointeruid.service</string>
-	</array>
-	<key>com.apple.security.exception.mach-lookup.local-name</key>
-	<array>
-		<string>com.apple.AXMediaUtilitiesService</string>
-	</array>
-	<key>com.apple.security.exception.mach-register.global-name</key>
-	<array>
-		<string>ch.xxtou.hudapp.gsEvents</string>
-	</array>
-	<key>com.apple.security.exception.mach-register.local-name</key>
-	<array>
-		<string>ch.xxtou.hudapp</string>
-	</array>
-	<key>com.apple.security.exception.shared-preference.read-only</key>
-	<array>
-		<string>com.apple.purplebuddy</string>
-		<string>com.apple.uikitservices.userInterfaceStyleMode</string>
-	</array>
-	<key>com.apple.security.exception.shared-preference.read-write</key>
-	<array>
-		<string>com.apple.assistant.logging</string>
-	</array>
 	<key>com.apple.springboard-ui.client</key>
 	<true/>
 	<key>com.apple.springboard.CFUserNotification</key>
 	<true/>
 	<key>com.apple.springboard.accessibility-window-hosting</key>
 	<true/>
-	<key>com.apple.springboard.activateassistant</key>
-	<true/>
 	<key>com.apple.springboard.appbackgroundstyle</key>
 	<true/>
 	<key>com.apple.springboard.launchapplications</key>
-	<true/>
-	<key>com.apple.system-task-ports</key>
-	<true/>
-	<key>com.apple.system.diagnostics.iokit-properties</key>
 	<true/>
 	<key>file-read-data</key>
 	<true/>
