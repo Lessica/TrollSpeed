@@ -1,6 +1,9 @@
 .cache/
 .theos/
 packages/
+_site/
+*-cache/
+.jekyll-metadata
 compile_commands.json
 *.xcarchive
 *.tipa

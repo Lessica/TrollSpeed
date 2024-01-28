@@ -1,0 +1,6 @@
+remote_theme: pages-themes/minimal@v0.2.0
+plugins:
+- jekyll-remote-theme
+title: TrollSpeed
+description: Shows upload & download speed below the status bar. Supports opa334’s TrollStore.
+show_downloads: true
