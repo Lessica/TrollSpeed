@@ -103,6 +103,10 @@ static void SpringBoardLockStatusChanged
 #define INLINE_SEPARATOR "\t"
 #define IDLE_INTERVAL 3.0
 
+static const double HUD_MIN_FONT_SIZE = 9.0;
+static const double HUD_MAX_FONT_SIZE = 10.0;
+static const double HUD_MIN_CORNER_RADIUS = 4.5;
+static const double HUD_MAX_CORNER_RADIUS = 5.0;
 static double HUD_FONT_SIZE = 8.0;
 static UIFontWeight HUD_FONT_WEIGHT = UIFontWeightRegular;
 static CGFloat HUD_INACTIVE_OPACITY = 0.667;
@@ -395,8 +399,8 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     HUD_DOWNLOAD_PREFIX = (usesArrowPrefixes ? "↓" : "▼");
 
     BOOL usesLargeFont = [self usesLargeFont];
-    HUD_FONT_SIZE = (usesLargeFont ? 9.0 : 8.0);
-    [_blurView.layer setCornerRadius:(usesLargeFont ? 4.5 : 4.0)];
+    HUD_FONT_SIZE = (usesLargeFont ? HUD_MAX_FONT_SIZE : HUD_MIN_FONT_SIZE);
+    [_blurView.layer setCornerRadius:(usesLargeFont ? HUD_MAX_CORNER_RADIUS : HUD_MIN_CORNER_RADIUS)];
 
     BOOL usesInvertedColor = [self usesInvertedColor];
     HUD_FONT_WEIGHT = (usesInvertedColor ? UIFontWeightSemibold : UIFontWeightRegular);
@@ -591,7 +595,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
     _blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
     _blurView = [[UIVisualEffectView alloc] initWithEffect:_blurEffect];
-    _blurView.layer.cornerRadius = 4.0;
+    _blurView.layer.cornerRadius = HUD_MIN_CORNER_RADIUS;
     _blurView.layer.masksToBounds = YES;
     _blurView.translatesAutoresizingMaskIntoConstraints = NO;
     _containerView = [[ScreenshotInvisibleContainer alloc] initWithContent:_blurView];
@@ -744,8 +748,11 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
             CGFloat minimumTopConstraintConstant = 0;
             CGFloat minimumBottomConstraintConstant = 0;
 
-            if (CGRectGetMinY(layoutGuide.layoutFrame) > 30) {
-                minimumTopConstraintConstant = -10;
+            if (CGRectGetMinY(layoutGuide.layoutFrame) >= 51) {
+                minimumTopConstraintConstant = -8;
+            }
+            else if (CGRectGetMinY(layoutGuide.layoutFrame) > 30) {
+                minimumTopConstraintConstant = -12;
                 minimumBottomConstraintConstant = -4;
             } else {
 #if !NO_TROLL

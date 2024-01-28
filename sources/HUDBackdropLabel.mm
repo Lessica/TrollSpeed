@@ -71,8 +71,7 @@
             ]];
 
             _backdropTextLayer = [CATextLayer layer];
-            _backdropTextLayer.contentsScale = self.layer.contentsScale * 1.1;
-            _backdropTextLayer.allowsFontSubpixelQuantization = YES;
+            _backdropTextLayer.contentsScale = self.layer.contentsScale * 1.2;
             _backdropTextLayer.actions = @{
                 @"bounds": [NSNull null],
                 @"contents": [NSNull null],
