@@ -27,7 +27,7 @@ jobs:
           echo "/usr/local/opt/make/libexec/gnubin" >> $GITHUB_PATH
 
       - name: Checkout XXTouchNG/theos
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: XXTouchNG/theos
           ref: 78ee784d8d3238982c9abdc58cd39919263648b1
@@ -41,14 +41,14 @@ jobs:
 
       - name: Restore additional SDKs
         id: cached-sdks-restore
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: ${{ env.THEOS }}/sdks
           key: ${{ runner.os }}-sdks-${{ env.XCODE_VERSION }}
 
       - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
         name: Checkout theos/sdks
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: theos/sdks
           ref: master
@@ -56,7 +56,7 @@ jobs:
 
       - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
         name: Checkout XXTouchNG/tbd
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: XXTouchNG/tbd
           ref: 30a6883092221e13d814c02ac41af1e565a40617
@@ -78,13 +78,13 @@ jobs:
       - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
         name: Save additional SDKs
         id: cached-sdks-save
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         with:
           path: ${{ env.THEOS }}/sdks
           key: ${{ steps.cached-sdks-restore.outputs.cache-primary-key }}
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: Lessica/TrollSpeed
           ref: main
@@ -114,7 +114,7 @@ jobs:
           find .theos/obj -name "*.dSYM" -print | zip -r packages/TrollSpeed_${{ env.GIT_TAG }}_symbols.zip -@
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: TrollSpeed_${{ env.GIT_TAG }}
           path: |
@@ -123,7 +123,7 @@ jobs:
             TrollSpeed/packages/ch.xxtou.hudapp_*.deb
 
       - name: Upload symbols
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: TrollSpeed_${{ env.GIT_TAG }}_symbols
           path: |
