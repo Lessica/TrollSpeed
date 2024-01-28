@@ -38,9 +38,9 @@ You need to enable “Developer Mode” on iOS 16 or above to use TrollSpeed or 
 - Please give me feedback if you find any issues &amp; bugs, or have any suggestions.
 - Give me a star 🌟 if you like this project. Thanks!
 
-## Screenshot
+## Screenshots
 
-![screenshot](https://user-images.githubusercontent.com/5410705/213263734-1ef1b553-88d4-41cc-856e-891ea08d185c.jpeg)
+![preview](screenshots/preview.jpeg)
 
 ## Special Thanks
 
