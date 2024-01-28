@@ -5,6 +5,7 @@
 //  Created by Lessica on 2024/1/27.
 //
 
+#if canImport(AppIntents)
 import AppIntents
 
 @available(iOS 16, *)
@@ -26,3 +27,4 @@ struct ToggleHUDIntent: AppIntent {
         return .result(value: true)
     }
 }
+#endif

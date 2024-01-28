@@ -92,8 +92,6 @@ static void SpringBoardLockStatusChanged
 
 #pragma mark - NetworkSpeed13
 
-// Thanks to: https://github.com/lwlsw/NetworkSpeed13
-
 #define KILOBITS 1000
 #define MEGABITS 1000000
 #define GIGABITS 1000000000
@@ -1001,7 +999,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
     if (!_impactFeedbackGenerator)
     {
-        _impactFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
+        _impactFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
     }
 
     if (sender.state == UIGestureRecognizerStateBegan || sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled)

@@ -40,6 +40,7 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     NSLayoutConstraint *_authorLabelBottomConstraint;
     BOOL _isRemoteHUDActive;
     HUDRootViewController *_localHUDRootViewController;  // Only for debugging
+    UIImpactFeedbackGenerator *_impactFeedbackGenerator;
 }
 
 + (void)setShouldToggleHUDAfterLaunch:(BOOL)flag
@@ -245,6 +246,9 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    _impactFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
+
     [self registerNotifications];
 }
 
@@ -608,7 +612,7 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     if (_isRemoteHUDActive) {
         return;
     }
-    NSString *repoURLString = @"https://github.com/Lessica/TrollSpeed";
+    NSString *repoURLString = @"https://trollspeed.app";
     NSURL *repoURL = [NSURL URLWithString:repoURLString];
     [[UIApplication sharedApplication] openURL:repoURL options:@{} completionHandler:nil];
 }
@@ -659,9 +663,13 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     {
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
+        [_impactFeedbackGenerator prepare];
         int anyToken;
+        __weak typeof(self) weakSelf = self;
         notify_register_dispatch(NOTIFY_LAUNCHED_HUD, &anyToken, dispatch_get_main_queue(), ^(int token) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
             notify_cancel(token);
+            [strongSelf->_impactFeedbackGenerator impactOccurred];
             dispatch_semaphore_signal(semaphore);
         });
 

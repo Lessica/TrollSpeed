@@ -5,6 +5,7 @@
 //  Created by Lessica on 2024/1/27.
 //
 
+#if canImport(AppIntents)
 import AppIntents
 
 @available(iOS 16, *)
@@ -29,3 +30,4 @@ struct DeactivateHUDIntent: AppIntent {
         return .result(value: false)
     }
 }
+#endif
