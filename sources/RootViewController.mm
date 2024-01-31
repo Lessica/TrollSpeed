@@ -314,7 +314,16 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
 - (void)resetUserDefaults
 {
+#if !NO_TROLL
     // Reset user defaults
+    NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+    if (bundleIdentifier) {
+        [GetStandardUserDefaults() removePersistentDomainForName:bundleIdentifier];
+        [GetStandardUserDefaults() synchronize];
+    }
+#endif
+
+    // Reset custom user defaults
     BOOL removed = [[NSFileManager defaultManager] removeItemAtPath:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH)) error:nil];
     if (removed)
     {

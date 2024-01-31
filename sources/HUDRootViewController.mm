@@ -129,33 +129,145 @@ static NSString *formattedSpeed(uint64_t bytes, BOOL isFocused)
     {
         if (0 == HUD_DATA_UNIT)
         {
-            if (bytes < KILOBYTES) return NSLocalizedString(@"0 KB", @"formattedSpeed");
-            else if (bytes < MEGABYTES) return [NSString stringWithFormat:NSLocalizedString(@"%.0f KB", @"formattedSpeed"), (double)bytes / KILOBYTES];
-            else if (bytes < GIGABYTES) return [NSString stringWithFormat:NSLocalizedString(@"%.2f MB", @"formattedSpeed"), (double)bytes / MEGABYTES];
-            else return [NSString stringWithFormat:NSLocalizedString(@"%.2f GB", @"formattedSpeed"), (double)bytes / GIGABYTES];
+            if (bytes < KILOBYTES) {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"0 KB", @"formattedSpeed");
+                });
+                return _string;
+            }
+            else if (bytes < MEGABYTES) {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"%.0f KB", @"formattedSpeed");
+                });
+                return [NSString stringWithFormat:_string, (double)bytes / KILOBYTES];
+            }
+            else if (bytes < GIGABYTES) {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"%.2f MB", @"formattedSpeed");
+                });
+                return [NSString stringWithFormat:_string, (double)bytes / MEGABYTES];
+            }
+            else {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"%.2f GB", @"formattedSpeed");
+                });
+                return [NSString stringWithFormat:_string, (double)bytes / GIGABYTES];
+            }
         }
         else
         {
-            if (bytes < KILOBITS) return NSLocalizedString(@"0 Kb", @"formattedSpeed");
-            else if (bytes < MEGABITS) return [NSString stringWithFormat:NSLocalizedString(@"%.0f Kb", @"formattedSpeed"), (double)bytes / KILOBITS];
-            else if (bytes < GIGABITS) return [NSString stringWithFormat:NSLocalizedString(@"%.2f Mb", @"formattedSpeed"), (double)bytes / MEGABITS];
-            else return [NSString stringWithFormat:NSLocalizedString(@"%.2f Gb", @"formattedSpeed"), (double)bytes / GIGABITS];
+            if (bytes < KILOBITS) {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"0 Kb", @"formattedSpeed");
+                });
+                return _string;
+            }
+            else if (bytes < MEGABITS) {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"%.0f Kb", @"formattedSpeed");
+                });
+                return [NSString stringWithFormat:_string, (double)bytes / KILOBITS];
+            }
+            else if (bytes < GIGABITS) {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"%.2f Mb", @"formattedSpeed");
+                });
+                return [NSString stringWithFormat:_string, (double)bytes / MEGABITS];
+            }
+            else {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"%.2f Gb", @"formattedSpeed");
+                });
+                return [NSString stringWithFormat:_string, (double)bytes / GIGABITS];
+            }
         }
     }
     else {
         if (0 == HUD_DATA_UNIT)
         {
-            if (bytes < KILOBYTES) return NSLocalizedString(@"0 KB/s", @"formattedSpeed");
-            else if (bytes < MEGABYTES) return [NSString stringWithFormat:NSLocalizedString(@"%.0f KB/s", @"formattedSpeed"), (double)bytes / KILOBYTES];
-            else if (bytes < GIGABYTES) return [NSString stringWithFormat:NSLocalizedString(@"%.2f MB/s", @"formattedSpeed"), (double)bytes / MEGABYTES];
-            else return [NSString stringWithFormat:NSLocalizedString(@"%.2f GB/s", @"formattedSpeed"), (double)bytes / GIGABYTES];
+            if (bytes < KILOBYTES) {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"0 KB/s", @"formattedSpeed");
+                });
+                return _string;
+            }
+            else if (bytes < MEGABYTES) {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"%.0f KB/s", @"formattedSpeed");
+                });
+                return [NSString stringWithFormat:_string, (double)bytes / KILOBYTES];
+            }
+            else if (bytes < GIGABYTES) {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"%.2f MB/s", @"formattedSpeed");
+                });
+                return [NSString stringWithFormat:_string, (double)bytes / MEGABYTES];
+            }
+            else {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"%.2f GB/s", @"formattedSpeed");
+                });
+                return [NSString stringWithFormat:_string, (double)bytes / GIGABYTES];
+            }
         }
         else
         {
-            if (bytes < KILOBITS) return NSLocalizedString(@"0 Kb/s", @"formattedSpeed");
-            else if (bytes < MEGABITS) return [NSString stringWithFormat:NSLocalizedString(@"%.0f Kb/s", @"formattedSpeed"), (double)bytes / KILOBITS];
-            else if (bytes < GIGABITS) return [NSString stringWithFormat:NSLocalizedString(@"%.2f Mb/s", @"formattedSpeed"), (double)bytes / MEGABITS];
-            else return [NSString stringWithFormat:NSLocalizedString(@"%.2f Gb/s", @"formattedSpeed"), (double)bytes / GIGABITS];
+            if (bytes < KILOBITS) {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"0 Kb/s", @"formattedSpeed");
+                });
+                return _string;
+            }
+            else if (bytes < MEGABITS) {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"%.0f Kb/s", @"formattedSpeed");
+                });
+                return [NSString stringWithFormat:_string, (double)bytes / KILOBITS];
+            }
+            else if (bytes < GIGABITS) {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"%.2f Mb/s", @"formattedSpeed");
+                });
+                return [NSString stringWithFormat:_string, (double)bytes / MEGABITS];
+            }
+            else {
+                static NSString *_string = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    _string = NSLocalizedString(@"%.2f Gb/s", @"formattedSpeed");
+                });
+                return [NSString stringWithFormat:_string, (double)bytes / GIGABITS];
+            }
         }
     }
 }
@@ -363,8 +475,22 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         NULL,
         CFNotificationSuspensionBehaviorCoalesce
     );
+
+    NSUserDefaults *userDefaults = GetStandardUserDefaults();
+    [userDefaults addObserver:self forKeyPath:HUDUserDefaultsKeyUsesCustomFontSize options:NSKeyValueObservingOptionNew context:nil];
+    [userDefaults addObserver:self forKeyPath:HUDUserDefaultsKeyRealCustomFontSize options:NSKeyValueObservingOptionNew context:nil];
 #endif
 }
+
+#if !NO_TROLL
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:HUDUserDefaultsKeyUsesCustomFontSize] ||
+        [keyPath isEqualToString:HUDUserDefaultsKeyRealCustomFontSize])
+    {
+        [self reloadUserDefaults];
+    }
+}
+#endif
 
 - (void)loadUserDefaults:(BOOL)forceReload
 {
@@ -398,9 +524,16 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     HUD_UPLOAD_PREFIX = (usesArrowPrefixes ? "↑" : "▲");
     HUD_DOWNLOAD_PREFIX = (usesArrowPrefixes ? "↓" : "▼");
 
-    BOOL usesLargeFont = [self usesLargeFont];
-    HUD_FONT_SIZE = (usesLargeFont ? HUD_MAX_FONT_SIZE : HUD_MIN_FONT_SIZE);
-    [_blurView.layer setCornerRadius:(usesLargeFont ? HUD_MAX_CORNER_RADIUS : HUD_MIN_CORNER_RADIUS)];
+    BOOL usesCustomFontSize = [self usesCustomFontSize];
+    if (!usesCustomFontSize) {
+        BOOL usesLargeFont = [self usesLargeFont];
+        HUD_FONT_SIZE = (usesLargeFont ? HUD_MAX_FONT_SIZE : HUD_MIN_FONT_SIZE);
+        [_blurView.layer setCornerRadius:(usesLargeFont ? HUD_MAX_CORNER_RADIUS : HUD_MIN_CORNER_RADIUS)];
+    } else {
+        CGFloat realCustomFontSize = [self realCustomFontSize];
+        HUD_FONT_SIZE = realCustomFontSize;
+        [_blurView.layer setCornerRadius:realCustomFontSize / 2.0];
+    }
 
     BOOL usesInvertedColor = [self usesInvertedColor];
     HUD_FONT_WEIGHT = (usesInvertedColor ? UIFontWeightSemibold : UIFontWeightRegular);
@@ -545,6 +678,14 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     [_userDefaults setObject:[NSNumber numberWithDouble:positionY] forKey:HUDUserDefaultsKeyCurrentLandscapePositionY];
     [self saveUserDefaults];
 }
+
+#if !NO_TROLL
+- (BOOL)usesCustomFontSize { return [GetStandardUserDefaults() boolForKey:HUDUserDefaultsKeyUsesCustomFontSize]; }
+- (CGFloat)realCustomFontSize { return [GetStandardUserDefaults() doubleForKey:HUDUserDefaultsKeyRealCustomFontSize]; }
+#else
+- (BOOL)usesCustomFontSize { return NO; }
+- (CGFloat)realCustomFontSize { return HUD_FONT_SIZE; }
+#endif
 
 - (instancetype)init
 {

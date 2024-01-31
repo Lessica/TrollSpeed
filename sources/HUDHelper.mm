@@ -10,6 +10,7 @@
 #import <mach-o/dyld.h>
 
 #import "HUDHelper.h"
+#import "NSUserDefaults+Private.h"
 
 extern "C" char **environ;
 
@@ -157,3 +158,15 @@ void SimulateMemoryPressure(void)
     log_debug(OS_LOG_DEFAULT, "spawned %{public}s -l critical pid = %{public}d", executablePath, task_pid);
 }
 #endif
+
+NSUserDefaults *GetStandardUserDefaults(void)
+{
+    static NSUserDefaults *_userDefaults = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString *containerPath = [[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject] stringByDeletingLastPathComponent];
+        NSURL *containerURL = [NSURL fileURLWithPath:containerPath];
+        _userDefaults = [[NSUserDefaults alloc] _initWithSuiteName:nil container:containerURL];
+    });
+    return _userDefaults;
+}

@@ -28,4 +28,7 @@ static HUDUserDefaultsKey const HUDUserDefaultsKeyUsesInvertedColor = @"usesInve
 static HUDUserDefaultsKey const HUDUserDefaultsKeyKeepInPlace = @"keepInPlace";
 static HUDUserDefaultsKey const HUDUserDefaultsKeyHideAtSnapshot = @"hideAtSnapshot";
 
+static HUDUserDefaultsKey const HUDUserDefaultsKeyUsesCustomFontSize = @"usesCustomFontSize";
+static HUDUserDefaultsKey const HUDUserDefaultsKeyRealCustomFontSize = @"realCustomFontSize";
+
 #endif /* hudapp_bridging_header_h */
