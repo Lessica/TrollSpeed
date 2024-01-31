@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC2A77302B6AADB400796650 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CC2A772F2B6AADB400796650 /* Settings.bundle */; };
+		CC2A77312B6AADB400796650 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CC2A772F2B6AADB400796650 /* Settings.bundle */; };
 		CC2BAFBA2B5CA9DD00A429D1 /* SPLarkPresentingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D312B5BF5C6007235A6 /* SPLarkPresentingAnimationController.swift */; };
 		CC2BAFBB2B5CA9DD00A429D1 /* SPLarkDismissingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D372B5BF5C6007235A6 /* SPLarkDismissingAnimationController.swift */; };
 		CC2BAFBC2B5CA9DD00A429D1 /* MainButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D2E2B5BF5C6007235A6 /* MainButton.mm */; };
@@ -83,6 +85,7 @@
 /* Begin PBXFileReference section */
 		0F43B7702B60D397003A435D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../layout/Applications/TrollSpeed.app/es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0F43B7712B60D397003A435D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../layout/Applications/TrollSpeed.app/es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CC2A772F2B6AADB400796650 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = layout/Applications/TrollSpeed.app/Settings.bundle; sourceTree = SOURCE_ROOT; };
 		CC2BAFE22B5CA9DD00A429D1 /* TrollSpeed-Sandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TrollSpeed-Sandbox.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC2BAFE42B5CAF2200A429D1 /* Sandbox-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Sandbox-Info.plist"; sourceTree = "<group>"; };
 		CC711D012B5BF550007235A6 /* TrollSpeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrollSpeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -236,6 +239,7 @@
 				CC9130A52B62A262006E3280 /* hudapp-bridging-header.h */,
 				CC711D812B5BFA64007235A6 /* Info.plist */,
 				CC2BAFE42B5CAF2200A429D1 /* Sandbox-Info.plist */,
+				CC2A772F2B6AADB400796650 /* Settings.bundle */,
 				CC711D872B5BFCC4007235A6 /* Localizable.strings */,
 				CC711D8E2B5BFD50007235A6 /* InfoPlist.strings */,
 			);
@@ -463,6 +467,7 @@
 			files = (
 				CC2BAFDB2B5CA9DD00A429D1 /* icon.png in Resources */,
 				CC2BAFDC2B5CA9DD00A429D1 /* InfoPlist.strings in Resources */,
+				CC2A77312B6AADB400796650 /* Settings.bundle in Resources */,
 				CC2BAFDD2B5CA9DD00A429D1 /* Localizable.strings in Resources */,
 				CC2BAFDE2B5CA9DD00A429D1 /* Assets.xcassets in Resources */,
 			);
@@ -474,6 +479,7 @@
 			files = (
 				CC711D932B5BFE6A007235A6 /* icon.png in Resources */,
 				CC711D8C2B5BFD50007235A6 /* InfoPlist.strings in Resources */,
+				CC2A77302B6AADB400796650 /* Settings.bundle in Resources */,
 				CC711D852B5BFCC4007235A6 /* Localizable.strings in Resources */,
 				CC711D112B5BF551007235A6 /* Assets.xcassets in Resources */,
 			);
