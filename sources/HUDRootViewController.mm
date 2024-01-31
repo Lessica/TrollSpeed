@@ -479,13 +479,19 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     NSUserDefaults *userDefaults = GetStandardUserDefaults();
     [userDefaults addObserver:self forKeyPath:HUDUserDefaultsKeyUsesCustomFontSize options:NSKeyValueObservingOptionNew context:nil];
     [userDefaults addObserver:self forKeyPath:HUDUserDefaultsKeyRealCustomFontSize options:NSKeyValueObservingOptionNew context:nil];
+    [userDefaults addObserver:self forKeyPath:HUDUserDefaultsKeyUsesCustomOffset options:NSKeyValueObservingOptionNew context:nil];
+    [userDefaults addObserver:self forKeyPath:HUDUserDefaultsKeyRealCustomOffsetX options:NSKeyValueObservingOptionNew context:nil];
+    [userDefaults addObserver:self forKeyPath:HUDUserDefaultsKeyRealCustomOffsetY options:NSKeyValueObservingOptionNew context:nil];
 #endif
 }
 
 #if !NO_TROLL
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if ([keyPath isEqualToString:HUDUserDefaultsKeyUsesCustomFontSize] ||
-        [keyPath isEqualToString:HUDUserDefaultsKeyRealCustomFontSize])
+        [keyPath isEqualToString:HUDUserDefaultsKeyRealCustomFontSize] ||
+        [keyPath isEqualToString:HUDUserDefaultsKeyUsesCustomOffset] ||
+        [keyPath isEqualToString:HUDUserDefaultsKeyRealCustomOffsetX] ||
+        [keyPath isEqualToString:HUDUserDefaultsKeyRealCustomOffsetY])
     {
         [self reloadUserDefaults];
     }
@@ -682,9 +688,15 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 #if !NO_TROLL
 - (BOOL)usesCustomFontSize { return [GetStandardUserDefaults() boolForKey:HUDUserDefaultsKeyUsesCustomFontSize]; }
 - (CGFloat)realCustomFontSize { return [GetStandardUserDefaults() doubleForKey:HUDUserDefaultsKeyRealCustomFontSize]; }
+- (BOOL)usesCustomOffset { return [GetStandardUserDefaults() boolForKey:HUDUserDefaultsKeyUsesCustomOffset]; }
+- (CGFloat)realCustomOffsetX { return [GetStandardUserDefaults() doubleForKey:HUDUserDefaultsKeyRealCustomOffsetX]; }
+- (CGFloat)realCustomOffsetY { return [GetStandardUserDefaults() doubleForKey:HUDUserDefaultsKeyRealCustomOffsetY]; }
 #else
 - (BOOL)usesCustomFontSize { return NO; }
 - (CGFloat)realCustomFontSize { return HUD_FONT_SIZE; }
+- (BOOL)usesCustomOffset { return NO; }
+- (CGFloat)realCustomOffsetX { return 0; }
+- (CGFloat)realCustomOffsetY { return 0; }
 #endif
 
 - (instancetype)init
@@ -829,6 +841,16 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     [_lockedView setImage:[UIImage systemImageNamed:(isCentered ? @"hand.raised.slash.fill" : @"lock.fill")]];
     [_blurView.layer setMaskedCorners:((isCenteredMost && !isLandscape) ? kCornerMaskBottom : kCornerMaskAll)];
 
+    BOOL usesCustomOffset = [self usesCustomOffset];
+    CGFloat realCustomOffsetX = 0;
+    CGFloat realCustomOffsetY = 0;
+
+    if (usesCustomOffset)
+    {
+        realCustomOffsetX = [self realCustomOffsetX];
+        realCustomOffsetY = [self realCustomOffsetY];
+    }
+
     UILayoutGuide *layoutGuide = self.view.safeAreaLayoutGuide;
     if (isLandscape)
     {
@@ -846,6 +868,9 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         paddingFarFromNotch = (notchHeight > 30) ? notchHeight - 24 : -4;
 #endif
 
+        paddingNearNotch += realCustomOffsetX;
+        paddingFarFromNotch += realCustomOffsetX;
+
         [_constraints addObjectsFromArray:@[
             [_contentView.leadingAnchor constraintEqualToAnchor:layoutGuide.leadingAnchor constant:(_orientation == UIInterfaceOrientationLandscapeLeft ? -paddingFarFromNotch : paddingNearNotch)],
             [_contentView.trailingAnchor constraintEqualToAnchor:layoutGuide.trailingAnchor constant:(_orientation == UIInterfaceOrientationLandscapeLeft ? -paddingNearNotch : paddingFarFromNotch)],
@@ -853,8 +878,12 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
         CGFloat minimumLandscapeTopConstant = 0;
         CGFloat minimumLandscapeBottomConstant = 0;
+
         minimumLandscapeTopConstant = (isPad ? 30 : 10);
         minimumLandscapeBottomConstant = (isPad ? -34 : -14);
+
+        minimumLandscapeTopConstant += realCustomOffsetY;
+        minimumLandscapeBottomConstant += realCustomOffsetY;
 
         /* Fixed Constraints */
         [_constraints addObjectsFromArray:@[
@@ -877,8 +906,8 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     else
     {
         [_constraints addObjectsFromArray:@[
-            [_contentView.leadingAnchor constraintEqualToAnchor:layoutGuide.leadingAnchor],
-            [_contentView.trailingAnchor constraintEqualToAnchor:layoutGuide.trailingAnchor],
+            [_contentView.leadingAnchor constraintEqualToAnchor:layoutGuide.leadingAnchor constant:realCustomOffsetX],
+            [_contentView.trailingAnchor constraintEqualToAnchor:layoutGuide.trailingAnchor constant:realCustomOffsetX],
         ]];
 
         if (isCenteredMost && !isPad) {
@@ -904,6 +933,9 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
                 minimumBottomConstraintConstant = -20;
 #endif
             }
+
+            minimumTopConstraintConstant += realCustomOffsetY;
+            minimumBottomConstraintConstant += realCustomOffsetY;
 
             /* Fixed Constraints */
             [_constraints addObjectsFromArray:@[

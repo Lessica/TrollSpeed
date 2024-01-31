@@ -10,7 +10,17 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Appearance</string>
+			<string>Custom Font Size</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Uses Custom Font Size</string>
+			<key>Key</key>
+			<string>usesCustomFontSize</string>
+			<key>DefaultValue</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -28,13 +38,47 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Custom Offset</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Uses Custom Font Size</string>
+			<string>Uses Custom Offset</string>
 			<key>Key</key>
-			<string>usesCustomFontSize</string>
+			<string>usesCustomOffset</string>
 			<key>DefaultValue</key>
 			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSSliderSpecifier</string>
+			<key>Title</key>
+			<string>Custom Offset X</string>
+			<key>Key</key>
+			<string>realCustomOffsetX</string>
+			<key>DefaultValue</key>
+			<real>0</real>
+			<key>MinimumValue</key>
+			<real>-100</real>
+			<key>MaximumValue</key>
+			<real>100</real>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSSliderSpecifier</string>
+			<key>Title</key>
+			<string>Custom Offset Y</string>
+			<key>Key</key>
+			<string>realCustomOffsetY</string>
+			<key>DefaultValue</key>
+			<real>0</real>
+			<key>MinimumValue</key>
+			<real>-100</real>
+			<key>MaximumValue</key>
+			<real>100</real>
 		</dict>
 	</array>
 </dict>
