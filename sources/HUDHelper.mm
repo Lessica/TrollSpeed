@@ -167,6 +167,13 @@ NSUserDefaults *GetStandardUserDefaults(void)
         NSString *containerPath = [[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject] stringByDeletingLastPathComponent];
         NSURL *containerURL = [NSURL fileURLWithPath:containerPath];
         _userDefaults = [[NSUserDefaults alloc] _initWithSuiteName:nil container:containerURL];
+        [_userDefaults registerDefaults:@{
+            HUDUserDefaultsKeyUsesCustomOffset: @NO,
+            HUDUserDefaultsKeyRealCustomOffsetX: @0,
+            HUDUserDefaultsKeyRealCustomOffsetY: @0,
+            HUDUserDefaultsKeyUsesCustomFontSize: @NO,
+            HUDUserDefaultsKeyRealCustomFontSize: @9,
+        }];
     });
     return _userDefaults;
 }

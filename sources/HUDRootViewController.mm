@@ -536,13 +536,13 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         HUD_FONT_SIZE = (usesLargeFont ? HUD_MAX_FONT_SIZE : HUD_MIN_FONT_SIZE);
         [_blurView.layer setCornerRadius:(usesLargeFont ? HUD_MAX_CORNER_RADIUS : HUD_MIN_CORNER_RADIUS)];
     } else {
-        CGFloat realCustomFontSize = [self realCustomFontSize];
+        CGFloat realCustomFontSize = MIN(MAX([self realCustomFontSize], 8), 12);
         HUD_FONT_SIZE = realCustomFontSize;
         [_blurView.layer setCornerRadius:realCustomFontSize / 2.0];
     }
 
     BOOL usesInvertedColor = [self usesInvertedColor];
-    HUD_FONT_WEIGHT = (usesInvertedColor ? UIFontWeightSemibold : UIFontWeightRegular);
+    HUD_FONT_WEIGHT = (usesInvertedColor ? UIFontWeightMedium : UIFontWeightRegular);
     HUD_INACTIVE_OPACITY = (usesInvertedColor ? 1.0 : 0.667);
     [_blurView setEffect:(usesInvertedColor ? nil : _blurEffect)];
     [_speedLabel setColorInvertEnabled:usesInvertedColor];
@@ -920,6 +920,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
             if (CGRectGetMinY(layoutGuide.layoutFrame) >= 51) {
                 minimumTopConstraintConstant = -8;
+                minimumBottomConstraintConstant = -4;
             }
             else if (CGRectGetMinY(layoutGuide.layoutFrame) > 30) {
                 minimumTopConstraintConstant = -12;
