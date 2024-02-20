@@ -17,28 +17,6 @@
 #import "HUDMainApplication.h"
 #import "UIApplication+Private.h"
 
-static void DumpThreads(void)
-{
-    char name[256];
-    mach_msg_type_number_t count;
-    thread_act_array_t list;
-    task_threads(mach_task_self(), &list, &count);
-    for (int i = 0; i < count; ++i)
-    {
-        pthread_t pt = pthread_from_mach_thread_np(list[i]);
-        if (pt)
-        {
-            name[0] = '\0';
-            __unused int rc = pthread_getname_np(pt, name, sizeof name);
-            log_debug(OS_LOG_DEFAULT, "mach thread %u: getname returned %d: %{public}s", list[i], rc, name);
-        }
-        else
-        {
-            log_debug(OS_LOG_DEFAULT, "mach thread %u: no pthread found", list[i]);
-        }
-    }
-}
-
 @implementation HUDMainApplication
 
 - (instancetype)init
@@ -150,9 +128,6 @@ static void DumpThreads(void)
             {
                 /* Tested on iOS 15.1.1 and below */
                 [fetcher setValue:dispatcher forKey:@"eventFetcherSink"];
-
-                /* Print NSThread names */
-                DumpThreads();
             }
 
             [self setValue:fetcher forKey:@"eventFetcher"];

@@ -8,6 +8,8 @@
 	<true/>
 	<key>com.apple.backboard.client</key>
 	<true/>
+	<key>com.apple.private.allow-background-haptics</key>
+	<true/>
 	<key>com.apple.private.hid.client.event-dispatch</key>
 	<true/>
 	<key>com.apple.private.hid.client.event-filter</key>

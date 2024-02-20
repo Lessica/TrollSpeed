@@ -24,7 +24,7 @@ Depends: firmware (>= 14.0), mobilesubstrate (>= 0.9.7000)
 Architecture: iphoneos-arm
 Author: Lessica <82flex@gmail.com>
 Maintainer: Lessica <82flex@gmail.com>
-Description: Troll speed, but jailbroken.
+Description: Troll your speed, but jailbroken.
 __EOF__
 
 # Set permissions
