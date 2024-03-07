@@ -83,9 +83,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0F43B7702B60D397003A435D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../layout/Applications/TrollSpeed.app/es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		0F43B7712B60D397003A435D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../layout/Applications/TrollSpeed.app/es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		CC2A772F2B6AADB400796650 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = layout/Applications/TrollSpeed.app/Settings.bundle; sourceTree = SOURCE_ROOT; };
+		0F43B7702B60D397003A435D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../Resources/es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0F43B7712B60D397003A435D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../Resources/es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CC2A772F2B6AADB400796650 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Resources/Settings.bundle; sourceTree = SOURCE_ROOT; };
 		CC2BAFE22B5CA9DD00A429D1 /* TrollSpeed-Sandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TrollSpeed-Sandbox.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC2BAFE42B5CAF2200A429D1 /* Sandbox-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Sandbox-Info.plist"; sourceTree = "<group>"; };
 		CC711D012B5BF550007235A6 /* TrollSpeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrollSpeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -157,12 +157,12 @@
 		CC711D7D2B5BF6B7007235A6 /* UIEventDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIEventDispatcher.h; sourceTree = "<group>"; };
 		CC711D7E2B5BF772007235A6 /* hudapp-prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "hudapp-prefix.pch"; sourceTree = "<group>"; };
 		CC711D7F2B5BF772007235A6 /* entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = entitlements.plist; sourceTree = "<group>"; };
-		CC711D812B5BFA64007235A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Info.plist; path = layout/Applications/TrollSpeed.app/Info.plist; sourceTree = SOURCE_ROOT; };
-		CC711D862B5BFCC4007235A6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = layout/Applications/TrollSpeed.app/en.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
-		CC711D892B5BFCE0007235A6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "layout/Applications/TrollSpeed.app/zh-Hans.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
-		CC711D8D2B5BFD50007235A6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = layout/Applications/TrollSpeed.app/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
-		CC711D8F2B5BFD51007235A6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "layout/Applications/TrollSpeed.app/zh-Hans.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
-		CC711D922B5BFE66007235A6 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = layout/Applications/TrollSpeed.app/icon.png; sourceTree = SOURCE_ROOT; };
+		CC711D812B5BFA64007235A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
+		CC711D862B5BFCC4007235A6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
+		CC711D892B5BFCE0007235A6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "Resources/zh-Hans.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		CC711D8D2B5BFD50007235A6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
+		CC711D8F2B5BFD51007235A6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "Resources/zh-Hans.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
+		CC711D922B5BFE66007235A6 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = Resources/icon.png; sourceTree = SOURCE_ROOT; };
 		CC711D952B5BFF2F007235A6 /* GraphicsServices.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = GraphicsServices.tbd; sourceTree = "<group>"; };
 		CC711D962B5BFF2F007235A6 /* SpringBoardServices.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = SpringBoardServices.tbd; sourceTree = "<group>"; };
 		CC711D972B5BFF2F007235A6 /* BackBoardServices.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = BackBoardServices.tbd; sourceTree = "<group>"; };
@@ -613,7 +613,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libraries",
 				);
-				MARKETING_VERSION = 1.11.5;
+				MARKETING_VERSION = 1.11.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.xxtou.hudapp-sandbox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -656,7 +656,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libraries",
 				);
-				MARKETING_VERSION = 1.11.5;
+				MARKETING_VERSION = 1.11.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.xxtou.hudapp-sandbox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -813,7 +813,7 @@
 					"$(inherited)",
 					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",
 				);
-				INFOPLIST_FILE = layout/Applications/TrollSpeed.app/Info.plist;
+				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TrollSpeed;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -827,7 +827,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libraries",
 				);
-				MARKETING_VERSION = 1.11.5;
+				MARKETING_VERSION = 1.11.6;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -857,7 +857,7 @@
 					"$(inherited)",
 					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",
 				);
-				INFOPLIST_FILE = layout/Applications/TrollSpeed.app/Info.plist;
+				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TrollSpeed;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -871,7 +871,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libraries",
 				);
-				MARKETING_VERSION = 1.11.5;
+				MARKETING_VERSION = 1.11.6;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

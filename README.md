@@ -57,7 +57,7 @@ TrollSpeed is [Free Software](https://www.gnu.org/philosophy/free-sw.html) licen
 
 ### Localization
 
-To add a language, create a new `.lproj` folder in `layout/Applications/TrollSpeed.app`.
+To add a language, create a new `.lproj` folder in `Resources`.
 
 - en/zh-Hans [@Lessica](https://github.com/Lessica)
 - es [@Deci8BelioS](https://github.com/Deci8BelioS)
