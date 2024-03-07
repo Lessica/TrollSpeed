@@ -1,9 +1,9 @@
 Package: ch.xxtou.hudapp
 Name: HUD App
-Version: 1.11.2
+Version: 1.11.4
 Section: Tweaks
 Depends: firmware (>= 14.0), mobilesubstrate (>= 0.9.7000)
 Architecture: iphoneos-arm
 Author: Lessica <82flex@gmail.com>
 Maintainer: Lessica <82flex@gmail.com>
-Description: Troll speed, but jailbroken.
+Description: Troll your speed, but jailbroken.

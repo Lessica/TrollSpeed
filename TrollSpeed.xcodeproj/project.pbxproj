@@ -613,7 +613,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libraries",
 				);
-				MARKETING_VERSION = 1.11.2;
+				MARKETING_VERSION = 1.11.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.xxtou.hudapp-sandbox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -656,7 +656,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libraries",
 				);
-				MARKETING_VERSION = 1.11.2;
+				MARKETING_VERSION = 1.11.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.xxtou.hudapp-sandbox";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -827,7 +827,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libraries",
 				);
-				MARKETING_VERSION = 1.11.2;
+				MARKETING_VERSION = 1.11.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -871,7 +871,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libraries",
 				);
-				MARKETING_VERSION = 1.11.2;
+				MARKETING_VERSION = 1.11.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
