@@ -1,8 +1,8 @@
 ARCHS := arm64  # arm64e
-TARGET := iphone:clang:latest:14.0
+TARGET := iphone:clang:15.6:14.0
 INSTALL_TARGET_PROCESSES := TrollSpeed
 ENT_PLIST := $(PWD)/supports/entitlements.plist
-LAUNCHD_PLIST := $(PWD)/layout/Library/LaunchDaemons/ch.xxtou.hudapp.plist
+LAUNCHD_PLIST := $(PWD)/layout/Library/LaunchDaemons/ch.xxtou.hudservices.plist
 
 include $(THEOS)/makefiles/common.mk
 

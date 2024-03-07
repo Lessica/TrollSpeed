@@ -51,7 +51,7 @@ BOOL IsHUDEnabled(void)
     return WEXITSTATUS(status) != 0;
 }
 
-#define LAUNCH_DAEMON_PATH ROOT_PATH("/Library/LaunchDaemons/ch.xxtou.hudapp.plist")
+#define LAUNCH_DAEMON_PATH ROOT_PATH("/Library/LaunchDaemons/ch.xxtou.hudservices.plist")
 
 void SetHUDEnabled(BOOL isEnabled)
 {
