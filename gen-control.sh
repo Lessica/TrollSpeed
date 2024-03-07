@@ -31,9 +31,7 @@ __EOF__
 chmod 0644 layout/DEBIAN/control
 
 # Write the Info.plist file
-defaults write $(pwd)/Resources/Info.plist CFBundleVersion $VERSION
 defaults write $(pwd)/Resources/Info.plist CFBundleShortVersionString $VERSION
 plutil -convert xml1 $(pwd)/Resources/Info.plist
-defaults write $(pwd)/supports/Sandbox-Info.plist CFBundleVersion $VERSION
 defaults write $(pwd)/supports/Sandbox-Info.plist CFBundleShortVersionString $VERSION
 plutil -convert xml1 $(pwd)/supports/Sandbox-Info.plist
