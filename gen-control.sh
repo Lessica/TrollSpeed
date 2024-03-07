@@ -17,7 +17,7 @@ mkdir -p layout/DEBIAN
 # Write the control file
 cat > layout/DEBIAN/control << __EOF__
 Package: ch.xxtou.hudapp
-Name: HUD App
+Name: TrollSpeed
 Version: $VERSION
 Section: Tweaks
 Depends: firmware (>= 14.0), mobilesubstrate (>= 0.9.7000)
