@@ -1,6 +1,6 @@
 Package: ch.xxtou.hudapp
 Name: HUD App
-Version: 1.11.4
+Version: 1.11.5
 Section: Tweaks
 Depends: firmware (>= 14.0), mobilesubstrate (>= 0.9.7000)
 Architecture: iphoneos-arm

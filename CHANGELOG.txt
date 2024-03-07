@@ -1,4 +1,0 @@
-## Bugfix
-
-- Allows haptic engine to run in background on iOS 16+.
-- Icon is now properly displayed on jailbroken devices.
