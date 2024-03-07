@@ -23,8 +23,20 @@ jobs:
 
       - name: Install Homebrew dependencies
         run: |
-          HOMEBREW_NO_AUTO_UPDATE=1 brew install dpkg ldid make libplist openssl@3
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install dpkg make libplist openssl@3
           echo "/usr/local/opt/make/libexec/gnubin" >> $GITHUB_PATH
+
+      - name: Checkout ldid
+        uses: actions/checkout@v4
+        with:
+          repository: Lessica/ldid
+          ref: master
+          path: ldid
+
+      - name: Build ldid
+        run: |
+          cd $GITHUB_WORKSPACE/ldid
+          make install
 
       - name: Checkout XXTouchNG/theos
         uses: actions/checkout@v4
