@@ -40,49 +40,12 @@ jobs:
           rm -rf $GITHUB_WORKSPACE/theos/sdks
           echo "THEOS=$GITHUB_WORKSPACE/theos" >> $GITHUB_ENV
 
-      - name: Restore additional SDKs
-        id: cached-sdks-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: ${{ env.THEOS }}/sdks
-          key: ${{ runner.os }}-sdks-${{ env.XCODE_VERSION }}
-
-      - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
-        name: Checkout theos/sdks
+      - name: Checkout theos/sdks
         uses: actions/checkout@v4
         with:
           repository: theos/sdks
           ref: master
           path: ${{ env.THEOS }}/sdks
-
-      - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
-        name: Checkout XXTouchNG/tbd
-        uses: actions/checkout@v4
-        with:
-          repository: XXTouchNG/tbd
-          ref: 30a6883092221e13d814c02ac41af1e565a40617
-          path: tbd
-
-      - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
-        name: Build tbd
-        run: |
-          cd $GITHUB_WORKSPACE/tbd
-          make
-          cp bin/tbd /usr/local/bin/tbd
-
-      - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
-        name: Generate additional SDKs
-        run: |
-          cd $THEOS/sdks
-          python3 create_patched_sdk.py --no-overwrite -x $(dirname $(dirname $(xcode-select -p)))
-
-      - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
-        name: Save additional SDKs
-        id: cached-sdks-save
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ env.THEOS }}/sdks
-          key: ${{ steps.cached-sdks-restore.outputs.cache-primary-key }}
 
       - name: Checkout
         uses: actions/checkout@v4
