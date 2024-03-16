@@ -33,9 +33,11 @@ chmod 0644 layout/DEBIAN/control
 RAND_BUILD_STR=$(openssl rand -hex 4)
 
 # Write the Info.plist file
-defaults write $(pwd)/Resources/Info.plist CFBundleShortVersionString $VERSION
-defaults write $(pwd)/Resources/Info.plist CFBundleVersion $RAND_BUILD_STR
-plutil -convert xml1 $(pwd)/Resources/Info.plist
-defaults write $(pwd)/supports/Sandbox-Info.plist CFBundleShortVersionString $VERSION
-defaults write $(pwd)/supports/Sandbox-Info.plist CFBundleVersion $RAND_BUILD_STR
-plutil -convert xml1 $(pwd)/supports/Sandbox-Info.plist
+defaults write $PWD/Resources/Info.plist CFBundleShortVersionString $VERSION
+defaults write $PWD/Resources/Info.plist CFBundleVersion $RAND_BUILD_STR
+plutil -convert xml1 $PWD/Resources/Info.plist
+chmod 0644 $PWD/Resources/Info.plist
+defaults write $PWD/supports/Sandbox-Info.plist CFBundleShortVersionString $VERSION
+defaults write $PWD/supports/Sandbox-Info.plist CFBundleVersion $RAND_BUILD_STR
+plutil -convert xml1 $PWD/supports/Sandbox-Info.plist
+chmod 0644 $PWD/supports/Sandbox-Info.plist

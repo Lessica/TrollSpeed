@@ -27,6 +27,7 @@ cd -
 cd TrollSpeed.xcarchive/Products
 mv Applications Payload
 ldid -Sentitlements.plist Payload/TrollSpeed.app
+chmod 0644 Payload/TrollSpeed.app/Info.plist
 zip -qr TrollSpeed.tipa Payload
 cd -
 mkdir -p packages
