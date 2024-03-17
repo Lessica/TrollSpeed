@@ -20,7 +20,7 @@ Package: ch.xxtou.hudapp
 Name: TrollSpeed
 Version: $VERSION
 Section: Tweaks
-Depends: firmware (>= 14.0), mobilesubstrate (>= 0.9.7000)
+Depends: firmware (>= 14.0)
 Architecture: iphoneos-arm
 Author: Lessica <82flex@gmail.com>
 Maintainer: Lessica <82flex@gmail.com>
@@ -37,6 +37,7 @@ defaults write $PWD/Resources/Info.plist CFBundleShortVersionString $VERSION
 defaults write $PWD/Resources/Info.plist CFBundleVersion $RAND_BUILD_STR
 plutil -convert xml1 $PWD/Resources/Info.plist
 chmod 0644 $PWD/Resources/Info.plist
+
 defaults write $PWD/supports/Sandbox-Info.plist CFBundleShortVersionString $VERSION
 defaults write $PWD/supports/Sandbox-Info.plist CFBundleVersion $RAND_BUILD_STR
 plutil -convert xml1 $PWD/supports/Sandbox-Info.plist
