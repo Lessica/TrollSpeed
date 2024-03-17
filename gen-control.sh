@@ -42,3 +42,6 @@ defaults write $PWD/supports/Sandbox-Info.plist CFBundleShortVersionString $VERS
 defaults write $PWD/supports/Sandbox-Info.plist CFBundleVersion $RAND_BUILD_STR
 plutil -convert xml1 $PWD/supports/Sandbox-Info.plist
 chmod 0644 $PWD/supports/Sandbox-Info.plist
+
+XCODE_PROJ_PBXPROJ=$PWD/TrollSpeed.xcodeproj/project.pbxproj
+sed -i '' "s/MARKETING_VERSION = .*;/MARKETING_VERSION = $VERSION;/g" $XCODE_PROJ_PBXPROJ

@@ -1,8 +1,8 @@
 Package: ch.xxtou.hudapp
 Name: TrollSpeed
-Version: 1.11.9
+Version: 1.11.10
 Section: Tweaks
-Depends: firmware (>= 14.0), mobilesubstrate (>= 0.9.7000)
+Depends: firmware (>= 14.0)
 Architecture: iphoneos-arm
 Author: Lessica <82flex@gmail.com>
 Maintainer: Lessica <82flex@gmail.com>
