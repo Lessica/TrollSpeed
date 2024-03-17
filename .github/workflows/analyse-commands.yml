@@ -9,7 +9,7 @@ env:
   THEOS: ''
   GIT_TAG: ''
   GIT_COMMIT: ''
-  XCODE_VERSION: '15.2'
+  XCODE_VERSION: '14.3.1'
 
 jobs:
   build:

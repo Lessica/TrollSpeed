@@ -1,6 +1,6 @@
 Package: ch.xxtou.hudapp
 Name: TrollSpeed
-Version: 1.11.10
+Version: 1.11.11
 Section: Tweaks
 Depends: firmware (>= 14.0)
 Architecture: iphoneos-arm
