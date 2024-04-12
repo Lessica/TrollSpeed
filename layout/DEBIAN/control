@@ -1,5 +1,5 @@
-Package: ch.xxtou.hudapp
-Name: TrollSpeed
+Package: ch.xxtou.hudapp.jb
+Name: TrollSpeed JB
 Version: 1.11.11
 Section: Tweaks
 Depends: firmware (>= 14.0)

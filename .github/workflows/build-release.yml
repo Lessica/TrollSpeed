@@ -95,7 +95,7 @@ jobs:
           path: |
             TrollSpeed/packages/TrollSpeed_*.tipa
             TrollSpeed/packages/TrollSpeed+AppIntents16_*.tipa
-            TrollSpeed/packages/ch.xxtou.hudapp_*.deb
+            TrollSpeed/packages/ch.xxtou.hudapp.jb_*.deb
 
       - name: Upload symbols
         uses: actions/upload-artifact@v4
@@ -112,4 +112,4 @@ jobs:
           files: |
             TrollSpeed/packages/TrollSpeed_*.tipa
             TrollSpeed/packages/TrollSpeed+AppIntents16_*.tipa
-            TrollSpeed/packages/ch.xxtou.hudapp_*.deb
+            TrollSpeed/packages/ch.xxtou.hudapp.jb_*.deb

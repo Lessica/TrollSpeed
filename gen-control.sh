@@ -16,8 +16,8 @@ mkdir -p layout/DEBIAN
 
 # Write the control file
 cat > layout/DEBIAN/control << __EOF__
-Package: ch.xxtou.hudapp
-Name: TrollSpeed
+Package: ch.xxtou.hudapp.jb
+Name: TrollSpeed JB
 Version: $VERSION
 Section: Tweaks
 Depends: firmware (>= 14.0)
