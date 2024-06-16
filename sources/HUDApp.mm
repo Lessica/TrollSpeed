@@ -7,6 +7,7 @@
 
 #import <notify.h>
 #import <mach-o/dyld.h>
+#import <sys/utsname.h>
 #import <objc/runtime.h>
 
 #if !NO_TROLL
@@ -18,6 +19,13 @@
 #import "UIApplication+Private.h"
 
 #define PID_PATH "/var/mobile/Library/Caches/ch.xxtou.hudapp.pid"
+
+static __used
+NSString *mDeviceModel(void) {
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    return [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+}
 
 static __used
 void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHIDEventRef event)
@@ -36,7 +44,10 @@ void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHI
     BOOL isExactly15 = NO;
     static NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
     if (version.majorVersion == 15 && version.minorVersion == 0 && version.patchVersion == 0) {
-        isExactly15 = YES;
+        NSString *deviceModel = mDeviceModel();
+        if (![deviceModel hasPrefix:@"iPhone13,"] && ![deviceModel hasPrefix:@"iPhone14,"]) { // iPhone 12 & 13 Series
+            isExactly15 = YES;
+        }
     }
 
     if (@available(iOS 15.0, *)) {

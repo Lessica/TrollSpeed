@@ -8,7 +8,7 @@
 	<false/>
 	<key>EnvironmentVariables</key>
 	<dict>
-		<key>_MSSafeMode</key>
+		<key>DISABLE_TWEAKS</key>
 		<string>1</string>
 	</dict>
 	<key>GroupName</key>
