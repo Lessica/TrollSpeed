@@ -10,8 +10,6 @@ Shows upload &amp; download speed below the status bar.
 
 Tested and expected to work on all iOS versions supported by opa334’s TrollStore.
 
-You need to enable “Developer Mode” on iOS 16 or above to use TrollSpeed or Misaka.
-
 ## How it works?
 
 [TrollStore](https://github.com/opa334/TrollStore) + [UIDaemon](https://github.com/limneos/UIDaemon) + [NetworkSpeed13](https://github.com/lwlsw/NetworkSpeed13) + (some magic)
