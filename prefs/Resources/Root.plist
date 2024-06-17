@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Custom Font Size</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>ch.xxtou.hudapp.prefs</string>
+			<key>key</key>
+			<string>usesCustomFontSize</string>
+			<key>label</key>
+			<string>Uses Custom Font Size</string>
+			<key>PostNotification</key>
+			<string>ch.xxtou.notification.hud.reload</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>9</real>
+			<key>defaults</key>
+			<string>ch.xxtou.hudapp.prefs</string>
+			<key>key</key>
+			<string>realCustomFontSize</string>
+			<key>label</key>
+			<string>Custom Font Size</string>
+			<key>max</key>
+			<real>12</real>
+			<key>min</key>
+			<real>8</real>
+			<key>showValue</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>ch.xxtou.notification.hud.reload</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Custom Offset</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>ch.xxtou.hudapp.prefs</string>
+			<key>key</key>
+			<string>usesCustomOffset</string>
+			<key>label</key>
+			<string>Uses Custom Offset</string>
+			<key>PostNotification</key>
+			<string>ch.xxtou.notification.hud.reload</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>0</real>
+			<key>defaults</key>
+			<string>ch.xxtou.hudapp.prefs</string>
+			<key>key</key>
+			<string>realCustomOffsetX</string>
+			<key>label</key>
+			<string>Custom Offset X</string>
+			<key>max</key>
+			<real>100</real>
+			<key>min</key>
+			<real>-100</real>
+			<key>showValue</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>ch.xxtou.notification.hud.reload</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>0</real>
+			<key>defaults</key>
+			<string>ch.xxtou.hudapp.prefs</string>
+			<key>key</key>
+			<string>realCustomOffsetY</string>
+			<key>label</key>
+			<string>Custom Offset Y</string>
+			<key>max</key>
+			<real>100</real>
+			<key>min</key>
+			<real>-100</real>
+			<key>showValue</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>ch.xxtou.notification.hud.reload</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string></string>
+			<key>footerText</key>
+			<string>Made with ♥ by @Lessica and @jmpews</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Reset to Default</string>
+			<key>action</key>
+			<string>resetToDefaults:</string>
+			<key>defaults</key>
+			<string>ch.xxtou.hudapp.prefs</string>
+			<key>PostNotification</key>
+			<string>ch.xxtou.notification.hud.reload</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>TrollSpeed</string>
+</dict>
+</plist>

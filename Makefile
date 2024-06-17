@@ -36,10 +36,12 @@ TrollSpeed_CODESIGN_FLAGS += -Ssupports/entitlements.plist
 
 include $(THEOS_MAKE_PATH)/application.mk
 
+SUBPROJECTS += prefs
 ifneq ($(FINALPACKAGE),1)
 SUBPROJECTS += memory_pressure
-include $(THEOS_MAKE_PATH)/aggregate.mk
 endif
+
+include $(THEOS_MAKE_PATH)/aggregate.mk
 
 before-all::
 	$(ECHO_NOTHING)defaults write $(LAUNCHD_PLIST) ProgramArguments -array "$(THEOS_PACKAGE_INSTALL_PREFIX)/Applications/TrollSpeed.app/TrollSpeed" "-hud" || true$(ECHO_END)

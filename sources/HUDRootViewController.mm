@@ -10,6 +10,7 @@
 #import <ifaddrs.h>
 #import <objc/runtime.h>
 #import <mach/vm_param.h>
+#import <Foundation/Foundation.h>
 
 #import "HUDPresetPosition.h"
 #import "HUDRootViewController.h"
@@ -686,11 +687,60 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 }
 
 #if !NO_TROLL
-- (BOOL)usesCustomFontSize { return [GetStandardUserDefaults() boolForKey:HUDUserDefaultsKeyUsesCustomFontSize]; }
-- (CGFloat)realCustomFontSize { return [GetStandardUserDefaults() doubleForKey:HUDUserDefaultsKeyRealCustomFontSize]; }
-- (BOOL)usesCustomOffset { return [GetStandardUserDefaults() boolForKey:HUDUserDefaultsKeyUsesCustomOffset]; }
-- (CGFloat)realCustomOffsetX { return [GetStandardUserDefaults() doubleForKey:HUDUserDefaultsKeyRealCustomOffsetX]; }
-- (CGFloat)realCustomOffsetY { return [GetStandardUserDefaults() doubleForKey:HUDUserDefaultsKeyRealCustomOffsetY]; }
+#define PREFS_PATH "/var/mobile/Library/Preferences/ch.xxtou.hudapp.prefs.plist"
+
+- (NSDictionary *)extraUserDefaultsDictionary {
+    static BOOL isJailbroken = NO;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+      isJailbroken = [[NSFileManager defaultManager]
+          fileExistsAtPath:ROOT_PATH_NS("/Library/PreferenceBundles/TrollSpeedPrefs.bundle")];
+    });
+    if (!isJailbroken) {
+        return nil;
+    }
+    return [NSDictionary dictionaryWithContentsOfFile:ROOT_PATH_NS(PREFS_PATH)];
+}
+
+- (BOOL)usesCustomFontSize {
+    NSDictionary *extraUserDefaults = [self extraUserDefaultsDictionary];
+    if (extraUserDefaults) {
+        return [extraUserDefaults[HUDUserDefaultsKeyUsesCustomFontSize] boolValue];
+    }
+    return [GetStandardUserDefaults() boolForKey:HUDUserDefaultsKeyUsesCustomFontSize];
+}
+
+- (CGFloat)realCustomFontSize {
+    NSDictionary *extraUserDefaults = [self extraUserDefaultsDictionary];
+    if (extraUserDefaults) {
+        return [extraUserDefaults[HUDUserDefaultsKeyRealCustomFontSize] doubleValue];
+    }
+    return [GetStandardUserDefaults() doubleForKey:HUDUserDefaultsKeyRealCustomFontSize];
+}
+
+- (BOOL)usesCustomOffset {
+    NSDictionary *extraUserDefaults = [self extraUserDefaultsDictionary];
+    if (extraUserDefaults) {
+        return [extraUserDefaults[HUDUserDefaultsKeyUsesCustomOffset] boolValue];
+    }
+    return [GetStandardUserDefaults() boolForKey:HUDUserDefaultsKeyUsesCustomOffset];
+}
+
+- (CGFloat)realCustomOffsetX {
+    NSDictionary *extraUserDefaults = [self extraUserDefaultsDictionary];
+    if (extraUserDefaults) {
+        return [extraUserDefaults[HUDUserDefaultsKeyRealCustomOffsetX] doubleValue];
+    }
+    return [GetStandardUserDefaults() doubleForKey:HUDUserDefaultsKeyRealCustomOffsetX];
+}
+
+- (CGFloat)realCustomOffsetY {
+    NSDictionary *extraUserDefaults = [self extraUserDefaultsDictionary];
+    if (extraUserDefaults) {
+        return [extraUserDefaults[HUDUserDefaultsKeyRealCustomOffsetY] doubleValue];
+    }
+    return [GetStandardUserDefaults() doubleForKey:HUDUserDefaultsKeyRealCustomOffsetY];
+}
 #else
 - (BOOL)usesCustomFontSize { return NO; }
 - (CGFloat)realCustomFontSize { return HUD_FONT_SIZE; }
