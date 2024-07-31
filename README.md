@@ -6,6 +6,10 @@
 ![Latest Release](https://img.shields.io/github/v/release/Lessica/TrollSpeed)
 ![MIT License](https://img.shields.io/github/license/Lessica/TrollSpeed)
 
+[now-on-havoc]: https://havoc.app/package/trollspeed 
+
+[<img width="150" src="https://docs.havoc.app/img/badges/get_square.svg" />][now-on-havoc]
+
 Shows upload &amp; download speed below the status bar.
 
 Tested and expected to work on all iOS versions supported by opa334’s TrollStore.
