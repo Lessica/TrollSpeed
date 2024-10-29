@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
             log_debug(OS_LOG_DEFAULT, "HUD pid %d, pgid %d", pid, pgid);
 
             NSString *pidString = [NSString stringWithFormat:@"%d", pid];
-            [pidString writeToFile:ROOT_PATH_NS(PID_PATH)
+            [pidString writeToFile:JBROOT_PATH_NSSTRING(@PID_PATH)
                         atomically:YES
                           encoding:NSUTF8StringEncoding
                              error:nil];
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
         }
         else if (strcmp(argv[1], "-exit") == 0)
         {
-            NSString *pidString = [NSString stringWithContentsOfFile:ROOT_PATH_NS(PID_PATH)
+            NSString *pidString = [NSString stringWithContentsOfFile:JBROOT_PATH_NSSTRING(@"" PID_PATH)
                                                             encoding:NSUTF8StringEncoding
                                                                error:nil];
 
@@ -170,14 +170,14 @@ int main(int argc, char *argv[])
             {
                 pid_t pid = (pid_t)[pidString intValue];
                 kill(pid, SIGKILL);
-                unlink([ROOT_PATH_NS(PID_PATH) UTF8String]);
+                unlink([JBROOT_PATH_NSSTRING(@"" PID_PATH) UTF8String]);
             }
 
             return EXIT_SUCCESS;
         }
         else if (strcmp(argv[1], "-check") == 0)
         {
-            NSString *pidString = [NSString stringWithContentsOfFile:ROOT_PATH_NS(PID_PATH)
+            NSString *pidString = [NSString stringWithContentsOfFile:JBROOT_PATH_NSSTRING(@"" PID_PATH)
                                                             encoding:NSUTF8StringEncoding
                                                                error:nil];
 

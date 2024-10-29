@@ -1,5 +1,5 @@
 ARCHS := arm64  # arm64e
-TARGET := iphone:clang:15.6:14.0
+TARGET := iphone:clang:16.5:14.0
 INSTALL_TARGET_PROCESSES := TrollSpeed
 ENT_PLIST := $(PWD)/supports/entitlements.plist
 LAUNCHD_PLIST := $(PWD)/layout/Library/LaunchDaemons/ch.xxtou.hudservices.plist
@@ -10,11 +10,17 @@ GIT_TAG_SHORT := $(shell git describe --tags --always --abbrev=0)
 APPLICATION_NAME := TrollSpeed
 
 TrollSpeed_USE_MODULES := 0
+
 TrollSpeed_FILES += $(wildcard sources/*.mm sources/*.m)
 TrollSpeed_FILES += $(wildcard sources/KIF/*.mm sources/KIF/*.m)
 TrollSpeed_FILES += $(wildcard sources/*.swift)
 TrollSpeed_FILES += $(wildcard sources/SPLarkController/*.swift)
 TrollSpeed_FILES += $(wildcard sources/SnapshotSafeView/*.swift)
+
+ifeq ($(THEOS_PACKAGE_SCHEME),roothide)
+TrollSpeed_FILES += libroot/dyn.c
+TrollSpeed_LIBRARIES += roothide
+endif
 
 # App Intents will be built from Xcode.
 # TrollSpeed_FILES += $(wildcard sources/Intents/*.swift)

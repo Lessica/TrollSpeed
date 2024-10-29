@@ -79,9 +79,9 @@ jobs:
           cd $GITHUB_WORKSPACE/TrollSpeed
           ./gen-control.sh ${{ env.GIT_TAG }}
           ./build.sh ${{ env.GIT_TAG }}
-          THEOS_PACKAGE_SCHEME=rootless FINALPACKAGE=1 make package
-          FINALPACKAGE=1 make clean
-          FINALPACKAGE=1 make package
+          THEOS_PACKAGE_SCHEME=roothide FINALPACKAGE=1 make clean package
+          THEOS_PACKAGE_SCHEME=rootless FINALPACKAGE=1 make clean package
+          FINALPACKAGE=1 make clean package
 
       - name: Collect symbols
         run: |

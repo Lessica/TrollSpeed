@@ -51,7 +51,7 @@ BOOL IsHUDEnabled(void)
     return WEXITSTATUS(status) != 0;
 }
 
-#define LAUNCH_DAEMON_PATH ROOT_PATH("/Library/LaunchDaemons/ch.xxtou.hudservices.plist")
+#define LAUNCH_DAEMON_PATH JBROOT_PATH_CSTRING("/Library/LaunchDaemons/ch.xxtou.hudservices.plist")
 
 void SetHUDEnabled(BOOL isEnabled)
 {
@@ -71,7 +71,7 @@ void SetHUDEnabled(BOOL isEnabled)
         }
 
         pid_t task_pid;
-        static const char *executablePath = ROOT_PATH("/usr/bin/launchctl");
+        static const char *executablePath = JBROOT_PATH_CSTRING("/usr/bin/launchctl");
         const char *args[] = { executablePath, isEnabled ? "load" : "unload", LAUNCH_DAEMON_PATH, NULL };
         posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
         posix_spawnattr_destroy(&attr);

@@ -43,6 +43,8 @@
 			<true/>
 			<key>PostNotification</key>
 			<string>ch.xxtou.notification.hud.reload</string>
+			<key>isContinuous</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -76,13 +78,15 @@
 			<key>label</key>
 			<string>Custom Offset X</string>
 			<key>max</key>
-			<real>100</real>
+			<real>600</real>
 			<key>min</key>
-			<real>-100</real>
+			<real>-600</real>
 			<key>showValue</key>
 			<true/>
 			<key>PostNotification</key>
 			<string>ch.xxtou.notification.hud.reload</string>
+			<key>isContinuous</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -103,6 +107,8 @@
 			<true/>
 			<key>PostNotification</key>
 			<string>ch.xxtou.notification.hud.reload</string>
+			<key>isContinuous</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -123,6 +129,8 @@
 			<string>ch.xxtou.hudapp.prefs</string>
 			<key>PostNotification</key>
 			<string>ch.xxtou.notification.hud.reload</string>
+			<key>isDestructive</key>
+			<true/>
 		</dict>
 	</array>
 	<key>title</key>

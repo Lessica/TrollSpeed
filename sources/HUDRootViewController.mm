@@ -502,17 +502,17 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 - (void)loadUserDefaults:(BOOL)forceReload
 {
     if (forceReload || !_userDefaults)
-        _userDefaults = [[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH))] mutableCopy] ?: [NSMutableDictionary dictionary];
+        _userDefaults = [[NSDictionary dictionaryWithContentsOfFile:(JBROOT_PATH_NSSTRING(USER_DEFAULTS_PATH))] mutableCopy] ?: [NSMutableDictionary dictionary];
 }
 
 - (void)saveUserDefaults
 {
-    BOOL wroteSucceed = [_userDefaults writeToFile:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH)) atomically:YES];
+    BOOL wroteSucceed = [_userDefaults writeToFile:(JBROOT_PATH_NSSTRING(USER_DEFAULTS_PATH)) atomically:YES];
     if (wroteSucceed) {
         [[NSFileManager defaultManager] setAttributes:@{
             NSFileOwnerAccountID: @501,
             NSFileGroupOwnerAccountID: @501,
-        } ofItemAtPath:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH)) error:nil];
+        } ofItemAtPath:(JBROOT_PATH_NSSTRING(USER_DEFAULTS_PATH)) error:nil];
         notify_post(NOTIFY_RELOAD_APP);
     }
 }
@@ -576,7 +576,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
 + (BOOL)passthroughMode
 {
-    return [[[NSDictionary dictionaryWithContentsOfFile:(ROOT_PATH_NS_VAR(USER_DEFAULTS_PATH))] objectForKey:HUDUserDefaultsKeyPassthroughMode] boolValue];
+    return [[[NSDictionary dictionaryWithContentsOfFile:(JBROOT_PATH_NSSTRING(USER_DEFAULTS_PATH))] objectForKey:HUDUserDefaultsKeyPassthroughMode] boolValue];
 }
 
 - (BOOL)isLandscapeOrientation
@@ -694,12 +694,12 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
       isJailbroken = [[NSFileManager defaultManager]
-          fileExistsAtPath:ROOT_PATH_NS("/Library/PreferenceBundles/TrollSpeedPrefs.bundle")];
+          fileExistsAtPath:JBROOT_PATH_NSSTRING(@"/Library/PreferenceBundles/TrollSpeedPrefs.bundle")];
     });
     if (!isJailbroken) {
         return nil;
     }
-    return [NSDictionary dictionaryWithContentsOfFile:ROOT_PATH_NS(PREFS_PATH)];
+    return [NSDictionary dictionaryWithContentsOfFile:JBROOT_PATH_NSSTRING(@PREFS_PATH)];
 }
 
 - (BOOL)usesCustomFontSize {
@@ -897,7 +897,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
     if (usesCustomOffset)
     {
-        realCustomOffsetX = [self realCustomOffsetX];
+        realCustomOffsetX = [self realCustomOffsetX] * (-1);
         realCustomOffsetY = [self realCustomOffsetY];
     }
 

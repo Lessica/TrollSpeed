@@ -9,8 +9,10 @@
 
     #import <Foundation/Foundation.h>
     #import <UIKit/UIKit.h>
+
+    #import <libroot.h>
     #import <os/log.h>
-    #import "rootless.h"
+
     #import "NSUserDefaults+Private.h"
 #endif
 
