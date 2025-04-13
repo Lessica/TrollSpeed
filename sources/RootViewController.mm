@@ -55,26 +55,12 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
 - (BOOL)isHUDEnabled
 {
-#if !NO_TROLL
     return IsHUDEnabled();
-#else
-    return _localHUDRootViewController != nil;
-#endif
 }
 
 - (void)setHUDEnabled:(BOOL)enabled
 {
-#if !NO_TROLL
     SetHUDEnabled(enabled);
-#else
-    if (enabled && _localHUDRootViewController == nil) {
-        _localHUDRootViewController = [[HUDRootViewController alloc] init];
-        [self presentViewController:_localHUDRootViewController animated:YES completion:nil];
-    } else {
-        [_localHUDRootViewController dismissViewControllerAnimated:YES completion:nil];
-        _localHUDRootViewController = nil;
-    }
-#endif
 }
 
 - (void)registerNotifications
@@ -83,7 +69,7 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     notify_register_dispatch(NOTIFY_RELOAD_APP, &token, dispatch_get_main_queue(), ^(int token) {
         [self loadUserDefaults:YES];
     });
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHUDNotificationReceived:) name:kToggleHUDAfterLaunchNotificationName object:nil];
 }
 
@@ -109,7 +95,10 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     [_topLeftButton setTintColor:[UIColor whiteColor]];
     [_topLeftButton addTarget:self action:@selector(tapTopLeftButton:) forControlEvents:UIControlEventTouchUpInside];
     [_topLeftButton setImage:[UIImage systemImageNamed:@"arrow.up.left"] forState:UIControlStateNormal];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [_topLeftButton setAdjustsImageWhenHighlighted:NO];
+#pragma clang diagnostic pop
     [self.backgroundView addSubview:_topLeftButton];
     if (@available(iOS 15.0, *))
     {
@@ -131,7 +120,10 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     [_topRightButton setTintColor:[UIColor whiteColor]];
     [_topRightButton addTarget:self action:@selector(tapTopRightButton:) forControlEvents:UIControlEventTouchUpInside];
     [_topRightButton setImage:[UIImage systemImageNamed:@"arrow.up.right"] forState:UIControlStateNormal];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [_topRightButton setAdjustsImageWhenHighlighted:NO];
+#pragma clang diagnostic pop
     [self.backgroundView addSubview:_topRightButton];
     if (@available(iOS 15.0, *))
     {
@@ -152,7 +144,10 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     [_topCenterButton setTintColor:[UIColor whiteColor]];
     [_topCenterButton addTarget:self action:@selector(tapTopCenterButton:) forControlEvents:UIControlEventTouchUpInside];
     [_topCenterButton setImage:[UIImage systemImageNamed:@"arrow.up"] forState:UIControlStateNormal];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [_topCenterButton setAdjustsImageWhenHighlighted:NO];
+#pragma clang diagnostic pop
     [self.backgroundView addSubview:_topCenterButton];
     if (@available(iOS 15.0, *))
     {
@@ -303,7 +298,7 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Reset Settings", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self resetUserDefaults];
         }]];
-#if DEBUG && !NO_TROLL
+#if DEBUG && !TARGET_OS_SIMULATOR
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Memory Pressure", nil) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             SimulateMemoryPressure();
         }]];
@@ -314,14 +309,12 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
 - (void)resetUserDefaults
 {
-#if !NO_TROLL
     // Reset user defaults
     NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
     if (bundleIdentifier) {
         [GetStandardUserDefaults() removePersistentDomainForName:bundleIdentifier];
         [GetStandardUserDefaults() synchronize];
     }
-#endif
 
     // Reset custom user defaults
     BOOL removed = [[NSFileManager defaultManager] removeItemAtPath:(JBROOT_PATH_NSSTRING(USER_DEFAULTS_PATH)) error:nil];
@@ -557,13 +550,13 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
 
         // replace all "@GITHUB@" with github icon
         NSRange atRange;
-        
+
         atRange = [creditsAttributedText.string rangeOfString:@"@GITHUB@"];
         while (atRange.location != NSNotFound) {
             [creditsAttributedText replaceCharactersInRange:atRange withAttributedString:githubIconTextFull];
             atRange = [creditsAttributedText.string rangeOfString:@"@GITHUB@"];
         }
-        
+
         // replace all "@TRANSLATION@" with character bubble
         atRange = [creditsAttributedText.string rangeOfString:@"@TRANSLATION@"];
         while (atRange.location != NSNotFound) {

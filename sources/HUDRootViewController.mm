@@ -19,7 +19,6 @@
 
 #pragma mark -
 
-#if !NO_TROLL
 #import "FBSOrientationUpdate.h"
 #import "FBSOrientationObserver.h"
 #import "UIApplication+Private.h"
@@ -40,7 +39,7 @@ static void LaunchServicesApplicationStateChanged
     /* Application installed or uninstalled */
 
     BOOL isAppInstalled = NO;
-    
+
     for (LSApplicationProxy *app in [[objc_getClass("LSApplicationWorkspace") defaultWorkspace] allApplications])
     {
         if ([app.applicationIdentifier isEqualToString:@"ch.xxtou.hudapp"])
@@ -69,10 +68,10 @@ static void SpringBoardLockStatusChanged
     if ([lockState isEqualToString:@NOTIFY_UI_LOCKSTATE])
     {
         mach_port_t sbsPort = SBSSpringBoardServerPort();
-        
+
         if (sbsPort == MACH_PORT_NULL)
             return;
-        
+
         BOOL isLocked;
         BOOL isPasscodeSet;
         SBGetScreenLockStatus(sbsPort, &isLocked, &isPasscodeSet);
@@ -89,7 +88,6 @@ static void SpringBoardLockStatusChanged
         }
     }
 }
-#endif
 
 #pragma mark - NetworkSpeed13
 
@@ -279,7 +277,7 @@ static UpDownBytes getUpDownBytes()
     UpDownBytes upDownBytes;
     upDownBytes.inputBytes = 0;
     upDownBytes.outputBytes = 0;
-    
+
     if (getifaddrs(&ifa_list) == -1) return upDownBytes;
 
     for (ifa = ifa_list; ifa; ifa = ifa->ifa_next)
@@ -287,7 +285,7 @@ static UpDownBytes getUpDownBytes()
         /* Skip invalid interfaces */
         if (ifa->ifa_name == NULL || ifa->ifa_addr == NULL || ifa->ifa_data == NULL)
             continue;
-        
+
         /* Skip interfaces that are not link level interfaces */
         if (AF_LINK != ifa->ifa_addr->sa_family)
             continue;
@@ -295,17 +293,17 @@ static UpDownBytes getUpDownBytes()
         /* Skip interfaces that are not up or running */
         if (!(ifa->ifa_flags & IFF_UP) && !(ifa->ifa_flags & IFF_RUNNING))
             continue;
-        
+
         /* Skip interfaces that are not ethernet or cellular */
         if (strncmp(ifa->ifa_name, "en", 2) && strncmp(ifa->ifa_name, "pdp_ip", 6))
             continue;
-        
+
         struct if_data *if_data = (struct if_data *)ifa->ifa_data;
-        
+
         upDownBytes.inputBytes += if_data->ifi_ibytes;
         upDownBytes.outputBytes += if_data->ifi_obytes;
     }
-    
+
     freeifaddrs(ifa_list);
     return upDownBytes;
 }
@@ -348,13 +346,13 @@ static NSAttributedString *formattedAttributedString(BOOL isFocused)
                 upDiff = upDownBytes.outputBytes - prevOutputBytes;
             else
                 upDiff = 0;
-            
+
             if (upDownBytes.inputBytes > prevInputBytes)
                 downDiff = upDownBytes.inputBytes - prevInputBytes;
             else
                 downDiff = 0;
         }
-        
+
         prevOutputBytes = upDownBytes.outputBytes;
         prevInputBytes = upDownBytes.inputBytes;
 
@@ -410,7 +408,7 @@ static NSAttributedString *formattedAttributedString(BOOL isFocused)
                 [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString:formattedSpeed(downDiff, isFocused) attributes:@{ NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:HUD_FONT_SIZE weight:HUD_FONT_WEIGHT] }]];
             }
         }
-        
+
         return [mutableString copy];
     }
 }
@@ -444,9 +442,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     NSLayoutConstraint *_leadingConstraint;
     NSLayoutConstraint *_trailingConstraint;
     UIInterfaceOrientation _orientation;
-#if !NO_TROLL
     FBSOrientationObserver *_orientationObserver;
-#endif
 }
 
 - (void)registerNotifications
@@ -456,9 +452,8 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         [self reloadUserDefaults];
     });
 
-#if !NO_TROLL
     CFNotificationCenterRef darwinCenter = CFNotificationCenterGetDarwinNotifyCenter();
-    
+
     CFNotificationCenterAddObserver(
         darwinCenter,
         (__bridge const void *)self,
@@ -467,7 +462,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         NULL,
         CFNotificationSuspensionBehaviorCoalesce
     );
-    
+
     CFNotificationCenterAddObserver(
         darwinCenter,
         (__bridge const void *)self,
@@ -483,10 +478,8 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     [userDefaults addObserver:self forKeyPath:HUDUserDefaultsKeyUsesCustomOffset options:NSKeyValueObservingOptionNew context:nil];
     [userDefaults addObserver:self forKeyPath:HUDUserDefaultsKeyRealCustomOffsetX options:NSKeyValueObservingOptionNew context:nil];
     [userDefaults addObserver:self forKeyPath:HUDUserDefaultsKeyRealCustomOffsetY options:NSKeyValueObservingOptionNew context:nil];
-#endif
 }
 
-#if !NO_TROLL
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if ([keyPath isEqualToString:HUDUserDefaultsKeyUsesCustomFontSize] ||
         [keyPath isEqualToString:HUDUserDefaultsKeyRealCustomFontSize] ||
@@ -497,7 +490,6 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         [self reloadUserDefaults];
     }
 }
-#endif
 
 - (void)loadUserDefaults:(BOOL)forceReload
 {
@@ -686,7 +678,6 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     [self saveUserDefaults];
 }
 
-#if !NO_TROLL
 #define PREFS_PATH "/var/mobile/Library/Preferences/ch.xxtou.hudapp.prefs.plist"
 
 - (NSDictionary *)extraUserDefaultsDictionary {
@@ -741,13 +732,6 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     }
     return [GetStandardUserDefaults() doubleForKey:HUDUserDefaultsKeyRealCustomOffsetY];
 }
-#else
-- (BOOL)usesCustomFontSize { return NO; }
-- (CGFloat)realCustomFontSize { return HUD_FONT_SIZE; }
-- (BOOL)usesCustomOffset { return NO; }
-- (CGFloat)realCustomOffsetX { return 0; }
-- (CGFloat)realCustomOffsetY { return 0; }
-#endif
 
 - (instancetype)init
 {
@@ -755,7 +739,6 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     if (self) {
         _constraints = [NSMutableArray array];
         [self registerNotifications];
-#if !NO_TROLL
         _orientationObserver = [[objc_getClass("FBSOrientationObserver") alloc] init];
         __weak HUDRootViewController *weakSelf = self;
         [_orientationObserver setHandler:^(FBSOrientationUpdate *orientationUpdate) {
@@ -764,16 +747,13 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
                 [strongSelf updateOrientation:(UIInterfaceOrientation)orientationUpdate.orientation animateWithDuration:orientationUpdate.duration];
             });
         }];
-#endif
     }
     return self;
 }
 
 - (void)dealloc
 {
-#if !NO_TROLL
     [_orientationObserver invalidate];
-#endif
 }
 
 - (void)updateSpeedLabel
@@ -869,10 +849,6 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
     [NSLayoutConstraint deactivateConstraints:_constraints];
     [_constraints removeAllObjects];
 
-#if NO_TROLL
-    _orientation = [self.view.window.windowScene interfaceOrientation];
-#endif
-
     BOOL isLandscape;
     if (_orientation == UIInterfaceOrientationUnknown) {
         isLandscape = CGRectGetWidth(self.view.bounds) > CGRectGetHeight(self.view.bounds);
@@ -908,15 +884,9 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         CGFloat paddingNearNotch;
         CGFloat paddingFarFromNotch;
 
-#if !NO_TROLL
         notchHeight = CGRectGetMinY(layoutGuide.layoutFrame);
         paddingNearNotch = (notchHeight > 30) ? notchHeight - 16 : 4;
         paddingFarFromNotch = (notchHeight > 30) ? -24 : -4;
-#else
-        notchHeight = CGRectGetMinX(layoutGuide.layoutFrame);
-        paddingNearNotch = (notchHeight > 30) ? -16 : 4;
-        paddingFarFromNotch = (notchHeight > 30) ? notchHeight - 24 : -4;
-#endif
 
         paddingNearNotch += realCustomOffsetX;
         paddingFarFromNotch += realCustomOffsetX;
@@ -976,13 +946,8 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
                 minimumTopConstraintConstant = -12;
                 minimumBottomConstraintConstant = -4;
             } else {
-#if !NO_TROLL
                 minimumTopConstraintConstant = (isPad ? 30 : 20);
                 minimumBottomConstraintConstant = -20;
-#else
-                minimumTopConstraintConstant = (isPad ? 10 : 0);
-                minimumBottomConstraintConstant = -20;
-#endif
             }
 
             minimumTopConstraintConstant += realCustomOffsetY;
@@ -1064,20 +1029,20 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onBlur:) object:view];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onFocus:) object:view];
-    
+
     _isFocused = YES;
     [self updateSpeedLabel];
     [self resetLoopTimer];
 
     HUDPresetPosition selectedMode = [self selectedModeForCurrentOrientation];
     BOOL isCentered = (selectedMode == HUDPresetPositionTopCenter || selectedMode == HUDPresetPositionTopCenterMost);
-    
+
     CGFloat topTrans = CGRectGetHeight(view.bounds) * (scaleFactor / 2);
     CGFloat leadingTrans = (isCentered ? 0 : (selectedMode == HUDPresetPositionTopLeft ? CGRectGetWidth(view.bounds) * (scaleFactor / 2) : -CGRectGetWidth(view.bounds) * (scaleFactor / 2)));
 
     if (beginFromInitialState)
         [view setTransform:CGAffineTransformIdentity];
-    
+
     [UIView animateWithDuration:duration delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:UIViewAnimationOptionCurveEaseIn | UIViewAnimationOptionBeginFromCurrentState animations:^{
         if (ABS(leadingTrans) > 1e-6 || ABS(topTrans) > 1e-6)
         {
@@ -1102,7 +1067,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onBlur:) object:view];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(onFocus:) object:view];
-    
+
     _isFocused = NO;
     [self updateSpeedLabel];
     [self resetLoopTimer];
@@ -1189,7 +1154,7 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         {
             if (!_notificationFeedbackGenerator)
                 _notificationFeedbackGenerator = [[UINotificationFeedbackGenerator alloc] init];
-            
+
             [_notificationFeedbackGenerator prepare];
             [_notificationFeedbackGenerator notificationOccurred:UINotificationFeedbackTypeError];
 
@@ -1242,7 +1207,6 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 
 @end
 
-#if !NO_TROLL
 @implementation HUDRootViewController (Troll)
 
 static inline CGFloat orientationAngle(UIInterfaceOrientation orientation)
@@ -1327,53 +1291,3 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
 }
 
 @end
-#else
-@implementation HUDRootViewController (NoTroll)
-
-- (UIModalPresentationStyle)modalPresentationStyle { return UIModalPresentationOverFullScreen; }
-- (UIModalTransitionStyle)modalTransitionStyle { return UIModalTransitionStyleCrossDissolve; }
-
-- (void)viewWillTransitionToSize:(CGSize)size
-       withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator
-{
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-
-    BOOL usesRotation = [self usesRotation];
-    __weak typeof(self) weakSelf = self;
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context)
-     {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        UIInterfaceOrientation orientation = [strongSelf.view.window.windowScene interfaceOrientation];
-
-        if (!usesRotation)
-        {
-            [strongSelf onBlur:strongSelf->_contentView duration:0];
-
-            if (orientation == UIInterfaceOrientationPortrait) {
-                strongSelf->_contentView.alpha = strongSelf->_isFocused ? 1.0 : HUD_INACTIVE_OPACITY;
-            } else {
-                strongSelf->_contentView.alpha = 0.0;
-            }
-        }
-        else
-        {
-            [strongSelf cancelPreviousPerformRequestsWithTarget:strongSelf->_contentView];
-
-            [strongSelf.view setNeedsUpdateConstraints];
-            [strongSelf.view setHidden:YES];
-
-            [strongSelf resetGestureRecognizers];
-            [strongSelf onBlur:strongSelf->_contentView duration:context.transitionDuration];
-        }
-    } completion:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context)
-     {
-        if (usesRotation)
-        {
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            [strongSelf.view setHidden:NO];
-        }
-    }];
-}
-
-@end
-#endif

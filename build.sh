@@ -21,7 +21,6 @@ xcodebuild clean build archive \
 CODE_SIGNING_ALLOWED=NO | xcpretty
 
 chmod 0644 Resources/Info.plist
-chmod 0644 supports/Sandbox-Info.plist
 cp supports/entitlements.plist TrollSpeed.xcarchive/Products
 cd TrollSpeed.xcarchive/Products/Applications
 codesign --remove-signature TrollSpeed.app

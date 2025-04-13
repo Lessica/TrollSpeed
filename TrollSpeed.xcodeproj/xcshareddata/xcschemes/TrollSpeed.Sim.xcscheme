@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1520"
+   LastUpgradeVersion = "1620"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      buildImplicitDependencies = "YES"
+      buildArchitectures = "Automatic">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -14,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CC2BAFB72B5CA9DD00A429D1"
-               BuildableName = "TrollSpeed-Sandbox.app"
-               BlueprintName = "TrollSpeed-Sandbox"
+               BlueprintIdentifier = "CC654E0D2DABD9C200D54F83"
+               BuildableName = "TrollSpeed.app"
+               BlueprintName = "TrollSpeed.Sim"
                ReferencedContainer = "container:TrollSpeed.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -43,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CC2BAFB72B5CA9DD00A429D1"
-            BuildableName = "TrollSpeed-Sandbox.app"
-            BlueprintName = "TrollSpeed-Sandbox"
+            BlueprintIdentifier = "CC654E0D2DABD9C200D54F83"
+            BuildableName = "TrollSpeed.app"
+            BlueprintName = "TrollSpeed.Sim"
             ReferencedContainer = "container:TrollSpeed.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -60,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CC2BAFB72B5CA9DD00A429D1"
-            BuildableName = "TrollSpeed-Sandbox.app"
-            BlueprintName = "TrollSpeed-Sandbox"
+            BlueprintIdentifier = "CC654E0D2DABD9C200D54F83"
+            BuildableName = "TrollSpeed.app"
+            BlueprintName = "TrollSpeed.Sim"
             ReferencedContainer = "container:TrollSpeed.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

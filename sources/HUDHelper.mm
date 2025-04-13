@@ -30,14 +30,26 @@ BOOL IsHUDEnabled(void)
     posix_spawnattr_t attr;
     posix_spawnattr_init(&attr);
 
+#if !TARGET_OS_SIMULATOR
     posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
     posix_spawnattr_set_persona_uid_np(&attr, 0);
     posix_spawnattr_set_persona_gid_np(&attr, 0);
+#endif
 
+    int rc;
     pid_t task_pid;
     const char *args[] = { executablePath, "-check", NULL };
-    posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
+    rc = posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
+    if (rc != 0) {
+        log_debug(OS_LOG_DEFAULT, "posix_spawn error %s", strerror(rc));
+    }
+
     posix_spawnattr_destroy(&attr);
+
+    if (rc != 0) {
+        return NO;
+    }
+
     log_debug(OS_LOG_DEFAULT, "spawned %{public}s -check pid = %{public}d", executablePath, task_pid);
     
     int status;
@@ -60,9 +72,11 @@ void SetHUDEnabled(BOOL isEnabled)
     posix_spawnattr_t attr;
     posix_spawnattr_init(&attr);
 
+#if !TARGET_OS_SIMULATOR
     posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
     posix_spawnattr_set_persona_uid_np(&attr, 0);
     posix_spawnattr_set_persona_gid_np(&attr, 0);
+#endif
 
     if (access(LAUNCH_DAEMON_PATH, F_OK) == 0)
     {
@@ -70,11 +84,21 @@ void SetHUDEnabled(BOOL isEnabled)
             [NSThread sleepForTimeInterval:FADE_OUT_DURATION];
         }
 
+        int rc;
         pid_t task_pid;
         static const char *executablePath = JBROOT_PATH_CSTRING("/usr/bin/launchctl");
         const char *args[] = { executablePath, isEnabled ? "load" : "unload", LAUNCH_DAEMON_PATH, NULL };
-        posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
+        rc = posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
+        if (rc != 0) {
+            log_debug(OS_LOG_DEFAULT, "posix_spawn error %s", strerror(rc));
+        }
+
         posix_spawnattr_destroy(&attr);
+
+        if (rc != 0) {
+            return;
+        }
+
         log_debug(OS_LOG_DEFAULT, "spawned %{public}s -exit pid = %{public}d", executablePath, task_pid);
 
         int status;
@@ -99,20 +123,43 @@ void SetHUDEnabled(BOOL isEnabled)
         posix_spawnattr_setpgroup(&attr, 0);
         posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETPGROUP);
 
+        int rc;
         pid_t task_pid;
         const char *args[] = { executablePath, "-hud", NULL };
-        posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
+        rc = posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
+        if (rc != 0) {
+            log_debug(OS_LOG_DEFAULT, "posix_spawn error %s", strerror(rc));
+        }
+
         posix_spawnattr_destroy(&attr);
+
+        if (rc != 0) {
+            return;
+        }
+
         log_debug(OS_LOG_DEFAULT, "spawned %{public}s -hud pid = %{public}d", executablePath, task_pid);
+
+        int unused;
+        waitpid(task_pid, &unused, WNOHANG);
     }
     else
     {
         [NSThread sleepForTimeInterval:FADE_OUT_DURATION];
 
+        int rc;
         pid_t task_pid;
         const char *args[] = { executablePath, "-exit", NULL };
-        posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
+        rc = posix_spawn(&task_pid, executablePath, NULL, &attr, (char **)args, environ);
+        if (rc != 0) {
+            log_debug(OS_LOG_DEFAULT, "posix_spawn error %s", strerror(rc));
+        }
+
         posix_spawnattr_destroy(&attr);
+
+        if (rc != 0) {
+            return;
+        }
+
         log_debug(OS_LOG_DEFAULT, "spawned %{public}s -exit pid = %{public}d", executablePath, task_pid);
 
         int status;
@@ -146,9 +193,11 @@ void SimulateMemoryPressure(void)
     posix_spawnattr_t attr;
     posix_spawnattr_init(&attr);
 
+#if !TARGET_OS_SIMULATOR
     posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
     posix_spawnattr_set_persona_uid_np(&attr, 0);
     posix_spawnattr_set_persona_gid_np(&attr, 0);
+#endif
 
     pid_t task_pid;
     const char *args[] = { executablePath, "-l", "critical", NULL };

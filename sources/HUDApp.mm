@@ -10,7 +10,6 @@
 #import <sys/utsname.h>
 #import <objc/runtime.h>
 
-#if !NO_TROLL
 #import "IOKit+SPI.h"
 #import "HUDHelper.h"
 #import "TSEventFetcher.h"
@@ -32,7 +31,7 @@ void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHI
 {
     static UIApplication *app = [UIApplication sharedApplication];
     log_debug(OS_LOG_DEFAULT, "_HUDEventCallback => %{public}@", event);
-    
+
     // iOS 15.1+ has a new API for handling HID events.
     if (@available(iOS 15.1, *)) {}
     else {
@@ -74,7 +73,10 @@ void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHI
                 static UIWindow *keyWindow = nil;
                 static dispatch_once_t onceToken;
                 dispatch_once(&onceToken, ^{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                     keyWindow = [[app windows] firstObject];
+#pragma clang diagnostic pop
                 });
 
                 UIView *keyView = [keyWindow hitTest:[rep location] withEvent:nil];
@@ -96,7 +98,6 @@ void _HUDEventCallback(void *target, void *refcon, IOHIDServiceRef service, IOHI
         }
     }
 }
-#endif
 
 int main(int argc, char *argv[])
 {
@@ -104,10 +105,16 @@ int main(int argc, char *argv[])
     {
         log_debug(OS_LOG_DEFAULT, "launched argc %{public}d, argv[1] %{public}s", argc, argc > 1 ? argv[1] : "NULL");
 
-#if !NO_TROLL
         if (argc <= 1) {
             return UIApplicationMain(argc, argv, @"MainApplication", @"MainApplicationDelegate");
         }
+
+        NSString *pidPath;
+#if !TARGET_OS_SIMULATOR
+        pidPath = JBROOT_PATH_NSSTRING(@"" PID_PATH);
+#else
+        pidPath = [[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask].firstObject path] stringByAppendingPathComponent:@"ch.xxtou.hudapp.pid"];
+#endif
 
         if (strcmp(argv[1], "-hud") == 0)
         {
@@ -117,7 +124,7 @@ int main(int argc, char *argv[])
             log_debug(OS_LOG_DEFAULT, "HUD pid %d, pgid %d", pid, pgid);
 
             NSString *pidString = [NSString stringWithFormat:@"%d", pid];
-            [pidString writeToFile:JBROOT_PATH_NSSTRING(@PID_PATH)
+            [pidString writeToFile:pidPath
                         atomically:YES
                           encoding:NSUTF8StringEncoding
                              error:nil];
@@ -162,7 +169,7 @@ int main(int argc, char *argv[])
         }
         else if (strcmp(argv[1], "-exit") == 0)
         {
-            NSString *pidString = [NSString stringWithContentsOfFile:JBROOT_PATH_NSSTRING(@"" PID_PATH)
+            NSString *pidString = [NSString stringWithContentsOfFile:pidPath
                                                             encoding:NSUTF8StringEncoding
                                                                error:nil];
 
@@ -170,14 +177,14 @@ int main(int argc, char *argv[])
             {
                 pid_t pid = (pid_t)[pidString intValue];
                 kill(pid, SIGKILL);
-                unlink([JBROOT_PATH_NSSTRING(@"" PID_PATH) UTF8String]);
+                unlink([pidPath UTF8String]);
             }
 
             return EXIT_SUCCESS;
         }
         else if (strcmp(argv[1], "-check") == 0)
         {
-            NSString *pidString = [NSString stringWithContentsOfFile:JBROOT_PATH_NSSTRING(@"" PID_PATH)
+            NSString *pidString = [NSString stringWithContentsOfFile:pidPath
                                                             encoding:NSUTF8StringEncoding
                                                                error:nil];
 
@@ -189,8 +196,5 @@ int main(int argc, char *argv[])
             }
             else return EXIT_SUCCESS;  // No PID file, so HUD is not running
         }
-#else
-        return UIApplicationMain(argc, argv, @"MainApplication", @"MainApplicationDelegate");
-#endif
     }
 }

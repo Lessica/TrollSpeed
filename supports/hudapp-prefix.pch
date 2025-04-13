@@ -10,7 +10,9 @@
     #import <Foundation/Foundation.h>
     #import <UIKit/UIKit.h>
 
+#if !TARGET_OS_SIMULATOR
     #import <libroot.h>
+#endif
     #import <os/log.h>
 
     #import "NSUserDefaults+Private.h"
@@ -28,10 +30,12 @@
 
 #define FADE_OUT_DURATION 0.25
 
-#if !NO_TROLL
+#if !TARGET_OS_SIMULATOR
     #define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
 #else
     #define USER_DEFAULTS_PATH ([[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"ch.xxtou.hudapp.plist"])
+    #define JBROOT_PATH_CSTRING(cPath) cPath
+    #define JBROOT_PATH_NSSTRING(nsPath) nsPath
 #endif
 
 // HUD -> APP: Notify APP that the HUD's view is appeared.

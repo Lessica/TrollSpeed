@@ -7,34 +7,52 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6143419C2CD0D8F00069FD88 /* libroot_dyn_iphoneos-arm64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6143419B2CD0D8F00069FD88 /* libroot_dyn_iphoneos-arm64.a */; };
-		6143419D2CD0D9650069FD88 /* libroot_dyn_iphoneos-arm64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6143419B2CD0D8F00069FD88 /* libroot_dyn_iphoneos-arm64.a */; };
 		CC2A77302B6AADB400796650 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CC2A772F2B6AADB400796650 /* Settings.bundle */; };
-		CC2A77312B6AADB400796650 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CC2A772F2B6AADB400796650 /* Settings.bundle */; };
-		CC2BAFBA2B5CA9DD00A429D1 /* SPLarkPresentingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D312B5BF5C6007235A6 /* SPLarkPresentingAnimationController.swift */; };
-		CC2BAFBB2B5CA9DD00A429D1 /* SPLarkDismissingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D372B5BF5C6007235A6 /* SPLarkDismissingAnimationController.swift */; };
-		CC2BAFBC2B5CA9DD00A429D1 /* MainButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D2E2B5BF5C6007235A6 /* MainButton.mm */; };
-		CC2BAFBD2B5CA9DD00A429D1 /* HiddenContainerRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D3D2B5BF5C6007235A6 /* HiddenContainerRecognizer.swift */; };
-		CC2BAFC02B5CA9DD00A429D1 /* SPLarkSettingsCloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D302B5BF5C6007235A6 /* SPLarkSettingsCloseButton.swift */; };
-		CC2BAFC12B5CA9DD00A429D1 /* SPLarkPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D362B5BF5C6007235A6 /* SPLarkPresentationController.swift */; };
-		CC2BAFC22B5CA9DD00A429D1 /* TSSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D462B5BF5C6007235A6 /* TSSettingsController.swift */; };
-		CC2BAFC42B5CA9DD00A429D1 /* MainApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D422B5BF5C6007235A6 /* MainApplication.mm */; };
-		CC2BAFC52B5CA9DD00A429D1 /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D1F2B5BF5C6007235A6 /* RootViewController.mm */; };
-		CC2BAFC62B5CA9DD00A429D1 /* ScreenshotInvisibleContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D3B2B5BF5C6007235A6 /* ScreenshotInvisibleContainer.swift */; };
-		CC2BAFC72B5CA9DD00A429D1 /* ScreenshotInvincibleContainerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D3C2B5BF5C6007235A6 /* ScreenshotInvincibleContainerProtocol.swift */; };
-		CC2BAFC82B5CA9DD00A429D1 /* SPLarkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D342B5BF5C6007235A6 /* SPLarkController.swift */; };
-		CC2BAFC92B5CA9DD00A429D1 /* HUDApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D482B5BF5C6007235A6 /* HUDApp.mm */; };
-		CC2BAFCB2B5CA9DD00A429D1 /* SPLarkSettingsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D352B5BF5C6007235A6 /* SPLarkSettingsCollectionView.swift */; };
-		CC2BAFCC2B5CA9DD00A429D1 /* SPLarkSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D332B5BF5C6007235A6 /* SPLarkSettingsController.swift */; };
-		CC2BAFCD2B5CA9DD00A429D1 /* SPLarkControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D392B5BF5C6007235A6 /* SPLarkControllerExtension.swift */; };
-		CC2BAFCE2B5CA9DD00A429D1 /* MainApplicationDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D222B5BF5C6007235A6 /* MainApplicationDelegate.mm */; };
-		CC2BAFCF2B5CA9DD00A429D1 /* HUDRootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D442B5BF5C6007235A6 /* HUDRootViewController.mm */; };
-		CC2BAFD12B5CA9DD00A429D1 /* SPLarkTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D382B5BF5C6007235A6 /* SPLarkTransitioningDelegate.swift */; };
-		CC2BAFD22B5CA9DD00A429D1 /* SPLarkSettingsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D322B5BF5C6007235A6 /* SPLarkSettingsCollectionViewCell.swift */; };
-		CC2BAFDB2B5CA9DD00A429D1 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = CC711D922B5BFE66007235A6 /* icon.png */; };
-		CC2BAFDC2B5CA9DD00A429D1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC711D8E2B5BFD50007235A6 /* InfoPlist.strings */; };
-		CC2BAFDD2B5CA9DD00A429D1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC711D872B5BFCC4007235A6 /* Localizable.strings */; };
-		CC2BAFDE2B5CA9DD00A429D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC711D102B5BF551007235A6 /* Assets.xcassets */; };
+		CC654E0F2DABD9C200D54F83 /* ActivateHUDIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8DDA8E2B654DC8001C7C9E /* ActivateHUDIntent.swift */; };
+		CC654E102DABD9C200D54F83 /* TSSettingsIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9130A62B62A33A006E3280 /* TSSettingsIndex.swift */; };
+		CC654E112DABD9C200D54F83 /* HUDHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D1E2B5BF5C6007235A6 /* HUDHelper.mm */; };
+		CC654E122DABD9C200D54F83 /* SPLarkPresentingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D312B5BF5C6007235A6 /* SPLarkPresentingAnimationController.swift */; };
+		CC654E132DABD9C200D54F83 /* SPLarkDismissingAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D372B5BF5C6007235A6 /* SPLarkDismissingAnimationController.swift */; };
+		CC654E142DABD9C200D54F83 /* HUDBackdropView.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC9130A22B616C18006E3280 /* HUDBackdropView.mm */; };
+		CC654E152DABD9C200D54F83 /* MainButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D2E2B5BF5C6007235A6 /* MainButton.mm */; };
+		CC654E162DABD9C200D54F83 /* HiddenContainerRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D3D2B5BF5C6007235A6 /* HiddenContainerRecognizer.swift */; };
+		CC654E172DABD9C200D54F83 /* TSEventFetcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D472B5BF5C6007235A6 /* TSEventFetcher.mm */; };
+		CC654E182DABD9C200D54F83 /* UITouch-KIFAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC711D2B2B5BF5C6007235A6 /* UITouch-KIFAdditions.m */; };
+		CC654E192DABD9C200D54F83 /* SPLarkSettingsCloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D302B5BF5C6007235A6 /* SPLarkSettingsCloseButton.swift */; };
+		CC654E1A2DABD9C200D54F83 /* HUDBackdropLabel.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC91309D2B616541006E3280 /* HUDBackdropLabel.mm */; };
+		CC654E1B2DABD9C200D54F83 /* SPLarkPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D362B5BF5C6007235A6 /* SPLarkPresentationController.swift */; };
+		CC654E1C2DABD9C200D54F83 /* TSSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D462B5BF5C6007235A6 /* TSSettingsController.swift */; };
+		CC654E1D2DABD9C200D54F83 /* HUDMainApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D452B5BF5C6007235A6 /* HUDMainApplication.mm */; };
+		CC654E1E2DABD9C200D54F83 /* MainApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D422B5BF5C6007235A6 /* MainApplication.mm */; };
+		CC654E1F2DABD9C200D54F83 /* ToggleHUDIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8DDA942B655183001C7C9E /* ToggleHUDIntent.swift */; };
+		CC654E202DABD9C200D54F83 /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D1F2B5BF5C6007235A6 /* RootViewController.mm */; };
+		CC654E212DABD9C200D54F83 /* ScreenshotInvisibleContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D3B2B5BF5C6007235A6 /* ScreenshotInvisibleContainer.swift */; };
+		CC654E222DABD9C200D54F83 /* ScreenshotInvincibleContainerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D3C2B5BF5C6007235A6 /* ScreenshotInvincibleContainerProtocol.swift */; };
+		CC654E232DABD9C200D54F83 /* SPLarkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D342B5BF5C6007235A6 /* SPLarkController.swift */; };
+		CC654E242DABD9C200D54F83 /* HUDApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D482B5BF5C6007235A6 /* HUDApp.mm */; };
+		CC654E252DABD9C200D54F83 /* IOHIDEvent+KIF.m in Sources */ = {isa = PBXBuildFile; fileRef = CC711D2C2B5BF5C6007235A6 /* IOHIDEvent+KIF.m */; };
+		CC654E262DABD9C200D54F83 /* DeactivateHUDIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8DDA912B655156001C7C9E /* DeactivateHUDIntent.swift */; };
+		CC654E272DABD9C200D54F83 /* SPLarkSettingsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D352B5BF5C6007235A6 /* SPLarkSettingsCollectionView.swift */; };
+		CC654E282DABD9C200D54F83 /* SPLarkSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D332B5BF5C6007235A6 /* SPLarkSettingsController.swift */; };
+		CC654E292DABD9C200D54F83 /* SPLarkControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D392B5BF5C6007235A6 /* SPLarkControllerExtension.swift */; };
+		CC654E2A2DABD9C200D54F83 /* MainApplicationDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D222B5BF5C6007235A6 /* MainApplicationDelegate.mm */; };
+		CC654E2B2DABD9C200D54F83 /* HUDRootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D442B5BF5C6007235A6 /* HUDRootViewController.mm */; };
+		CC654E2C2DABD9C200D54F83 /* HUDMainApplicationDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D272B5BF5C6007235A6 /* HUDMainApplicationDelegate.mm */; };
+		CC654E2D2DABD9C200D54F83 /* SPLarkTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D382B5BF5C6007235A6 /* SPLarkTransitioningDelegate.swift */; };
+		CC654E2E2DABD9C200D54F83 /* SPLarkSettingsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC711D322B5BF5C6007235A6 /* SPLarkSettingsCollectionViewCell.swift */; };
+		CC654E2F2DABD9C200D54F83 /* HUDMainWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D202B5BF5C6007235A6 /* HUDMainWindow.mm */; };
+		CC654E332DABD9C200D54F83 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC8DDA982B66318E001C7C9E /* AppIntents.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		CC654E362DABD9C200D54F83 /* BackBoardServices.Sim.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC654E072DABD95200D54F83 /* BackBoardServices.Sim.tbd */; };
+		CC654E372DABD9C200D54F83 /* IOKit.Sim.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC654E052DABD94A00D54F83 /* IOKit.Sim.tbd */; };
+		CC654E392DABD9C200D54F83 /* AssertionServices.Sim.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC654E032DABD94300D54F83 /* AssertionServices.Sim.tbd */; };
+		CC654E3A2DABD9C200D54F83 /* GraphicsServices.Sim.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC654E092DABD95800D54F83 /* GraphicsServices.Sim.tbd */; };
+		CC654E3B2DABD9C200D54F83 /* SpringBoardServices.Sim.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC654E0B2DABD95E00D54F83 /* SpringBoardServices.Sim.tbd */; };
+		CC654E3D2DABD9C200D54F83 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = CC711D922B5BFE66007235A6 /* icon.png */; };
+		CC654E3E2DABD9C200D54F83 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC711D8E2B5BFD50007235A6 /* InfoPlist.strings */; };
+		CC654E3F2DABD9C200D54F83 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CC2A772F2B6AADB400796650 /* Settings.bundle */; };
+		CC654E402DABD9C200D54F83 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC711D872B5BFCC4007235A6 /* Localizable.strings */; };
+		CC654E412DABD9C200D54F83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC711D102B5BF551007235A6 /* Assets.xcassets */; };
+		CC654E602DABE3EB00D54F83 /* libroot_dyn_iphoneos-arm64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC654E5F2DABE3EB00D54F83 /* libroot_dyn_iphoneos-arm64.a */; };
 		CC711D112B5BF551007235A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC711D102B5BF551007235A6 /* Assets.xcassets */; };
 		CC711D4A2B5BF5C6007235A6 /* HUDHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D1E2B5BF5C6007235A6 /* HUDHelper.mm */; };
 		CC711D4B2B5BF5C6007235A6 /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D1F2B5BF5C6007235A6 /* RootViewController.mm */; };
@@ -74,14 +92,10 @@
 		CC8DDA8F2B654DC8001C7C9E /* ActivateHUDIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8DDA8E2B654DC8001C7C9E /* ActivateHUDIntent.swift */; };
 		CC8DDA922B655156001C7C9E /* DeactivateHUDIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8DDA912B655156001C7C9E /* DeactivateHUDIntent.swift */; };
 		CC8DDA952B6551C7001C7C9E /* ToggleHUDIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8DDA942B655183001C7C9E /* ToggleHUDIntent.swift */; };
-		CC8DDA992B66318E001C7C9E /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC8DDA982B66318E001C7C9E /* AppIntents.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		CC8DDA9A2B6631DC001C7C9E /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC8DDA982B66318E001C7C9E /* AppIntents.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		CC91309E2B616541006E3280 /* HUDBackdropLabel.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC91309D2B616541006E3280 /* HUDBackdropLabel.mm */; };
-		CC91309F2B616541006E3280 /* HUDBackdropLabel.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC91309D2B616541006E3280 /* HUDBackdropLabel.mm */; };
 		CC9130A32B616C18006E3280 /* HUDBackdropView.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC9130A22B616C18006E3280 /* HUDBackdropView.mm */; };
-		CC9130A42B616C18006E3280 /* HUDBackdropView.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC9130A22B616C18006E3280 /* HUDBackdropView.mm */; };
 		CC9130A72B62A33A006E3280 /* TSSettingsIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9130A62B62A33A006E3280 /* TSSettingsIndex.swift */; };
-		CC9130A82B62A33A006E3280 /* TSSettingsIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9130A62B62A33A006E3280 /* TSSettingsIndex.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,8 +103,13 @@
 		0F43B7712B60D397003A435D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../Resources/es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6143419B2CD0D8F00069FD88 /* libroot_dyn_iphoneos-arm64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libroot_dyn_iphoneos-arm64.a"; sourceTree = "<group>"; };
 		CC2A772F2B6AADB400796650 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Resources/Settings.bundle; sourceTree = SOURCE_ROOT; };
-		CC2BAFE22B5CA9DD00A429D1 /* TrollSpeed-Sandbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TrollSpeed-Sandbox.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CC2BAFE42B5CAF2200A429D1 /* Sandbox-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Sandbox-Info.plist"; sourceTree = "<group>"; };
+		CC654E032DABD94300D54F83 /* AssertionServices.Sim.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = AssertionServices.Sim.tbd; sourceTree = "<group>"; };
+		CC654E052DABD94A00D54F83 /* IOKit.Sim.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = IOKit.Sim.tbd; sourceTree = "<group>"; };
+		CC654E072DABD95200D54F83 /* BackBoardServices.Sim.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = BackBoardServices.Sim.tbd; sourceTree = "<group>"; };
+		CC654E092DABD95800D54F83 /* GraphicsServices.Sim.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = GraphicsServices.Sim.tbd; sourceTree = "<group>"; };
+		CC654E0B2DABD95E00D54F83 /* SpringBoardServices.Sim.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = SpringBoardServices.Sim.tbd; sourceTree = "<group>"; };
+		CC654E452DABD9C200D54F83 /* TrollSpeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrollSpeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC654E5F2DABE3EB00D54F83 /* libroot_dyn_iphoneos-arm64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libroot_dyn_iphoneos-arm64.a"; sourceTree = "<group>"; };
 		CC711D012B5BF550007235A6 /* TrollSpeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrollSpeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC711D102B5BF551007235A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CC711D1E2B5BF5C6007235A6 /* HUDHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDHelper.mm; sourceTree = "<group>"; };
@@ -186,12 +205,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		CC2BAFD42B5CA9DD00A429D1 /* Frameworks */ = {
+		CC654E302DABD9C200D54F83 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CC8DDA992B66318E001C7C9E /* AppIntents.framework in Frameworks */,
-				6143419D2CD0D9650069FD88 /* libroot_dyn_iphoneos-arm64.a in Frameworks */,
+				CC654E332DABD9C200D54F83 /* AppIntents.framework in Frameworks */,
+				CC654E362DABD9C200D54F83 /* BackBoardServices.Sim.tbd in Frameworks */,
+				CC654E372DABD9C200D54F83 /* IOKit.Sim.tbd in Frameworks */,
+				CC654E392DABD9C200D54F83 /* AssertionServices.Sim.tbd in Frameworks */,
+				CC654E3A2DABD9C200D54F83 /* GraphicsServices.Sim.tbd in Frameworks */,
+				CC654E3B2DABD9C200D54F83 /* SpringBoardServices.Sim.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,7 +227,7 @@
 				CC8DDA9A2B6631DC001C7C9E /* AppIntents.framework in Frameworks */,
 				CC711D9C2B5C0032007235A6 /* IOKit.tbd in Frameworks */,
 				CC711D9A2B5BFF2F007235A6 /* BackBoardServices.tbd in Frameworks */,
-				6143419C2CD0D8F00069FD88 /* libroot_dyn_iphoneos-arm64.a in Frameworks */,
+				CC654E602DABE3EB00D54F83 /* libroot_dyn_iphoneos-arm64.a in Frameworks */,
 				CC711D982B5BFF2F007235A6 /* GraphicsServices.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -212,6 +235,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CC654E5E2DABE22E00D54F83 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				6143419B2CD0D8F00069FD88 /* libroot_dyn_iphoneos-arm64.a */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		CC711CF82B5BF550007235A6 = {
 			isa = PBXGroup;
 			children = (
@@ -221,6 +252,7 @@
 				CC711D032B5BF550007235A6 /* supports */,
 				CC711D1D2B5BF5C6007235A6 /* sources */,
 				CC8DDA972B66318E001C7C9E /* Frameworks */,
+				CC654E5E2DABE22E00D54F83 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -228,7 +260,7 @@
 			isa = PBXGroup;
 			children = (
 				CC711D012B5BF550007235A6 /* TrollSpeed.app */,
-				CC2BAFE22B5CA9DD00A429D1 /* TrollSpeed-Sandbox.app */,
+				CC654E452DABD9C200D54F83 /* TrollSpeed.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -242,7 +274,6 @@
 				CC711D7E2B5BF772007235A6 /* hudapp-prefix.pch */,
 				CC9130A52B62A262006E3280 /* hudapp-bridging-header.h */,
 				CC711D812B5BFA64007235A6 /* Info.plist */,
-				CC2BAFE42B5CAF2200A429D1 /* Sandbox-Info.plist */,
 				CC2A772F2B6AADB400796650 /* Settings.bundle */,
 				CC711D872B5BFCC4007235A6 /* Localizable.strings */,
 				CC711D8E2B5BFD50007235A6 /* InfoPlist.strings */,
@@ -365,11 +396,16 @@
 			isa = PBXGroup;
 			children = (
 				CC711D9D2B5C0081007235A6 /* AssertionServices.tbd */,
+				CC654E032DABD94300D54F83 /* AssertionServices.Sim.tbd */,
 				CC711D972B5BFF2F007235A6 /* BackBoardServices.tbd */,
+				CC654E072DABD95200D54F83 /* BackBoardServices.Sim.tbd */,
 				CC711D952B5BFF2F007235A6 /* GraphicsServices.tbd */,
+				CC654E092DABD95800D54F83 /* GraphicsServices.Sim.tbd */,
 				CC711D9B2B5C0032007235A6 /* IOKit.tbd */,
+				CC654E052DABD94A00D54F83 /* IOKit.Sim.tbd */,
 				CC711D962B5BFF2F007235A6 /* SpringBoardServices.tbd */,
-				6143419B2CD0D8F00069FD88 /* libroot_dyn_iphoneos-arm64.a */,
+				CC654E0B2DABD95E00D54F83 /* SpringBoardServices.Sim.tbd */,
+				CC654E5F2DABE3EB00D54F83 /* libroot_dyn_iphoneos-arm64.a */,
 			);
 			path = libraries;
 			sourceTree = "<group>";
@@ -395,21 +431,21 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CC2BAFB72B5CA9DD00A429D1 /* TrollSpeed-Sandbox */ = {
+		CC654E0D2DABD9C200D54F83 /* TrollSpeed.Sim */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CC2BAFDF2B5CA9DD00A429D1 /* Build configuration list for PBXNativeTarget "TrollSpeed-Sandbox" */;
+			buildConfigurationList = CC654E422DABD9C200D54F83 /* Build configuration list for PBXNativeTarget "TrollSpeed.Sim" */;
 			buildPhases = (
-				CC2BAFB82B5CA9DD00A429D1 /* Sources */,
-				CC2BAFD42B5CA9DD00A429D1 /* Frameworks */,
-				CC2BAFDA2B5CA9DD00A429D1 /* Resources */,
+				CC654E0E2DABD9C200D54F83 /* Sources */,
+				CC654E302DABD9C200D54F83 /* Frameworks */,
+				CC654E3C2DABD9C200D54F83 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "TrollSpeed-Sandbox";
+			name = TrollSpeed.Sim;
 			productName = TrollSpeed;
-			productReference = CC2BAFE22B5CA9DD00A429D1 /* TrollSpeed-Sandbox.app */;
+			productReference = CC654E452DABD9C200D54F83 /* TrollSpeed.app */;
 			productType = "com.apple.product-type.application";
 		};
 		CC711D002B5BF550007235A6 /* TrollSpeed */ = {
@@ -459,21 +495,21 @@
 			projectRoot = "";
 			targets = (
 				CC711D002B5BF550007235A6 /* TrollSpeed */,
-				CC2BAFB72B5CA9DD00A429D1 /* TrollSpeed-Sandbox */,
+				CC654E0D2DABD9C200D54F83 /* TrollSpeed.Sim */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		CC2BAFDA2B5CA9DD00A429D1 /* Resources */ = {
+		CC654E3C2DABD9C200D54F83 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CC2BAFDB2B5CA9DD00A429D1 /* icon.png in Resources */,
-				CC2BAFDC2B5CA9DD00A429D1 /* InfoPlist.strings in Resources */,
-				CC2A77312B6AADB400796650 /* Settings.bundle in Resources */,
-				CC2BAFDD2B5CA9DD00A429D1 /* Localizable.strings in Resources */,
-				CC2BAFDE2B5CA9DD00A429D1 /* Assets.xcassets in Resources */,
+				CC654E3D2DABD9C200D54F83 /* icon.png in Resources */,
+				CC654E3E2DABD9C200D54F83 /* InfoPlist.strings in Resources */,
+				CC654E3F2DABD9C200D54F83 /* Settings.bundle in Resources */,
+				CC654E402DABD9C200D54F83 /* Localizable.strings in Resources */,
+				CC654E412DABD9C200D54F83 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,33 +528,43 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		CC2BAFB82B5CA9DD00A429D1 /* Sources */ = {
+		CC654E0E2DABD9C200D54F83 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CC2BAFBA2B5CA9DD00A429D1 /* SPLarkPresentingAnimationController.swift in Sources */,
-				CC91309F2B616541006E3280 /* HUDBackdropLabel.mm in Sources */,
-				CC2BAFBB2B5CA9DD00A429D1 /* SPLarkDismissingAnimationController.swift in Sources */,
-				CC2BAFBC2B5CA9DD00A429D1 /* MainButton.mm in Sources */,
-				CC2BAFBD2B5CA9DD00A429D1 /* HiddenContainerRecognizer.swift in Sources */,
-				CC2BAFC02B5CA9DD00A429D1 /* SPLarkSettingsCloseButton.swift in Sources */,
-				CC2BAFC12B5CA9DD00A429D1 /* SPLarkPresentationController.swift in Sources */,
-				CC2BAFC22B5CA9DD00A429D1 /* TSSettingsController.swift in Sources */,
-				CC2BAFC42B5CA9DD00A429D1 /* MainApplication.mm in Sources */,
-				CC2BAFC52B5CA9DD00A429D1 /* RootViewController.mm in Sources */,
-				CC9130A42B616C18006E3280 /* HUDBackdropView.mm in Sources */,
-				CC2BAFC62B5CA9DD00A429D1 /* ScreenshotInvisibleContainer.swift in Sources */,
-				CC2BAFC72B5CA9DD00A429D1 /* ScreenshotInvincibleContainerProtocol.swift in Sources */,
-				CC2BAFC82B5CA9DD00A429D1 /* SPLarkController.swift in Sources */,
-				CC2BAFC92B5CA9DD00A429D1 /* HUDApp.mm in Sources */,
-				CC2BAFCB2B5CA9DD00A429D1 /* SPLarkSettingsCollectionView.swift in Sources */,
-				CC9130A82B62A33A006E3280 /* TSSettingsIndex.swift in Sources */,
-				CC2BAFCC2B5CA9DD00A429D1 /* SPLarkSettingsController.swift in Sources */,
-				CC2BAFCD2B5CA9DD00A429D1 /* SPLarkControllerExtension.swift in Sources */,
-				CC2BAFCE2B5CA9DD00A429D1 /* MainApplicationDelegate.mm in Sources */,
-				CC2BAFCF2B5CA9DD00A429D1 /* HUDRootViewController.mm in Sources */,
-				CC2BAFD12B5CA9DD00A429D1 /* SPLarkTransitioningDelegate.swift in Sources */,
-				CC2BAFD22B5CA9DD00A429D1 /* SPLarkSettingsCollectionViewCell.swift in Sources */,
+				CC654E0F2DABD9C200D54F83 /* ActivateHUDIntent.swift in Sources */,
+				CC654E102DABD9C200D54F83 /* TSSettingsIndex.swift in Sources */,
+				CC654E112DABD9C200D54F83 /* HUDHelper.mm in Sources */,
+				CC654E122DABD9C200D54F83 /* SPLarkPresentingAnimationController.swift in Sources */,
+				CC654E132DABD9C200D54F83 /* SPLarkDismissingAnimationController.swift in Sources */,
+				CC654E142DABD9C200D54F83 /* HUDBackdropView.mm in Sources */,
+				CC654E152DABD9C200D54F83 /* MainButton.mm in Sources */,
+				CC654E162DABD9C200D54F83 /* HiddenContainerRecognizer.swift in Sources */,
+				CC654E172DABD9C200D54F83 /* TSEventFetcher.mm in Sources */,
+				CC654E182DABD9C200D54F83 /* UITouch-KIFAdditions.m in Sources */,
+				CC654E192DABD9C200D54F83 /* SPLarkSettingsCloseButton.swift in Sources */,
+				CC654E1A2DABD9C200D54F83 /* HUDBackdropLabel.mm in Sources */,
+				CC654E1B2DABD9C200D54F83 /* SPLarkPresentationController.swift in Sources */,
+				CC654E1C2DABD9C200D54F83 /* TSSettingsController.swift in Sources */,
+				CC654E1D2DABD9C200D54F83 /* HUDMainApplication.mm in Sources */,
+				CC654E1E2DABD9C200D54F83 /* MainApplication.mm in Sources */,
+				CC654E1F2DABD9C200D54F83 /* ToggleHUDIntent.swift in Sources */,
+				CC654E202DABD9C200D54F83 /* RootViewController.mm in Sources */,
+				CC654E212DABD9C200D54F83 /* ScreenshotInvisibleContainer.swift in Sources */,
+				CC654E222DABD9C200D54F83 /* ScreenshotInvincibleContainerProtocol.swift in Sources */,
+				CC654E232DABD9C200D54F83 /* SPLarkController.swift in Sources */,
+				CC654E242DABD9C200D54F83 /* HUDApp.mm in Sources */,
+				CC654E252DABD9C200D54F83 /* IOHIDEvent+KIF.m in Sources */,
+				CC654E262DABD9C200D54F83 /* DeactivateHUDIntent.swift in Sources */,
+				CC654E272DABD9C200D54F83 /* SPLarkSettingsCollectionView.swift in Sources */,
+				CC654E282DABD9C200D54F83 /* SPLarkSettingsController.swift in Sources */,
+				CC654E292DABD9C200D54F83 /* SPLarkControllerExtension.swift in Sources */,
+				CC654E2A2DABD9C200D54F83 /* MainApplicationDelegate.mm in Sources */,
+				CC654E2B2DABD9C200D54F83 /* HUDRootViewController.mm in Sources */,
+				CC654E2C2DABD9C200D54F83 /* HUDMainApplicationDelegate.mm in Sources */,
+				CC654E2D2DABD9C200D54F83 /* SPLarkTransitioningDelegate.swift in Sources */,
+				CC654E2E2DABD9C200D54F83 /* SPLarkSettingsCollectionViewCell.swift in Sources */,
+				CC654E2F2DABD9C200D54F83 /* HUDMainWindow.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,22 +634,22 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		CC2BAFE02B5CA9DD00A429D1 /* Debug */ = {
+		CC654E432DABD9C200D54F83 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GXZ23M5TP2;
+				CODE_SIGN_ENTITLEMENTS = supports/entitlements.plist;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "-";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "supports/hudapp-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",
-					"NO_TROLL=1",
 				);
-				INFOPLIST_FILE = "supports/Sandbox-Info.plist";
+				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TrollSpeed;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -618,10 +664,10 @@
 					"$(PROJECT_DIR)/libraries",
 				);
 				MARKETING_VERSION = 1.12.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "ch.xxtou.hudapp-sandbox";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
+				PRODUCT_NAME = TrollSpeed;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = iphonesimulator;
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -632,22 +678,22 @@
 			};
 			name = Debug;
 		};
-		CC2BAFE12B5CA9DD00A429D1 /* Release */ = {
+		CC654E442DABD9C200D54F83 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GXZ23M5TP2;
+				CODE_SIGN_ENTITLEMENTS = supports/entitlements.plist;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "-";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "supports/hudapp-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",
-					"NO_TROLL=1",
 				);
-				INFOPLIST_FILE = "supports/Sandbox-Info.plist";
+				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TrollSpeed;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -662,10 +708,10 @@
 					"$(PROJECT_DIR)/libraries",
 				);
 				MARKETING_VERSION = 1.12.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "ch.xxtou.hudapp-sandbox";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
+				PRODUCT_NAME = TrollSpeed;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = iphonesimulator;
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -839,9 +885,9 @@
 				);
 				MARKETING_VERSION = 1.12.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = TrollSpeed;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -884,9 +930,9 @@
 				);
 				MARKETING_VERSION = 1.12.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = TrollSpeed;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -900,11 +946,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CC2BAFDF2B5CA9DD00A429D1 /* Build configuration list for PBXNativeTarget "TrollSpeed-Sandbox" */ = {
+		CC654E422DABD9C200D54F83 /* Build configuration list for PBXNativeTarget "TrollSpeed.Sim" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CC2BAFE02B5CA9DD00A429D1 /* Debug */,
-				CC2BAFE12B5CA9DD00A429D1 /* Release */,
+				CC654E432DABD9C200D54F83 /* Debug */,
+				CC654E442DABD9C200D54F83 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
