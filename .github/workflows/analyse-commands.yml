@@ -9,12 +9,12 @@ env:
   THEOS: ''
   GIT_TAG: ''
   GIT_COMMIT: ''
-  XCODE_VERSION: '14.3.1'
+  XCODE_VERSION: '15.4'
 
 jobs:
   build:
     name: Build and generate compilation database
-    runs-on: macos-13
+    runs-on: macos-14
 
     steps:
       - name: Setup Xcode version
@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: XXTouchNG/theos
-          ref: 78ee784d8d3238982c9abdc58cd39919263648b1
+          ref: 954dfd17fd05544a3bb26b2a25e1930cd228f4ef
           path: theos
           submodules: recursive
 
