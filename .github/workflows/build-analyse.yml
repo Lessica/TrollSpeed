@@ -22,4 +22,4 @@ jobs:
 
       - name: Build
         run: |
-          xcodebuild clean build analyze -scheme TrollSpeed -project TrollSpeed.xcodeproj CODE_SIGNING_ALLOWED=NO | xcpretty && exit ${PIPESTATUS[0]}
+          xcodebuild clean build analyze -scheme TrollSpeed.Sim -project TrollSpeed.xcodeproj | xcpretty && exit ${PIPESTATUS[0]}
