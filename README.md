@@ -55,7 +55,7 @@ Tested and expected to work on all iOS versions supported by opa334’s TrollSto
 
 ## License
 
-TrollSpeed is [Free Software](https://www.gnu.org/philosophy/free-sw.html) licensed under the [GNU Affero General Public License](LICENSE).
+TrollSpeed is licensed under the [MIT License](LICENSE).
 
 ### Localization
 
