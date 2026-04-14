@@ -6,7 +6,7 @@ LAUNCHD_PLIST := $(PWD)/layout/Library/LaunchDaemons/ch.xxtou.hudservices.plist
 
 include $(THEOS)/makefiles/common.mk
 
-GIT_TAG_SHORT := $(shell git describe --tags --always --abbrev=0)
+TIPA_VERSION := $(shell ./get-version.sh)
 APPLICATION_NAME := TrollSpeed
 
 TrollSpeed_USE_MODULES := 0
@@ -65,5 +65,5 @@ after-package::
 	$(ECHO_NOTHING)defaults write $(THEOS_STAGING_DIR)/Payload/TrollSpeed.app/Info.plist CFBundleVersion -string $(shell openssl rand -hex 4)$(ECHO_END)
 	$(ECHO_NOTHING)plutil -convert xml1 $(THEOS_STAGING_DIR)/Payload/TrollSpeed.app/Info.plist$(ECHO_END)
 	$(ECHO_NOTHING)chmod 0644 $(THEOS_STAGING_DIR)/Payload/TrollSpeed.app/Info.plist$(ECHO_END)
-	$(ECHO_NOTHING)cd $(THEOS_STAGING_DIR); zip -qr TrollSpeed_${GIT_TAG_SHORT}.tipa Payload; cd -;$(ECHO_END)
-	$(ECHO_NOTHING)mv $(THEOS_STAGING_DIR)/TrollSpeed_${GIT_TAG_SHORT}.tipa packages/TrollSpeed_${GIT_TAG_SHORT}.tipa$(ECHO_END)
+	$(ECHO_NOTHING)cd $(THEOS_STAGING_DIR); zip -qr TrollSpeed_${TIPA_VERSION}.tipa Payload; cd -;$(ECHO_END)
+	$(ECHO_NOTHING)mv $(THEOS_STAGING_DIR)/TrollSpeed_${TIPA_VERSION}.tipa packages/TrollSpeed_${TIPA_VERSION}.tipa$(ECHO_END)
