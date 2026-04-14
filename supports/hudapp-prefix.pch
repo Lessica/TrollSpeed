@@ -13,8 +13,12 @@
 #if !TARGET_OS_SIMULATOR
     #if __has_include(<roothide.h>)
         #import <roothide.h>
-        #define JBROOT_PATH_CSTRING(cPath) jbroot(cPath)
-        #define JBROOT_PATH_NSSTRING(nsPath) jbroot(nsPath)
+        #ifndef JBROOT_PATH_CSTRING
+            #define JBROOT_PATH_CSTRING(cPath) jbroot(cPath)
+        #endif
+        #ifndef JBROOT_PATH_NSSTRING
+            #define JBROOT_PATH_NSSTRING(nsPath) jbroot(nsPath)
+        #endif
     #elif __has_include(<libroot.h>)
         #import <libroot.h>
     #endif
