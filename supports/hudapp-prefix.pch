@@ -17,6 +17,9 @@
     #if __has_include(<roothide.h>)
         #import <roothide.h>
     #endif
+#else
+    #define JBROOT_PATH_CSTRING(cPath) jbroot(cPath)
+    #define JBROOT_PATH_NSSTRING(nsPath) jbroot(nsPath)
 #endif
     #import <os/log.h>
 
@@ -26,8 +29,6 @@
     #define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
 #else
     #define USER_DEFAULTS_PATH ([[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"ch.xxtou.hudapp.plist"])
-    #define JBROOT_PATH_CSTRING(cPath) cPath
-    #define JBROOT_PATH_NSSTRING(nsPath) nsPath
 #endif
 #endif
 
