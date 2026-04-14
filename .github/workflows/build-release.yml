@@ -96,6 +96,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          tag_name: v${{ env.PKG_VERSION }}
           body_path: TrollSpeed/CHANGELOG.md
           files: |
             TrollSpeed/packages/TrollSpeed_*.tipa
