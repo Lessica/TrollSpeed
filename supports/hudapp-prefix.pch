@@ -16,8 +16,6 @@
     #endif
     #if __has_include(<roothide.h>)
         #import <roothide.h>
-        #define JBROOT_PATH_CSTRING(cPath) jbroot(cPath)
-        #define JBROOT_PATH_NSSTRING(nsPath) jbroot(nsPath)
     #endif
 #else
     #define JBROOT_PATH_CSTRING(cPath) cPath
