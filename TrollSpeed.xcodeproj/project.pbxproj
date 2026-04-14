@@ -642,6 +642,7 @@
 				CODE_SIGN_ENTITLEMENTS = supports/entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = "-";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "supports/hudapp-prefix.pch";
@@ -663,7 +664,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libraries",
 				);
-				MARKETING_VERSION = 1.12.1;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
 				PRODUCT_NAME = TrollSpeed;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -686,6 +687,7 @@
 				CODE_SIGN_ENTITLEMENTS = supports/entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = "-";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "supports/hudapp-prefix.pch";
@@ -707,7 +709,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libraries",
 				);
-				MARKETING_VERSION = 1.12.1;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
 				PRODUCT_NAME = TrollSpeed;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -779,7 +781,7 @@
 				HEADER_SEARCH_PATHS = $THEOS/vendor/include;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.12.1;
+				MARKETING_VERSION = 2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -841,7 +843,7 @@
 				HEADER_SEARCH_PATHS = $THEOS/vendor/include;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.12.1;
+				MARKETING_VERSION = 2.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_MODULE_NAME = TrollSpeed;
@@ -862,6 +864,7 @@
 				CODE_SIGN_ENTITLEMENTS = supports/entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = "-";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "supports/hudapp-prefix.pch";
@@ -883,7 +886,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libraries",
 				);
-				MARKETING_VERSION = 1.12.1;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
 				PRODUCT_NAME = TrollSpeed;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -907,6 +910,7 @@
 				CODE_SIGN_ENTITLEMENTS = supports/entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = "-";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "supports/hudapp-prefix.pch";
@@ -928,7 +932,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libraries",
 				);
-				MARKETING_VERSION = 1.12.1;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.xxtou.hudapp;
 				PRODUCT_NAME = TrollSpeed;
 				PROVISIONING_PROFILE_SPECIFIER = "";

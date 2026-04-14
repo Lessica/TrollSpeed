@@ -54,6 +54,10 @@ open class SPLarkSettingsController: UIViewController {
         fatalError("SPLarkSettingsController - Need implement function")
     }
     
+    open func settingEnabled(index: Int) -> Bool {
+        return true
+    }
+    
     open func reload(index: Int) {
         self.collectionView.reloadItems(at: [IndexPath.init(row: index, section: 0)])
     }
@@ -107,12 +111,14 @@ extension SPLarkSettingsController: UICollectionViewDataSource, UICollectionView
         case self.collectionView:
             let cell = self.collectionView.dequeueCell(indexPath: indexPath)
             let highlighted = self.settingHighlighted(index: indexPath.row)
+            let enabled = self.settingEnabled(index: indexPath.row)
             cell.titleLabel.text = self.settingTitle(index: indexPath.row, highlighted: highlighted)
             cell.subtitleLabel.text = self.settingSubtitle(index: indexPath.row, highlighted: highlighted)
             cell.setHighlighted(
                 highlighted,
                 color: highlighted ? self.settingColorHighlighted(index: indexPath.row) : UIColor.white.withAlphaComponent(0.1)
             )
+            cell.setEnabled(enabled)
             return cell
         default:
             return UICollectionViewCell()

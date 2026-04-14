@@ -74,10 +74,16 @@
 "Dismiss" = "Descartar";
 
 /* No comment provided by engineer. */
+"Display Mode" = "Modo de pantalla";
+
+/* No comment provided by engineer. */
 "Exit HUD" = "Cerrar HUD";
 
 /* No comment provided by engineer. */
 "Follow" = "Habilitado";
+
+/* No comment provided by engineer. */
+"FPS" = "FPS";
 
 /* No comment provided by engineer. */
 "Hide" = "Oculto";
@@ -132,6 +138,9 @@
 
 /* No comment provided by engineer. */
 "Size" = "Tamaño";
+
+/* No comment provided by engineer. */
+"Speed" = "Velocidad";
 
 /* No comment provided by engineer. */
 "Standard" = "Estándar";

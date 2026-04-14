@@ -74,10 +74,16 @@
 "Dismiss" = "关闭";
 
 /* No comment provided by engineer. */
+"Display Mode" = "显示模式";
+
+/* No comment provided by engineer. */
 "Exit HUD" = "关闭悬浮窗";
 
 /* No comment provided by engineer. */
 "Follow" = "跟随";
+
+/* No comment provided by engineer. */
+"FPS" = "FPS";
 
 /* No comment provided by engineer. */
 "Hide" = "隐藏";
@@ -132,6 +138,9 @@
 
 /* No comment provided by engineer. */
 "Size" = "尺寸";
+
+/* No comment provided by engineer. */
+"Speed" = "网速";
 
 /* No comment provided by engineer. */
 "Standard" = "标准";

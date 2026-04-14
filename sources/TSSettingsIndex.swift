@@ -8,7 +8,8 @@
 import Foundation
 
 enum TSSettingsIndex: Int, CaseIterable {
-    case passthroughMode = 0
+    case displayMode = 0
+    case passthroughMode
     case keepInPlace
     case hideAtSnapshot
     case singleLineMode
@@ -20,6 +21,8 @@ enum TSSettingsIndex: Int, CaseIterable {
 
     var key: String {
         switch self {
+        case .displayMode:
+            return HUDUserDefaultsKeyDisplayMode
         case .passthroughMode:
             return HUDUserDefaultsKeyPassthroughMode
         case .keepInPlace:
@@ -43,6 +46,8 @@ enum TSSettingsIndex: Int, CaseIterable {
 
     var title: String {
         switch self {
+        case .displayMode:
+            return NSLocalizedString("Display Mode", comment: "TSSettingsIndex")
         case .passthroughMode:
             return NSLocalizedString("Pass-through", comment: "TSSettingsIndex")
         case .keepInPlace:
@@ -66,6 +71,8 @@ enum TSSettingsIndex: Int, CaseIterable {
 
     func subtitle(highlighted: Bool, restartRequired: Bool) -> String {
         switch self {
+        case .displayMode:
+            return highlighted ? NSLocalizedString("FPS", comment: "TSSettingsIndex") : NSLocalizedString("Speed", comment: "TSSettingsIndex")
         case .passthroughMode:
             if restartRequired {
                 return NSLocalizedString("Re-open to apply", comment: "TSSettingsIndex")

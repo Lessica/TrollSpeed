@@ -15,6 +15,7 @@ VERSION=${VERSION#v}
 xcodebuild clean build archive \
 -scheme TrollSpeed \
 -project TrollSpeed.xcodeproj \
+-configuration Release \
 -sdk iphoneos \
 -destination 'generic/platform=iOS' \
 -archivePath TrollSpeed \
