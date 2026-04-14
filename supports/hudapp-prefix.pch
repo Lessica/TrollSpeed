@@ -11,7 +11,12 @@
     #import <UIKit/UIKit.h>
 
 #if !TARGET_OS_SIMULATOR
-    #import <libroot.h>
+    #if __has_include(<libroot.h>)
+        #import <libroot.h>
+    #endif
+    #if __has_include(<roothide.h>)
+        #import <roothide.h>
+    #endif
 #endif
     #import <os/log.h>
 
