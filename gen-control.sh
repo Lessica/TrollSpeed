@@ -1,34 +1,11 @@
 #!/bin/sh
 
 # This script is used to generate the control file for the Debian package.
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 <version>"
-    exit 1
-fi
 
-VERSION=$1
+# Read the version from the existing control file
+VERSION=$(./get-version.sh) || exit 1
 
-# Strip leading "v" from version if present
-VERSION=${VERSION#v}
-
-# Create the layout directory
-mkdir -p layout/DEBIAN
-
-# Write the control file
-cat > layout/DEBIAN/control << __EOF__
-Package: ch.xxtou.hudapp.jb
-Name: TrollSpeed JB
-Version: $VERSION
-Section: Tweaks
-Depends: firmware (>= 14.0)
-Architecture: iphoneos-arm
-Author: Lessica <82flex@gmail.com>
-Maintainer: Lessica <82flex@gmail.com>
-Description: Troll your speed, but jailbroken.
-__EOF__
-
-# Set permissions
-chmod 0644 layout/DEBIAN/control
+echo "Using version: $VERSION"
 
 RAND_BUILD_STR=$(openssl rand -hex 4)
 
