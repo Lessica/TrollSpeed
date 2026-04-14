@@ -1,15 +1,11 @@
 #!/bin/sh
 
 # This script is used to build the TrollSpeed app and create a tipa file with Xcode.
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 <version>"
-    exit 1
-fi
 
-VERSION=$1
+# Read the version from the existing control file
+VERSION=$(./get-version.sh) || exit 1
 
-# Strip leading "v" from version if present
-VERSION=${VERSION#v}
+echo "Using version: $VERSION"
 
 # Set GITHUB_WORKSPACE to home directory if not set
 if [ -z "$GITHUB_WORKSPACE" ]; then
