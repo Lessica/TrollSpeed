@@ -11,11 +11,10 @@
     #import <UIKit/UIKit.h>
 
 #if !TARGET_OS_SIMULATOR
-    #if __has_include(<libroot.h>)
-        #import <libroot.h>
-    #endif
     #if __has_include(<roothide.h>)
         #import <roothide.h>
+    #elif __has_include(<libroot.h>)
+        #import <libroot.h>
     #endif
 #else
     #define JBROOT_PATH_CSTRING(cPath) cPath
