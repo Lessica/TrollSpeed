@@ -17,6 +17,14 @@
 #import "HUDBackdropLabel.h"
 #import "TrollSpeed-Swift.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+CFIndex CARenderServerGetDirtyFrameCount(void *);
+#ifdef __cplusplus
+}
+#endif
+
 #pragma mark -
 
 #import "FBSOrientationUpdate.h"
@@ -28,6 +36,9 @@
 
 #define NOTIFY_UI_LOCKSTATE    "com.apple.springboard.lockstate"
 #define NOTIFY_LS_APP_CHANGED  "com.apple.LaunchServices.ApplicationsChanged"
+
+static BOOL needsBaselineReset = YES;
+static BOOL needsFPSBaselineReset = YES;
 
 static void LaunchServicesApplicationStateChanged
 (CFNotificationCenterRef center,
@@ -78,6 +89,8 @@ static void SpringBoardLockStatusChanged
 
         if (!isLocked)
         {
+            needsBaselineReset = YES;
+            needsFPSBaselineReset = YES;
             [rootViewController.view setHidden:NO];
             [rootViewController resetLoopTimer];
         }
@@ -116,6 +129,7 @@ static uint8_t HUD_SHOW_DOWNLOAD_SPEED_FIRST = 1;
 static uint8_t HUD_SHOW_SECOND_SPEED_IN_NEW_LINE = 0;
 static const char *HUD_UPLOAD_PREFIX = "▲";
 static const char *HUD_DOWNLOAD_PREFIX = "▼";
+static uint8_t HUD_DISPLAY_MODE = 0;  // 0=Speed, 1=FPS
 
 typedef struct {
     uint64_t inputBytes;
@@ -310,6 +324,7 @@ static UpDownBytes getUpDownBytes()
 
 static BOOL shouldUpdateSpeedLabel;
 static uint64_t prevOutputBytes = 0, prevInputBytes = 0;
+static CFIndex prevDirtyFrameCount = 0;
 static NSAttributedString *attributedUploadPrefix = nil;
 static NSAttributedString *attributedDownloadPrefix = nil;
 static NSAttributedString *attributedInlineSeparator = nil;
@@ -334,6 +349,15 @@ static NSAttributedString *formattedAttributedString(BOOL isFocused)
 
         uint64_t upDiff;
         uint64_t downDiff;
+
+        if (needsBaselineReset && !isFocused)
+        {
+            prevOutputBytes = upDownBytes.outputBytes;
+            prevInputBytes = upDownBytes.inputBytes;
+            needsBaselineReset = NO;
+            shouldUpdateSpeedLabel = NO;
+            return nil;
+        }
 
         if (isFocused)
         {
@@ -410,6 +434,44 @@ static NSAttributedString *formattedAttributedString(BOOL isFocused)
         }
 
         return [mutableString copy];
+    }
+}
+
+static NSAttributedString *formattedFPSAttributedString(BOOL isFocused)
+{
+    @autoreleasepool
+    {
+        CFIndex dirtyFrameCount = CARenderServerGetDirtyFrameCount(NULL);
+
+        if (needsFPSBaselineReset)
+        {
+            prevDirtyFrameCount = dirtyFrameCount;
+            needsFPSBaselineReset = NO;
+            shouldUpdateSpeedLabel = YES;
+
+            NSString *fpsString = @"0 FPS";
+            return [[NSAttributedString alloc] initWithString:fpsString attributes:@{
+                NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:HUD_FONT_SIZE weight:HUD_FONT_WEIGHT]
+            }];
+        }
+
+        CFIndex frameDiff = dirtyFrameCount - prevDirtyFrameCount;
+        prevDirtyFrameCount = dirtyFrameCount;
+
+        if (frameDiff < 0) frameDiff = 0;
+
+        double fps = (double)frameDiff / UPDATE_INTERVAL;
+        double maxFPS = (double)[UIScreen mainScreen].maximumFramesPerSecond;
+        if (fps > maxFPS) fps = maxFPS;
+
+        shouldUpdateSpeedLabel = YES;
+
+        NSString *fpsString = [NSString stringWithFormat:@"%.0f FPS", fps];
+        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:fpsString attributes:@{
+            NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:HUD_FONT_SIZE weight:HUD_FONT_WEIGHT]
+        }];
+
+        return attributedString;
     }
 }
 
@@ -548,8 +610,14 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
         [_containerView setupContainerAsDisplayContentInScreenshots];
     }
 
+    BOOL displayMode = [self displayMode];
+    HUD_DISPLAY_MODE = displayMode;
+
     prevInputBytes = 0;
     prevOutputBytes = 0;
+    needsBaselineReset = YES;
+    prevDirtyFrameCount = 0;
+    needsFPSBaselineReset = YES;
     attributedUploadPrefix = nil;
     attributedDownloadPrefix = nil;
 
@@ -598,6 +666,13 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeySingleLineMode];
+    return mode != nil ? [mode boolValue] : NO;
+}
+
+- (BOOL)displayMode
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyDisplayMode];
     return mode != nil ? [mode boolValue] : NO;
 }
 
@@ -759,7 +834,12 @@ static const CACornerMask kCornerMaskAll = kCALayerMinXMinYCorner | kCALayerMaxX
 - (void)updateSpeedLabel
 {
     log_debug(OS_LOG_DEFAULT, "updateSpeedLabel");
-    NSAttributedString *attributedText = formattedAttributedString(_isFocused);
+    NSAttributedString *attributedText;
+    if (HUD_DISPLAY_MODE == 1) {
+        attributedText = formattedFPSAttributedString(_isFocused);
+    } else {
+        attributedText = formattedAttributedString(_isFocused);
+    }
     if (attributedText) {
         [_speedLabel setAttributedText:attributedText];
     }

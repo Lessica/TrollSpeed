@@ -27,11 +27,10 @@ jobs:
           HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install dpkg make libplist openssl@3 ldid-procursus
           echo "/usr/local/opt/make/libexec/gnubin" >> $GITHUB_PATH
 
-      - name: Checkout XXTouchNG/theos
+      - name: Checkout roothide/theos
         uses: actions/checkout@v4
         with:
-          repository: XXTouchNG/theos
-          ref: 954dfd17fd05544a3bb26b2a25e1930cd228f4ef
+          repository: roothide/theos
           path: theos
           submodules: recursive
 
@@ -67,6 +66,6 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/TrollSpeed
           ./gen-control.sh ${{ env.GIT_TAG }}
-          THEOS_PACKAGE_SCHEME=rootless make commands
-          make clean
-          make commands
+          THEOS_PACKAGE_SCHEME=rootless gmake commands
+          gmake clean
+          gmake commands

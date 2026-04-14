@@ -11,11 +11,30 @@
     #import <UIKit/UIKit.h>
 
 #if !TARGET_OS_SIMULATOR
-    #import <libroot.h>
+    #if __has_include(<roothide.h>)
+        #import <roothide.h>
+        #ifndef JBROOT_PATH_CSTRING
+            #define JBROOT_PATH_CSTRING(cPath) jbroot(cPath)
+        #endif
+        #ifndef JBROOT_PATH_NSSTRING
+            #define JBROOT_PATH_NSSTRING(nsPath) jbroot(nsPath)
+        #endif
+    #elif __has_include(<libroot.h>)
+        #import <libroot.h>
+    #endif
+#else
+    #define JBROOT_PATH_CSTRING(cPath) cPath
+    #define JBROOT_PATH_NSSTRING(nsPath) nsPath
 #endif
     #import <os/log.h>
 
     #import "NSUserDefaults+Private.h"
+
+#if !TARGET_OS_SIMULATOR
+    #define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
+#else
+    #define USER_DEFAULTS_PATH ([[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"ch.xxtou.hudapp.plist"])
+#endif
 #endif
 
 #if DEBUG
@@ -29,14 +48,6 @@
 #endif
 
 #define FADE_OUT_DURATION 0.25
-
-#if !TARGET_OS_SIMULATOR
-    #define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/ch.xxtou.hudapp.plist"
-#else
-    #define USER_DEFAULTS_PATH ([[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"ch.xxtou.hudapp.plist"])
-    #define JBROOT_PATH_CSTRING(cPath) cPath
-    #define JBROOT_PATH_NSSTRING(nsPath) nsPath
-#endif
 
 // HUD -> APP: Notify APP that the HUD's view is appeared.
 #define NOTIFY_LAUNCHED_HUD "ch.xxtou.notification.hud.launched"

@@ -1,13 +1,15 @@
 name: Build Release
 
 on:
+  workflow_dispatch:
   push:
     tags:
+      - "v*.*"
       - "v*.*.*"
 
 env:
   THEOS: ''
-  GIT_TAG: ''
+  PKG_VERSION: ''
   XCODE_VERSION: '15.4'
 
 jobs:
@@ -26,11 +28,10 @@ jobs:
           HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install dpkg make libplist openssl@3 ldid-procursus
           echo "/usr/local/opt/make/libexec/gnubin" >> $GITHUB_PATH
 
-      - name: Checkout XXTouchNG/theos
+      - name: Checkout roothide/theos
         uses: actions/checkout@v4
         with:
-          repository: XXTouchNG/theos
-          ref: 954dfd17fd05544a3bb26b2a25e1930cd228f4ef
+          repository: roothide/theos
           path: theos
           submodules: recursive
 
@@ -59,27 +60,26 @@ jobs:
           echo "Available SDKs: $(find $THEOS/sdks -name "*.sdk" -maxdepth 1 -print)"
           echo "FINALPACKAGE=1" >> $GITHUB_ENV
           cd $GITHUB_WORKSPACE/TrollSpeed
-          git fetch --tags
-          echo "GIT_TAG=$(git describe --tags --always --abbrev=0)" >> $GITHUB_ENV
+          echo "PKG_VERSION=$(./get-version.sh)" >> $GITHUB_ENV
 
       - name: Build package
         run: |
           cd $GITHUB_WORKSPACE/TrollSpeed
-          ./gen-control.sh ${{ env.GIT_TAG }}
-          ./build.sh ${{ env.GIT_TAG }}
-          THEOS_PACKAGE_SCHEME=roothide FINALPACKAGE=1 make clean package
-          THEOS_PACKAGE_SCHEME=rootless FINALPACKAGE=1 make clean package
-          FINALPACKAGE=1 make clean package
+          ./gen-control.sh
+          ./build.sh
+          THEOS_PACKAGE_SCHEME=roothide FINALPACKAGE=1 gmake clean package
+          THEOS_PACKAGE_SCHEME=rootless FINALPACKAGE=1 gmake clean package
+          FINALPACKAGE=1 gmake clean package
 
       - name: Collect symbols
         run: |
           cd $GITHUB_WORKSPACE/TrollSpeed
-          find .theos/obj -name "*.dSYM" -print | zip -r packages/TrollSpeed_${{ env.GIT_TAG }}_symbols.zip -@
+          find .theos/obj -name "*.dSYM" -print | zip -r packages/TrollSpeed_${{ env.PKG_VERSION }}_symbols.zip -@
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: TrollSpeed_${{ env.GIT_TAG }}
+          name: TrollSpeed_${{ env.PKG_VERSION }}
           path: |
             TrollSpeed/packages/TrollSpeed_*.tipa
             TrollSpeed/packages/TrollSpeed+AppIntents16_*.tipa
@@ -88,14 +88,14 @@ jobs:
       - name: Upload symbols
         uses: actions/upload-artifact@v4
         with:
-          name: TrollSpeed_${{ env.GIT_TAG }}_symbols
+          name: TrollSpeed_${{ env.PKG_VERSION }}_symbols
           path: |
-            TrollSpeed/packages/TrollSpeed_${{ env.GIT_TAG }}_symbols.zip
+            TrollSpeed/packages/TrollSpeed_${{ env.PKG_VERSION }}_symbols.zip
 
       - name: Upload release
         uses: softprops/action-gh-release@v1
         with:
-          token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          tag_name: v${{ env.PKG_VERSION }}
           body_path: TrollSpeed/CHANGELOG.md
           files: |
             TrollSpeed/packages/TrollSpeed_*.tipa

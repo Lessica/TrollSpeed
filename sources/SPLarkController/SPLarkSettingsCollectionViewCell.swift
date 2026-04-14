@@ -26,19 +26,37 @@ public class SPLarkSettingsCollectionViewCell: UICollectionViewCell {
 
     let titleLabel = UILabel()
     let subtitleLabel = UILabel()
-    
-    public override var isHighlighted: Bool {
-        didSet {
-            if isHighlighted {
-                UIView.animate(withDuration: 0.27, delay: 0.0, usingSpringWithDamping: 1, initialSpringVelocity: 1.0, options: [.curveEaseOut, .beginFromCurrentState], animations: {
-                    self.transform = self.transform.scaledBy(x: 0.92, y: 0.92)
-                }, completion: nil)
-            } else {
-                UIView.animate(withDuration: 0.27, delay: 0.0, usingSpringWithDamping: 1, initialSpringVelocity: 1.0, options: [.curveEaseOut, .beginFromCurrentState], animations: {
-                    self.transform = CGAffineTransform.identity
-                }, completion: nil)
-            }
-        }
+    let backgroundColorView = UIView()
+
+    private static let pressDownScale: CGFloat = 0.92
+    private static let animationDuration: TimeInterval = 0.4
+    private static let animationDamping: CGFloat = 0.6
+
+    private func animatePress() {
+        UIView.animate(withDuration: Self.animationDuration, delay: 0, usingSpringWithDamping: Self.animationDamping, initialSpringVelocity: 0, options: [.curveEaseOut, .beginFromCurrentState, .allowUserInteraction], animations: {
+            self.transform = CGAffineTransform(scaleX: Self.pressDownScale, y: Self.pressDownScale)
+        }, completion: nil)
+    }
+
+    private func animateRelease() {
+        UIView.animate(withDuration: Self.animationDuration, delay: 0, usingSpringWithDamping: Self.animationDamping, initialSpringVelocity: 0, options: [.curveEaseOut, .beginFromCurrentState, .allowUserInteraction], animations: {
+            self.transform = .identity
+        }, completion: nil)
+    }
+
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        animatePress()
+    }
+
+    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        animateRelease()
+    }
+
+    public override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
+        animateRelease()
     }
     
     override init(frame: CGRect) {
@@ -52,8 +70,11 @@ public class SPLarkSettingsCollectionViewCell: UICollectionViewCell {
     }
     
     func commonInit() {
-        self.layer.masksToBounds = true
-        self.layer.cornerRadius = 13
+        self.backgroundColor = .clear
+
+        self.backgroundColorView.layer.masksToBounds = true
+        self.backgroundColorView.layer.cornerRadius = 13
+        self.contentView.addSubview(self.backgroundColorView)
 
         self.titleLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         self.titleLabel.numberOfLines = 0
@@ -61,22 +82,29 @@ public class SPLarkSettingsCollectionViewCell: UICollectionViewCell {
         self.titleLabel.baselineAdjustment = .alignBaselines
         self.titleLabel.textColor = UIColor.white
         self.titleLabel.text = "Title"
-        self.addSubview(self.titleLabel)
+        self.contentView.addSubview(self.titleLabel)
         
         self.subtitleLabel.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         self.subtitleLabel.numberOfLines = 1
         self.subtitleLabel.textAlignment = .left
         self.subtitleLabel.textColor = UIColor.white
         self.subtitleLabel.text = "Subtitle"
-        self.addSubview(self.subtitleLabel)
+        self.contentView.addSubview(self.subtitleLabel)
     }
     
     func setHighlighted(_ state: Bool, color: UIColor) {
-        self.backgroundColor = color
+        self.backgroundColorView.backgroundColor = color
+    }
+    
+    func setEnabled(_ enabled: Bool) {
+        self.contentView.alpha = enabled ? 1.0 : 0.4
+        self.isUserInteractionEnabled = enabled
     }
     
     public override func prepareForReuse() {
         super.prepareForReuse()
+        self.contentView.alpha = 1.0
+        self.isUserInteractionEnabled = true
         self.titleLabel.text = "Title"
         self.subtitleLabel.text = "Subtitle"
         self.layoutSubviews()
@@ -84,10 +112,8 @@ public class SPLarkSettingsCollectionViewCell: UICollectionViewCell {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        
-        if self.isHighlighted {
-            return
-        }
+
+        self.backgroundColorView.frame = self.contentView.bounds
         
         if self.subtitleLabel.text == nil {
             let topInset: CGFloat = 19 / 2
@@ -97,8 +123,8 @@ public class SPLarkSettingsCollectionViewCell: UICollectionViewCell {
             self.titleLabel.frame = CGRect.init(
                 x: sideInset,
                 y: topInset,
-                width: self.frame.width - sideInset * 2,
-                height: self.frame.height - topInset * 2
+                width: self.contentView.frame.width - sideInset * 2,
+                height: self.contentView.frame.height - topInset * 2
             )
         } else {
             let topInset: CGFloat = 19 / 2
@@ -106,11 +132,11 @@ public class SPLarkSettingsCollectionViewCell: UICollectionViewCell {
             
             self.subtitleLabel.sizeToFit()
             self.subtitleLabel.frame.origin.x = sideInset
-            self.subtitleLabel.frame = CGRect.init(x: self.subtitleLabel.frame.origin.x, y: self.subtitleLabel.frame.origin.y, width: self.frame.width - sideInset * 2, height: self.subtitleLabel.frame.height)
-            self.subtitleLabel.frame.origin.y = self.frame.height - topInset * 1.2 - self.subtitleLabel.frame.height
+            self.subtitleLabel.frame = CGRect.init(x: self.subtitleLabel.frame.origin.x, y: self.subtitleLabel.frame.origin.y, width: self.contentView.frame.width - sideInset * 2, height: self.subtitleLabel.frame.height)
+            self.subtitleLabel.frame.origin.y = self.contentView.frame.height - topInset * 1.2 - self.subtitleLabel.frame.height
             
             self.titleLabel.sizeToFit()
-            self.titleLabel.frame = CGRect.init(x: self.titleLabel.frame.origin.x, y: self.titleLabel.frame.origin.y, width: self.frame.width - sideInset * 2, height: self.subtitleLabel.frame.origin.y - topInset - topInset / 2)
+            self.titleLabel.frame = CGRect.init(x: self.titleLabel.frame.origin.x, y: self.titleLabel.frame.origin.y, width: self.contentView.frame.width - sideInset * 2, height: self.subtitleLabel.frame.origin.y - topInset - topInset / 2)
             
             self.titleLabel.frame.origin.x = sideInset
             self.titleLabel.frame.origin.y = topInset * 1.3

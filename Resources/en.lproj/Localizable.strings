@@ -74,10 +74,16 @@
 "Dismiss" = "Dismiss";
 
 /* No comment provided by engineer. */
+"Display Mode" = "Display Mode";
+
+/* No comment provided by engineer. */
 "Exit HUD" = "Exit HUD";
 
 /* No comment provided by engineer. */
 "Follow" = "Follow";
+
+/* No comment provided by engineer. */
+"FPS" = "FPS";
 
 /* No comment provided by engineer. */
 "Hide" = "Hide";
@@ -132,6 +138,9 @@
 
 /* No comment provided by engineer. */
 "Size" = "Size";
+
+/* No comment provided by engineer. */
+"Speed" = "Speed";
 
 /* No comment provided by engineer. */
 "Standard" = "Standard";

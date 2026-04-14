@@ -505,6 +505,20 @@ static const CGFloat _gAuthorLabelBottomConstraintConstantRegular = -80.f;
     [self saveUserDefaults];
 }
 
+- (BOOL)displayMode
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:HUDUserDefaultsKeyDisplayMode];
+    return mode != nil ? [mode boolValue] : NO;
+}
+
+- (void)setDisplayMode:(BOOL)displayMode
+{
+    [self loadUserDefaults:NO];
+    [_userDefaults setObject:@(displayMode) forKey:HUDUserDefaultsKeyDisplayMode];
+    [self saveUserDefaults];
+}
+
 - (void)reloadMainButtonState
 {
     _isRemoteHUDActive = [self isHUDEnabled];
