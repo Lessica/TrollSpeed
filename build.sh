@@ -30,6 +30,7 @@ codesign --remove-signature TrollSpeed.app
 cd - || exit
 cd TrollSpeed.xcarchive/Products || exit
 mv Applications Payload
+rm -f Payload/TrollSpeed.app/Frameworks/libswift_Concurrency.dylib
 ldid -Sentitlements.plist Payload/TrollSpeed.app
 chmod 0644 Payload/TrollSpeed.app/Info.plist
 zip -qr TrollSpeed.tipa Payload
