@@ -67,6 +67,6 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/TrollSpeed
           ./gen-control.sh ${{ env.GIT_TAG }}
-          THEOS_PACKAGE_SCHEME=rootless make commands
-          make clean
-          make commands
+          THEOS_PACKAGE_SCHEME=rootless gmake commands
+          gmake clean
+          gmake commands
