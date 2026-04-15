@@ -44,6 +44,8 @@ Tested and expected to work on all iOS versions supported by opa334’s TrollSto
 
 ![preview](screenshots/preview.jpeg)
 
+![IMG_0011](https://github.com/user-attachments/assets/716d8c62-5032-4bec-8090-fd7fc02e11b4)
+
 ## Special Thanks
 
 - [KIF](https://github.com/kif-framework/KIF)
