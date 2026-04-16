@@ -12,6 +12,12 @@ if [ -z "$GITHUB_WORKSPACE" ]; then
     GITHUB_WORKSPACE="$HOME"
 fi
 
+# Set THEOS to the correct path
+THEOS="$GITHUB_WORKSPACE/theos-roothide"
+if [ ! -d "$THEOS" ]; then
+    THEOS="$GITHUB_WORKSPACE/theos"
+fi
+
 # Build using Xcode
 xcodebuild clean build archive \
 -scheme TrollSpeed \
@@ -22,7 +28,7 @@ xcodebuild clean build archive \
 -archivePath TrollSpeed \
 CODE_SIGNING_ALLOWED=NO \
 IPHONEOS_DEPLOYMENT_TARGET=16.0 \
-THEOS="$GITHUB_WORKSPACE/theos" | xcpretty
+THEOS="$THEOS" | xcpretty
 
 chmod 0644 Resources/Info.plist
 cp supports/entitlements.plist TrollSpeed.xcarchive/Products

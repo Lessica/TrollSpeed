@@ -52,7 +52,6 @@
 		CC654E3F2DABD9C200D54F83 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CC2A772F2B6AADB400796650 /* Settings.bundle */; };
 		CC654E402DABD9C200D54F83 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC711D872B5BFCC4007235A6 /* Localizable.strings */; };
 		CC654E412DABD9C200D54F83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC711D102B5BF551007235A6 /* Assets.xcassets */; };
-		CC654E602DABE3EB00D54F83 /* libroot_dyn_iphoneos-arm64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC654E5F2DABE3EB00D54F83 /* libroot_dyn_iphoneos-arm64.a */; };
 		CC711D112B5BF551007235A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC711D102B5BF551007235A6 /* Assets.xcassets */; };
 		CC711D4A2B5BF5C6007235A6 /* HUDHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D1E2B5BF5C6007235A6 /* HUDHelper.mm */; };
 		CC711D4B2B5BF5C6007235A6 /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC711D1F2B5BF5C6007235A6 /* RootViewController.mm */; };
@@ -101,7 +100,6 @@
 /* Begin PBXFileReference section */
 		0F43B7702B60D397003A435D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../Resources/es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0F43B7712B60D397003A435D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../Resources/es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		6143419B2CD0D8F00069FD88 /* libroot_dyn_iphoneos-arm64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libroot_dyn_iphoneos-arm64.a"; sourceTree = "<group>"; };
 		CC2A772F2B6AADB400796650 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Resources/Settings.bundle; sourceTree = SOURCE_ROOT; };
 		CC654E032DABD94300D54F83 /* AssertionServices.Sim.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = AssertionServices.Sim.tbd; sourceTree = "<group>"; };
 		CC654E052DABD94A00D54F83 /* IOKit.Sim.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = IOKit.Sim.tbd; sourceTree = "<group>"; };
@@ -109,7 +107,6 @@
 		CC654E092DABD95800D54F83 /* GraphicsServices.Sim.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = GraphicsServices.Sim.tbd; sourceTree = "<group>"; };
 		CC654E0B2DABD95E00D54F83 /* SpringBoardServices.Sim.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = SpringBoardServices.Sim.tbd; sourceTree = "<group>"; };
 		CC654E452DABD9C200D54F83 /* TrollSpeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrollSpeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CC654E5F2DABE3EB00D54F83 /* libroot_dyn_iphoneos-arm64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libroot_dyn_iphoneos-arm64.a"; sourceTree = "<group>"; };
 		CC711D012B5BF550007235A6 /* TrollSpeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrollSpeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC711D102B5BF551007235A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CC711D1E2B5BF5C6007235A6 /* HUDHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HUDHelper.mm; sourceTree = "<group>"; };
@@ -227,7 +224,6 @@
 				CC8DDA9A2B6631DC001C7C9E /* AppIntents.framework in Frameworks */,
 				CC711D9C2B5C0032007235A6 /* IOKit.tbd in Frameworks */,
 				CC711D9A2B5BFF2F007235A6 /* BackBoardServices.tbd in Frameworks */,
-				CC654E602DABE3EB00D54F83 /* libroot_dyn_iphoneos-arm64.a in Frameworks */,
 				CC711D982B5BFF2F007235A6 /* GraphicsServices.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -235,14 +231,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		CC654E5E2DABE22E00D54F83 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				6143419B2CD0D8F00069FD88 /* libroot_dyn_iphoneos-arm64.a */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		CC711CF82B5BF550007235A6 = {
 			isa = PBXGroup;
 			children = (
@@ -252,7 +240,6 @@
 				CC711D032B5BF550007235A6 /* supports */,
 				CC711D1D2B5BF5C6007235A6 /* sources */,
 				CC8DDA972B66318E001C7C9E /* Frameworks */,
-				CC654E5E2DABE22E00D54F83 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -405,7 +392,6 @@
 				CC654E052DABD94A00D54F83 /* IOKit.Sim.tbd */,
 				CC711D962B5BFF2F007235A6 /* SpringBoardServices.tbd */,
 				CC654E0B2DABD95E00D54F83 /* SpringBoardServices.Sim.tbd */,
-				CC654E5F2DABE3EB00D54F83 /* libroot_dyn_iphoneos-arm64.a */,
 			);
 			path = libraries;
 			sourceTree = "<group>";
@@ -866,10 +852,13 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = "-";
+				ENABLE_APPINTENTS_DEPLOYMENT_AWARE_PROCESSING = NO;
+				ENABLE_PREVIEWS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "supports/hudapp-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
+					"DISABLE_PATH_REDIRECTION=1",
 					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",
 				);
 				INFOPLIST_FILE = Resources/Info.plist;
@@ -912,10 +901,13 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = "-";
+				ENABLE_APPINTENTS_DEPLOYMENT_AWARE_PROCESSING = NO;
+				ENABLE_PREVIEWS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "supports/hudapp-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
+					"DISABLE_PATH_REDIRECTION=1",
 					"THEOS_PACKAGE_INSTALL_PREFIX=\\\"\\\"",
 				);
 				INFOPLIST_FILE = Resources/Info.plist;

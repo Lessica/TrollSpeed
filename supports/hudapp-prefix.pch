@@ -10,7 +10,7 @@
     #import <Foundation/Foundation.h>
     #import <UIKit/UIKit.h>
 
-#if !TARGET_OS_SIMULATOR
+#if !TARGET_OS_SIMULATOR && !defined(DISABLE_PATH_REDIRECTION)
     #if __has_include(<roothide.h>)
         #import <roothide.h>
         #ifndef JBROOT_PATH_CSTRING
